@@ -476,17 +476,45 @@ export default function TabView() {
           <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="3"><SortView/></TabPanel>
           <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="4"><RelationShipView /></TabPanel>
         </TabContext>
-      
-        <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
-            <Alert open={successOpen} severity="success" sx={{ width: '100%' }}>
+        {
+            successOpen? (
+              <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
+              {/* <Snackbar
+                open={successOpen}
+                sx={{ width: 500 }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                autoHideDuration={500}
+              >
+                <Alert severity="success" sx={{ width: '100%' }}>
+                  {snackMessage}
+                </Alert>
+              </Snackbar> */}
+              
+                <Alert open={successOpen} severity="success" sx={{ width: '100%' }}>
+                    {snackMessage}
+                </Alert>
+            </div>
+            ) : null     
+        }         
+        {
+          failOpen ?
+            (  <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
+            {/* <Snackbar
+              open={successOpen}
+              sx={{ width: 500 }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              autoHideDuration={500}
+            >
+              <Alert severity="success" sx={{ width: '100%' }}>
                 {snackMessage}
-            </Alert>
-        </div>
-        <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
-            <Alert open={failOpen} severity="error" sx={{ width: '100%' }}>
-              {snackMessage}
-            </Alert>
-        </div>          
+              </Alert>
+            </Snackbar> */}
+              <Alert open={failOpen} severity="error" sx={{ width: '100%' }}>
+                {snackMessage}
+              </Alert>
+          </div>          ):null
+        }
+      
       </div>
   </Box>
   );
