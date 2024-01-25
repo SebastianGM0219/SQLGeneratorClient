@@ -1,0 +1,77 @@
+import * as React from 'react'
+import { useDispatch } from 'react-redux';
+import { styled } from '@mui/material/styles';
+import { makeStyles  } from 'tss-react/mui';
+import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGears, faCode} from '@fortawesome/free-solid-svg-icons'
+import { useSelector } from "react-redux";
+import { TabView, CodeView } from './view'
+import { setEdited } from '../../slices/utility';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import QueryButton from '../common/QueryButton/QueryButton'
+
+
+const CustomToggleButton = styled(ToggleButton)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(0.5),
+  color: theme.palette.text.secondary,
+  textTransform: 'none',
+  width: 120,
+  '& .svg-inline--fa': {
+    marginRight: 6
+  },
+  fontSize: 12,
+}));
+
+const useStyles = makeStyles()((theme) => {
+  return {
+    fullHeight: {
+      height: '100%',
+      padding: 0
+    },
+    restHeight: {
+      height: 'calc(100% - 28px)'
+    }
+  };
+})
+
+export default function MainView() {
+  const { classes } = useStyles();
+  const [alignment, setAlignment] = React.useState('builder');
+  const isConnected = useSelector(state => state.database.success);
+  const dispatch = useDispatch();
+
+  const handleChange = (event, newAlignment) => {
+    if(newAlignment!==null)
+      setAlignment(newAlignment);
+    if(newAlignment === "builder") dispatch(setEdited(false));
+    // else dispatch(setEdited(false));
+  };
+
+  return (
+    <Box className={classes.fullHeight} >
+      <Box>
+        <Box sx={{display: 'flex', padding: '14px',  justifyContent: 'space-between'}}>
+          <QueryButton />
+          <ToggleButtonGroup disabled= {!isConnected}
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+            aria-label="Platform"
+          >
+            <CustomToggleButton value="builder"><FontAwesomeIcon icon={faGears} size="1x"/>Builder</CustomToggleButton>
+            <CustomToggleButton value="sql"><FontAwesomeIcon icon={faCode} size="1x"/>SQL</CustomToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      </Box>
+      <Box  className={classes.restHeight}>
+         {alignment==="builder" && <TabView />}
+         {alignment!=="builder" && <CodeView />}
+      </Box>      
+    </Box>
+  )
+}
