@@ -460,46 +460,34 @@ export default function TabView() {
 
     <Box sx={{ position: 'relative', width: '100%', typography: 'body1', minWidth: 600, maxHeight: 500 }} className={classes.fullHeight}>
     
-      <div style={{ position: 'relative', height: '100%' }}>
-    {/* Your TabPanel components */}
-        <TabContext value={value} className={classes.fullHeight} disabled= {!isConnected}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList onChange={handleChange} aria-label="Main-Tab-list" className={classes.tabContextStyle}>
-                <Tab disabled= {!isConnected} label="Fields" className={classes.tabStyle} value="1" />
-                <Tab disabled= {!isConnected} label="Filters" className={classes.tabStyle} value="2" />
-                {!enableSort && <Tab disabled= {!isConnected} label="Sort" className={classes.tabStyle} value="3" />}
-                <Tab disabled= {!isConnected} label="Relationships" className={classes.tabStyle} value="4" />
-              </TabList>
-            </Box>
-            <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="1"><SelectorView/></TabPanel>
-            <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="2"><FilterView/></TabPanel>
-            <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="3"><SortView/></TabPanel>
-            <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="4"><RelationShipView /></TabPanel>
-          </TabContext>
-        
-          <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
-            <Snackbar
-              open={successOpen}
-              sx={{ width: 500 }}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              autoHideDuration={500}
-            >
-              <Alert severity="success" sx={{ width: '100%' }}>
+    <div style={{ position: 'relative', height: '100%' }}>
+  {/* Your TabPanel components */}
+      <TabContext value={value} className={classes.fullHeight} disabled= {!isConnected}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleChange} aria-label="Main-Tab-list" className={classes.tabContextStyle}>
+              <Tab disabled= {!isConnected} label="Fields" className={classes.tabStyle} value="1" />
+              <Tab disabled= {!isConnected} label="Filters" className={classes.tabStyle} value="2" />
+              {!enableSort && <Tab disabled= {!isConnected} label="Sort" className={classes.tabStyle} value="3" />}
+              <Tab disabled= {!isConnected} label="Relationships" className={classes.tabStyle} value="4" />
+            </TabList>
+          </Box>
+          <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="1"><SelectorView/></TabPanel>
+          <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="2"><FilterView/></TabPanel>
+          <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="3"><SortView/></TabPanel>
+          <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="4"><RelationShipView /></TabPanel>
+        </TabContext>
+      
+        <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
+            <Alert open={successOpen} severity="success" sx={{ width: '100%' }}>
                 {snackMessage}
-              </Alert>
-            </Snackbar>
-            <Snackbar
-              open={failOpen}
-              sx={{ width: 500 }}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              autoHideDuration={500}
-            >
-              <Alert severity="error" sx={{ width: '100%' }}>
-                {snackMessage}
-              </Alert>
-            </Snackbar>
-          </div>
+            </Alert>
         </div>
-    </Box>
+        <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
+            <Alert open={failOpen} severity="error" sx={{ width: '100%' }}>
+              {snackMessage}
+            </Alert>
+        </div>          
+      </div>
+  </Box>
   );
 }
