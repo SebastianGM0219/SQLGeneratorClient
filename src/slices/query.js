@@ -628,7 +628,7 @@ export const querySlice = createSlice({
       const newState = state.selectFields.filter(item => item.id !== id);
       state.selectFields = newState;
       state.relationFields = relation;
-      if(id === state.clickField.id)
+      if(state.clickField &&id === state.clickField.id)
       {
         state.clickField = {};
         console.log(state.clickField);

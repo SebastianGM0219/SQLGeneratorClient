@@ -434,12 +434,16 @@ export default function TabView() {
     const queryInfo= {
       query: query
     }
-
+    console.log("==u have to chage");
+    console.log(selectFields);
     if(selectFields.length>0)
     {
     dispatch(testQuery(queryInfo))
     .then(data =>{
         console.log(data);
+
+        if(selectFields.length>0)
+        {
         if(data.payload === "Query Syntax is good")
         {
           setSnackMessage(data.payload);
@@ -452,9 +456,16 @@ export default function TabView() {
           setSuccessOpen(false);
           setFailOpen(true);
         }
+        }
     })
     }
-  }, [queryData]);
+    else
+    {
+      setSuccessOpen(false);
+      setFailOpen(false);
+
+    }
+  }, [queryData,handleApply]);
   return (
 
 

@@ -149,7 +149,7 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
                   {items && items.map((item => {
                     const labelId = `checkbox-list-label-${item.name}`;
                     return (
-                      item.name.toLowerCase().includes(filter) &&
+                      item.name &&item.name.toLowerCase().includes(filter) &&
                       <TableListItem 
                         key={labelId} 
                         isChecked = {item.isChecked}
