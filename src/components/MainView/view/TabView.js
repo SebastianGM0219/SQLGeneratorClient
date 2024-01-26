@@ -10,12 +10,12 @@ import SortView from '../Sort'
 import FilterView from '../Filter';
 import clsx from 'clsx';
 import { setCurSelectorTab } from '../../../slices/utility';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { styled } from '@mui/material/styles';
+// import TextField from '@mui/material/TextField';
+// import Autocomplete from '@mui/material/Autocomplete';
+// import { styled } from '@mui/material/styles';
 import { runQuery,testQuery} from '../../../slices/query';
 import { setCodeSQL, setEdited } from '../../../slices/utility';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert } from '@mui/material';
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -48,21 +48,17 @@ export default function TabView() {
   const [value, setValue] = React.useState(String(currentSelectorTab+1));
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [failOpen, setFailOpen] = React.useState(false);
-
   const queryData = useSelector(state => state.query);
   const dispatch = useDispatch();
   const isConnected = useSelector(state => state.database.success);
-
   const joinCommand = useSelector(state => state.query.joinCommand);
-  const [crossTab, setCrossTab] = React.useState(isCrossTab);
+  // const [crossTab, setCrossTab] = React.useState(isCrossTab);
   const [defaultList, setDefaultList] = React.useState('');
-
   const crosstabSelectors = useSelector(state => state.query.crosstabSelectorFields);
   const crosstabColumns = useSelector(state => state.query.crosstabColumnFields);
   const crosstabValues = useSelector(state => state.query.crosstabValueFields);
   const operatorType = useSelector(state => state.query.operatorType);
-
-  const isUnique = useSelector(state => state.utility.isUnique);
+  // const isUnique = useSelector(state => state.utility.isUnique);
   const uniqueTable = useSelector(state => state.utility.uniqueTable);
   const handleApply = useSelector(state => state.query.selectFields);
   const parameters = useSelector(state => state.utility.parameters);
@@ -135,7 +131,7 @@ export default function TabView() {
     selectFields.map((item, index) => {
         const { data: { table, field, header_name, aggreType,command,dropbox} } = item;
         let prev_name=`${table}.${field}`;
-        if(command==null&&command==undefined)
+        if(command === null && command === undefined)
         {
           if(aggreType !== "none")
             prev_name = `${aggreType}( ${prev_name} )`;
@@ -269,6 +265,7 @@ export default function TabView() {
               selectQuery += updatedString;
           }         
         }
+        return undefined;
     })
     let groupByQuery = 'GROUP BY';
 
@@ -285,7 +282,7 @@ export default function TabView() {
       let cnt=0;
       selectFields.map((item, index) => {
         const { data: { table, field, aggreType} } = item;        
-        if (aggreType == 'none' && field!=='None') {
+        if (aggreType === 'none' && field !== 'None') {
           let string = ' '+table+'.'+field;
           groupByQuery += string;
           groupByQuery += ',';
@@ -311,7 +308,7 @@ export default function TabView() {
             groupByQuery += string;
           if(index < crosstabSelectors.length-1)
             groupByQuery += ',';
-          if(index == crosstabSelectors.length-1 && crosstabValues[0].id !== 'none')
+          if(index === crosstabSelectors.length-1 && crosstabValues[0].id !== 'none')
             groupByQuery += ',';
         }
       });
