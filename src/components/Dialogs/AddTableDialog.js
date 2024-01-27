@@ -28,7 +28,7 @@ const useStyles = makeStyles()((theme) => {
     },
     listBoxStyle: {
       borderRight: '1px solid #aaa',
-      maxHeight: 350,
+      height: 350,
       overflowY: 'auto',      
     },
     searchStyle: {
@@ -54,6 +54,7 @@ const useStyles = makeStyles()((theme) => {
 const SearchTextField = styled(TextField)(({ theme }) => ({
   marginBottom: 8,
   fontSize: 12,
+  marginTop: 1,
   width: '100%',
   '& .MuiSvgIcon-root': {
     width: 16
@@ -124,14 +125,14 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
           edge="end"
           color="inherit"
           onClick={handleClose}
-          style={{ position: 'absolute', right:20, Top: 5 }}
+          style={{ position: 'absolute', right:23, top: 10 }}
         >
           <CloseIcon />
         </IconButton>
         <DialogTitle>Add Table Data
         </DialogTitle>
         <DialogContent>
-          <Box width={540} minHeight={300}>
+          <Box width={540} Height={400}>
           <SearchTextField
             id="outlined-start-adornment"
             InputProps={{
@@ -205,11 +206,11 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
           </Box>
           </Box>
       </DialogContent>
-      <DialogActions>
-         <Button onClick={handleClose} >
+      <DialogActions sx ={{marginBottom: '10px'}}>
+         <Button variant="contained" onClick={handleClose} >
            Cancel
          </Button>        
-         <Button onClick={handleSubmit} >
+         <Button variant="contained" sx={{marginRight: '15px'}} onClick={handleSubmit} >
            OK
          </Button>
       </DialogActions>

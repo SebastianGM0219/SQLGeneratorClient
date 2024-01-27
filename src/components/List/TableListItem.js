@@ -12,6 +12,7 @@ const useStyles = makeStyles()((theme) => {
     boxStyle: {
       borderBottom: '1px solid #ddd',
       fontSize: 16,
+      padding: 10,
       cursor: 'pointer'
     },
     iconStyle: {

@@ -94,7 +94,7 @@ export const SelectorNode = (props) => {
  
   const indent = props.depth * 24;
   const [visible, setVisible] = React.useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch();                                                                                                                                                                                                   
   const showCloseButton = (e) => {
     setVisible(true);
   }

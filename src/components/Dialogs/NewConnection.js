@@ -188,15 +188,16 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:10, paddingTop:20, paddingBottom:10} }}>
       <DialogTitle sx={{marmarginBottom: '15px'}}>
         New Connection
-          <IconButton
+      </DialogTitle>
+      <IconButton
           edge="end"
           color="inherit"
           onClick={handleClose}
-          style={{ position: 'absolute', right:43, top: 23 }}
+          style={{ position: 'absolute', right:43, top: 30 }}
         >
           <CloseIcon />
         </IconButton>
-      </DialogTitle>
+
       <DialogContent width={600} >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px'}}>
           <CustomButton variant="outlined" sx={{marginLeft: '2px'}} onClick={handleNewDailog}>New</CustomButton>

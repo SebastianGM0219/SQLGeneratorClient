@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Typography, Grid,InputBase, FormControlLabel, Switch, Button,FormControl } from '@mui/material';
 import { makeStyles  } from 'tss-react/mui';
-
 import { TypeIcon } from '../common/Tree/TypeIcon';
 import ParameterEditor from '../common/ParameterEditor';
 import { setFieldCalcDrop, setFilterValue } from '../../slices/query';
@@ -12,22 +11,20 @@ import { CheckBox, TextFields } from '@mui/icons-material';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { runQuery } from '../../slices/query';
-import {setTreeOpened, setSheetOpened} from '../../slices/utility'
+import { setTreeOpened, setSheetOpened } from '../../slices/utility'
 import { saveFunc } from '../../slices/savedata'
 import { setValueSelector, setValueSelectorInCalc} from '../../slices/query'
-import {getTables, updateItem} from '../../slices/table'
+import { getTables, updateItem} from '../../slices/table'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import clsx from 'clsx';
 import FuncDropDownMenu from '../common/FuncDropDownMenu';
 import FieldDropBox from './FieldDrop/FieldDropBox';
 import AceEditor from "react-ace";
-import { setIsUnique, setUniqueTable,setFuncIndex } from "../../slices/utility";
-
+import { setIsUnique, setUniqueTable, setFuncIndex } from "../../slices/utility";
 import "ace-builds/src-noconflict/mode-mysql";
 import "ace-builds/src-noconflict/theme-textmate";
 import "ace-builds/src-noconflict/ext-language_tools";
 //import  {updateItem}  from '../../slices/savedata'; // Import the setDuplicateState action from the duplicate slice
-
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -89,7 +86,6 @@ const useStyles = makeStyles()((theme) => {
 });
 const QueryInput = styled(InputBase)(({ theme }) => ({
   width: '100%',
-
   '& .MuiInputBase-input': {
     // textTransform: 'uppercase',
     borderRadius: 4,
@@ -116,7 +112,6 @@ const CustomComboBox = styled(Select)(({ theme }) => ({
   width: '100%',
   border: '1px solid #b4b4b4',
   borderRadius: 4,
-
   marginTop: '5px',
   '& .MuiInputBase-input': {
     borderColor: '#b4b4b4',
@@ -191,8 +186,7 @@ export default function FieldTab() {
     else
     {
       //dispatch(setSourceColumnSelector({id:newTree[0].id, sourceColumn: newTree[0].data.header_name, source: newTree[0].data.table,field:newTree[0].data.field,type:newTree[0].data.type}));
-      if(fieldCalcDrop[0] && fieldCalcDrop[0].filterVariant && fieldCalcDrop[0].filterVariant[0] && fieldCalcDrop[0].filterVariant[0].data) 
-      {
+      if(fieldCalcDrop[0] && fieldCalcDrop[0].filterVariant && fieldCalcDrop[0].filterVariant[0] && fieldCalcDrop[0].filterVariant[0].data) {
         tableNameArray=(fieldCalcDrop[0].filterVariant[0].data.table);
         //const isUnique = tableNameArray==uniqueTable?true:false;
         // const uniqueTableName = uniqueArray.length===1?uniqueArray[0]: '';
@@ -201,11 +195,11 @@ export default function FieldTab() {
         dispatch(setUniqueTable(tableNameArray));
       }
       if(fieldCalcDrop.length==2)
-        dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:fieldCalcDrop[0].filterVariant[0].data.columnId, table:fieldCalcDrop[0].filterVariant[0].data.table, type:fieldCalcDrop[0].filterVariant[0].data.type, field:fieldCalcDrop[0].filterVariant[0].data.field}));       
+          dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:fieldCalcDrop[0].filterVariant[0].data.columnId, table:fieldCalcDrop[0].filterVariant[0].data.table, type:fieldCalcDrop[0].filterVariant[0].data.type, field:fieldCalcDrop[0].filterVariant[0].data.field}));       
       else if(fieldCalcDrop.length>2)
-        dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:"Multiple",table:fieldCalcDrop[0].filterVariant[0].data.table, type: "Multiple"}));
+          dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:"Multiple",table:fieldCalcDrop[0].filterVariant[0].data.table, type: "Multiple"}));
       else 
-       dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:"None",table:"None"}));
+          dispatch(setValueSelectorInCalc({id:clickField.id, name: name , command: calcCommand, dropbox: fieldCalcDrop,columnId:"None",table:"None"}));
      }
   }
 
@@ -215,13 +209,10 @@ export default function FieldTab() {
     if(!clickField || !clickField.id) {
       return;
     }
-    if(clickField.id.includes("function"))
-    {
+    if(clickField.id.includes("function")){
       setCalcCommand(clickField.data.command);
       setName(clickField.data.header_name);
-    }
-    else
-    {
+    } else{
       setName(clickField.data.header_name);
       setType(clickField.data.type);  
     }
@@ -247,13 +238,24 @@ export default function FieldTab() {
     {
       const editor = aceEditorRef.current.editor;
       editor.focus(); // Set focus on the AceEditor component
-
       const selectionRange = editor.getSelectionRange(); 
       const selectedText = editor.getSession().getTextRange(selectionRange);
 
-        let updatedCommand = calcCommand.replace(selectedText, `{${index}}`);
+      let updatedCommand = calcCommand.replace(selectedText, `{${index}}`);
 
+      const session = editor.getSession();
+
+      const content = session.getValue();
       setCalcCommand(updatedCommand);
+
+      // console.log("updatedcommand")';'
+      // console.log(updatedCommand);
+      const endPosition = {
+        row: session.getLength() - 1,
+        column: content.length
+      };
+
+      editor.moveCursorToPosition(endPosition);
     }
   }
 
@@ -303,7 +305,6 @@ export default function FieldTab() {
         </Box>
         <Box className={classes.defBox}>
           <Grid sx={{marginTop: 2}} container>
-            
             {/* <Box>    
               <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' onChange={handleName}  />
              </Box> */}
@@ -334,7 +335,7 @@ export default function FieldTab() {
                   <CustomMenuItem value="max">Max of</CustomMenuItem>
                   <CustomMenuItem value="min">Min of</CustomMenuItem>
                   <CustomMenuItem value="avg">Average of</CustomMenuItem>
-                </CustomComboBox>                
+                </CustomComboBox> 
             </Grid>            
           </Grid>
         </Box>
