@@ -14,7 +14,7 @@ const useStyles = makeStyles()((theme) => {
       backgroundColor: '#eeeeee',
       // height: 'calc(100% - 20px)',
       height: '100%',
-      padding: '4px'
+      padding: '7px'
 //      borderRadius: 4,
 //      border: '1px #666666',
       // border: '1px solid #666666'

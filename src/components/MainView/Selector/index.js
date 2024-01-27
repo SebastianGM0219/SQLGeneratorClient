@@ -271,6 +271,7 @@ function Selector() {
       hader: ''
     };
     
+    console.log("unqiueArrray");
     newTree.forEach(newItem => {
       let count = 0;
       treeData.forEach(preItem => {
@@ -311,11 +312,17 @@ function Selector() {
 
 
     const uniqueArray = [...new Set(tableNameArray)];
+    console.log(uniqueArray);
     const old_uniqueArray = uniqueTable.split(',').map(item => item.trim());
     const diff = uniqueArray.filter(item => !old_uniqueArray.includes(item));
 
     if(uniqueArray.length>=2 && diff.length>0)
+    {
+      console.log("here_array");
+      console.log(uniqueArray);
+      console.log(diff);
       setRelation(uniqueArray,diff);
+    }
     if(!newData.includes(undefined) ){ //&& !duplicated
       const isUnique = uniqueArray.length===1?true:false;
 //      const uniqueTableName = uniqueArray.length===1?uniqueArray[0]: '';

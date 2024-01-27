@@ -333,7 +333,8 @@ function App() {
   
       if(edited || isCrossTab) query = codeSQL;*/
       let query = codeSQL;
-
+      console.log("app.jst");
+      console.log(query);
       const queryInfo= {
         query: query
       }
@@ -341,10 +342,13 @@ function App() {
       setIsLoading(true);
       dispatch(runQuery(queryInfo))
         .then(data => {
+          console.log("finaly");
+          console.log(data);
           dispatch(setSheetOpened(true));
           setIsLoading(false);
         })
         .catch(err => {
+          console.log(err);
           setOpenModal(true);
         })
     }

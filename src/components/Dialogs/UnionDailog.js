@@ -156,7 +156,7 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
               }
               <Container spacing={0} sx={{margin: 0, padding: 0}} maxWidth={'1920'} minHeight={'1000'}>
                 <Box sx={{marginBottom:1}}>
-                  <Button onClick={handleRun} size="small" sx={{paddingLeft: '15px',  height:'33.25px',fontSize: 12, borderColor: '#CCCCCC', color: 'gray', paddingRight: '15px', marginRight: '500px',marginLeft: '20px'}} color = 'inherit' variant="outlined"   ><WifiIcon sx={{marginRight: '10px'}} fontSize= 'small' />Run</Button>
+                  <Button onClick={handleRun} size="small" sx={{paddingLeft: '15px',  height:'33.25px',fontSize: 12, borderColor: '#CCCCCC', color: 'gray', paddingRight: '15px', display: 'flex', justifyContent: 'space-between'}} color = 'inherit' variant="outlined"   ><WifiIcon sx={{marginRight: '10px'}} fontSize= 'small' />Run</Button>
                   <FormControl>
                     <RadioGroup
                       row
@@ -174,19 +174,13 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
                 <Box className={classes.largeBoxStyle}>
                   <Grid container style={{ minHeight: 250 }}>
                     <Grid item md={3} className={classes.listBoxStyle}>
-                      {/* <Box sx={{height:'100%'}}> */}
-                          <CustomLeftTree queryName={queryName}/>
-                      {/* </Box> */}
+                      <CustomLeftTree queryName={queryName}/>
                     </Grid>
                     <Grid item md={3} className={classes.listBoxStyle}>
-                      {/* <Box sx={{height:'100%'}}> */}
-                          <CustomRightTree queryName={queryName}/>                                    
-                      {/* </Box> */}
+                       <CustomRightTree queryName={queryName}/>                                    
                     </Grid>
                     <Grid item md={6} className={classes.listBoxStyle}>
-                      {/* <Box sx={{height:'100%'}}> */}
-                          <UnionCodeView />
-                      {/* </Box> */}
+                      <UnionCodeView />
                     </Grid>
                   </Grid>
                   <Result sx={{position: 'fixed', bottom: 0}}/>

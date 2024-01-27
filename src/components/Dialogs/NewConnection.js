@@ -42,11 +42,11 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 const CustomSelect = styled(Select)(({ theme}) => ({
-  fontSize: 12,  // Set the width based on the 'width' prop
+  fontSize: 14,  // Set the width based on the 'width' prop
   height: '35px',  
   '& .MuiInputBase-input': {
     height: 0,
-    fontSize: 12
+    fontSize: 14
   },
   '& .MuiInputLabel-root': {
     fontSize: 12,
@@ -54,7 +54,7 @@ const CustomSelect = styled(Select)(({ theme}) => ({
   }
 }));
 const CustomInputLabel = styled(InputLabel)(({theme}) => ({
-  fontSize:'12px',
+  fontSize:'14px',
   marginTop:12,
 }));
 export default function NewConnection({ open, handleClose, handleConnect }) {
@@ -126,6 +126,9 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     setConnectMenu((prevMenu) => [...prevMenu, newName]);
     setSelectedName(newName); 
     setIndex( connectMenu.length);
+    const dbInfo_new = { username:"postgres", host:"localhost", password: "5432", port: "", db: ""};
+    setDbInfos(dbInfo_new);
+
     setNewButtonOpen(false);
   };
 
@@ -220,7 +223,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleOkayNewDailog} variant="contained" >Okay</Button>
+                <Button onClick={handleOkayNewDailog} variant="contained" >OK</Button>
                 <Button onClick={handleCloseNewDailog} variant="contained">Close</Button>
               </DialogActions>
             </Dialog>          

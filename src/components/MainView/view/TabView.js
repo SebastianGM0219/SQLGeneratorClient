@@ -131,7 +131,7 @@ export default function TabView() {
     selectFields.map((item, index) => {
         const { data: { table, field, header_name, aggreType,command,dropbox} } = item;
         let prev_name=`${table}.${field}`;
-        if(command === null && command === undefined)
+        if(command==null&&command==undefined)
         {
           if(aggreType !== "none")
             prev_name = `${aggreType}( ${prev_name} )`;
@@ -140,7 +140,7 @@ export default function TabView() {
           if(header_name === field)
             selectQuery+=`${prev_name}`;
           if(index !== selectFields.length-1)
-            selectQuery += ', \n       ';
+            selectQuery += ', \n';
         }
         else
         {
@@ -151,17 +151,16 @@ export default function TabView() {
               return dropbox[index-1].filterVariant[0].data.table+"."+ dropbox[index-1].filterVariant[0].data.field; // Replace {{1}} with data.body
             });
 //            updatedString = updatedString.replace(/\s/g, '');
-            let matchResult ;
+            let regex = /DAY\((.*?)\)/g;
+            let matchResult;
 
-            matchResult = updatedString.match(/DAY\((.*)\)/);            
-            if (matchResult && matchResult[1]) 
-            {
-              updatedString = updatedString.replace(/DAY\((.*)\)/, `EXTRACT(DAY FROM ${matchResult[1]})`);
+            while ((matchResult = regex.exec(updatedString)) !== null) {
+              const extractedValue = matchResult[1];
+              updatedString = updatedString.replace(matchResult[0], `EXTRACT(DAY FROM ${extractedValue})`);
             }
 
             matchResult = updatedString.match(/DATE_ADD\((.*)\)/)
-            if(matchResult && matchResult[1])
-            {
+            if(matchResult && matchResult[1]) {
               let extractedElements = matchResult[1].split(',');
               if(extractedElements[0]==="'second'" || 
                  extractedElements[0]==="'minute'" || 
@@ -171,10 +170,9 @@ export default function TabView() {
                  extractedElements[0]==="'month'" ||
                  extractedElements[0]==="'quarter'" ||
                  extractedElements[0]==="'year'" ||
-                 extractedElements[0]==="'millisecond'")                 
-              {
+                 extractedElements[0]==="'millisecond'") {
                 const isDate = !isNaN(Date.parse(extractedElements[2]));                
-                if(isDate && extractedElements[0] !== "'millisecond'")
+                if(isDate && extractedElements[0] !== "'millisecond'") 
                   extractedElements[2]= "DATE " + extractedElements[2];
                 if(isDate &&extractedElements[0] === "'millisecond'")
                   extractedElements[2]= "TIMESTAMP " + extractedElements[2];                
@@ -189,11 +187,17 @@ export default function TabView() {
               }
             }
 
-            matchResult = updatedString.match(/DATE_DIFF\((.*)\)/)
-            if(matchResult && matchResult[1])
-            {
-              let extractedElements = matchResult[1].split(',');
-              updatedString = updatedString.replace(/DATE_DIFF\((.*)\)/, `DATE_PART(${extractedElements[0]}, AGE(${extractedElements[1]},${extractedElements[2]}))`);
+            
+            // matchResult = updatedString.match(/DATE_DIFF\((.*?)\)/)
+            // if(matchResult && matchResult[1]) {
+            //   let extractedElements = matchResult[1].split(',');
+            //   updatedString = updatedString.replace(/DATE_DIFF\((.*)\)/, `DATE_PART(${extractedElements[0]}, AGE(${extractedElements[1]},${extractedElements[2]}))`);
+            // }
+
+            regex = /DATE_DIFF\((.*?)\)/g;
+            while ((matchResult = regex.exec(updatedString)) !== null) {
+                const extractedElements = matchResult[1].split(',');
+                updatedString = updatedString.replace(matchResult[0], `DATE_PART(${extractedElements[0]}, AGE(${extractedElements[1]},${extractedElements[2]}))`);
             }
 
             const formatStringMap = {
@@ -225,64 +229,103 @@ export default function TabView() {
               '%%': '%%',
             };
 
-            matchResult = updatedString.match(/DATE_FORMAT\((.*)\)/)
+            // matchResult = updatedString.match(/DATE_FORMAT\((.*)\)/)
 
-            if(matchResult && matchResult[1])
-            {
-              let extractedElements = matchResult[1].split(',');
+            // if(matchResult && matchResult[1]) {
+            //   let extractedElements = matchResult[1].split(',');
+            //   extractedElements[1] = extractedElements[1].replace(/'/g, '');
+            //   updatedString = updatedString.replace(/DATE_FORMAT\((.*)\)/, `TO_CHAR(${extractedElements[0]}::DATE, '${formatStringMap[extractedElements[1]]}')`);
+            // }
+            regex = /DATE_FORMAT\((.*?)\)/g;
+
+            while ((matchResult = regex.exec(updatedString)) !== null) {
+              const extractedElements = matchResult[1].split(',');
               extractedElements[1] = extractedElements[1].replace(/'/g, '');
-              updatedString = updatedString.replace(/DATE_FORMAT\((.*)\)/, `TO_CHAR(${extractedElements[0]}::DATE, '${formatStringMap[extractedElements[1]]}')`);
+              const newFormat = formatStringMap[extractedElements[1]];
+              updatedString = updatedString.replace(matchResult[0], `TO_CHAR(${extractedElements[0]}::DATE, '${newFormat}')`);
             }
-              matchResult = updatedString.match(/EOMONTH\((.*)\)/)
 
-            if(matchResult && matchResult[1])
-            {
-              let extractedElements = matchResult[1].split(',');
+
+            // matchResult = updatedString.match(/EOMONTH\((.*)\)/)
+
+            // if(matchResult && matchResult[1]) {
+            //   let extractedElements = matchResult[1].split(',');
+            //   extractedElements[1] = extractedElements[1].replace(/'/g, '');
+            //   updatedString = updatedString.replace(/EOMONTH\((.*)\)/, `DATE_TRUNC('MONTH', ${extractedElements[0]}::date) + INTERVAL '1 MONTH - 1 DAY' * ${extractedElements[1]} `);
+            // }
+
+            regex = /EOMONTH\((.*?)\)/g;
+
+            while ((matchResult = regex.exec(updatedString)) !== null) {
+              const extractedElements = matchResult[1].split(',');
               extractedElements[1] = extractedElements[1].replace(/'/g, '');
-              updatedString = updatedString.replace(/EOMONTH\((.*)\)/, `DATE_TRUNC('MONTH', ${extractedElements[0]}::date) + INTERVAL '1 MONTH - 1 DAY' * ${extractedElements[1]} `);
+              updatedString = updatedString.replace(matchResult[0], `DATE_TRUNC('MONTH', ${extractedElements[0]}::date) + INTERVAL '1 MONTH - 1 DAY' * ${extractedElements[1]}`);
             }
-              matchResult = updatedString.match(/MONTH\((.*)\)/);            
+            
+            // matchResult = updatedString.match(/MONTH\((.*)\)/);            
 
-            if (matchResult && matchResult[1]) 
-            {
-              updatedString = updatedString.replace(/MONTH\((.*)\)/, `EXTRACT(MONTH FROM ${matchResult[1]})`);
+            // if (matchResult && matchResult[1]) {
+            //   updatedString = updatedString.replace(/MONTH\((.*)\)/, `EXTRACT(MONTH FROM ${matchResult[1]})`);
+            // }
+
+            regex = /MONTH\((.*?)\)/g;
+            
+            while ((matchResult = regex.exec(updatedString)) !== null) {
+              const extractedValue = matchResult[1];
+              updatedString = updatedString.replace(matchResult[0], `EXTRACT(MONTH FROM ${extractedValue})`);
             }
-              matchResult = updatedString.match(/YEAR\((.*)\)/);            
-            if (matchResult && matchResult[1]) 
-            {
-              updatedString = updatedString.replace(/YEAR\((.*)\)/, `EXTRACT(YEAR FROM ${matchResult[1]})`);
+
+            // matchResult = updatedString.match(/YEAR\((.*)\)/);            
+
+            // if (matchResult && matchResult[1]){
+            //   updatedString = updatedString.replace(/YEAR\((.*)\)/, `EXTRACT(YEAR FROM ${matchResult[1]})`);
+            // }
+
+            regex = /YEAR\((.*?)\)/g;
+            
+            while ((matchResult = regex.exec(updatedString)) !== null) {
+              const extractedValue = matchResult[1];
+              updatedString = updatedString.replace(matchResult[0], `EXTRACT(YEAR FROM ${extractedValue})`);
             }
-              matchResult = updatedString.match(/QUARTER\((.*)\)/);
-            if (matchResult && matchResult[1]) 
-            {
-              updatedString = updatedString.replace(/QUARTER\((.*)\)/, `EXTRACT(QUARTER FROM ${matchResult[1]})`);
+
+
+            // matchResult = updatedString.match(/QUARTER\((.*)\)/);
+
+            // if (matchResult && matchResult[1]){
+            //   updatedString = updatedString.replace(/QUARTER\((.*)\)/, `EXTRACT(QUARTER FROM ${matchResult[1]})`);
+            // }
+
+            regex = /QUARTER\((.*?)\)/g;
+            
+            while ((matchResult = regex.exec(updatedString)) !== null) {
+              const extractedValue = matchResult[1];
+              updatedString = updatedString.replace(matchResult[0], `EXTRACT(QUARTER FROM ${extractedValue})`);
             }
-              updatedString += " as ";
-              updatedString += header_name;
+
+            updatedString += " as ";
+            updatedString += header_name;
             if(index !== selectFields.length-1)
-              selectQuery += updatedString+ ", \n       ";         
+              selectQuery += updatedString+ ", \n";         
             else
               selectQuery += updatedString;
           }         
         }
-        return undefined;
     })
-    let groupByQuery = 'GROUP BY';
 
-    //GROUPBY
+    let groupByQuery = 'GROUP BY';
     let isGroupBy = 0;
+
     selectFields.map((item, index) => {
       const { data: {aggreType} } = item;
       if(aggreType !== 'none')
       isGroupBy = 1;
     });
 
-    if(isGroupBy)
-    {
+    if(isGroupBy) {
       let cnt=0;
       selectFields.map((item, index) => {
         const { data: { table, field, aggreType} } = item;        
-        if (aggreType === 'none' && field !== 'None') {
+        if (aggreType == 'none' && field!=='None') {
           let string = ' '+table+'.'+field;
           groupByQuery += string;
           groupByQuery += ',';
@@ -295,20 +338,19 @@ export default function TabView() {
 //      selectQuery += groupByQuery;
     }
 
-
     if (isCrossTab) {
       selectQuery = 'SELECT ';
       crosstabSelectors.map((item, index) => {
         const { data: { table, field } } = item;
         selectQuery += `${table}.${field}`;
-        selectQuery += ', \n       ';
+        selectQuery += ', \n';
         if (crosstabValues[0].id !== 'none') {
           let string = ' '+table+'.'+field;
           if(index < crosstabSelectors.length) 
             groupByQuery += string;
           if(index < crosstabSelectors.length-1)
             groupByQuery += ',';
-          if(index === crosstabSelectors.length-1 && crosstabValues[0].id !== 'none')
+          if(index == crosstabSelectors.length-1 && crosstabValues[0].id !== 'none')
             groupByQuery += ',';
         }
       });
@@ -316,7 +358,7 @@ export default function TabView() {
       if(crosstabColumns[0].id !== 'none'){
         const { data: { table, field } } = crosstabColumns[0];
         selectQuery += `${table}.${field}`;
-        selectQuery += ', \n       ';
+        selectQuery += ', \n';
         if (crosstabValues[0].id !== 'none') {
           let string = ' '+table+'.'+field;
           groupByQuery += string;
@@ -348,6 +390,7 @@ export default function TabView() {
     });
 
     let sortQuery = "ORDER BY";
+
     sortFields.forEach((item, index) => {
         sortQuery += ` ${item.table}.${item.field} ${item.sortType}`
         if(index !== sortFields.length-1) sortQuery+=',';
@@ -427,7 +470,9 @@ export default function TabView() {
     } else {
       setDefaultList(query);
     }
-
+    dispatch(setCodeSQL(query));
+    console.log("dispatch");
+    console.log(query);
     const queryInfo= {
       query: query
     }
