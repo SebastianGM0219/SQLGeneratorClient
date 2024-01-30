@@ -141,6 +141,7 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
             value={filter}
             onChange={handleChange}
             placeholder='Search'
+            style={{marginBottom: '15px'}}
             autoFocus  
           />
           <Box className={classes.boxStyle} >

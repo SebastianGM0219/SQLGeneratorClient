@@ -17,6 +17,7 @@ const useStyles = makeStyles()((theme) => {
       padding: 2,
       border: '1px solid #b6b6b6',
       borderRadius: 4,
+      marginBottom: 4,
       background: 'white',
       position: 'relative',
       '&:hover': {

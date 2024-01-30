@@ -17,10 +17,12 @@ import Select from '@mui/material/Select';
 import Cookies from 'js-cookie';
 import {getTables, addUpdateItem} from '../../slices/table';
 import CloseIcon from '@mui/icons-material/Close';
+import { Snackbar, Alert } from '@mui/material';
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
   fontSize: 12,
   marginTop: 1,
+  // pointerEvents: 'none',
   '& .MuiInputBase-input': {
     height: 0,
     fontSize: 14
@@ -77,11 +79,20 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const [selectedName, setSelectedName] = useState(""); 
   const dispatch = useDispatch();
   const [error, setError] = React.useState(false);
+  const [empty, SetEmpty] = React.useState(true);
+  const [saveOpen, setSaveOpen] = React.useState(false);
+  const [disableParam, setDisableParam] = React.useState(initmenu.length>0? false: true);
 //  const dbInfo = useSelector(state => state.database.dbInfo);
   useEffect(() => {
     localStorage.setItem('dbQuery',"");
+
   }, []);  
 
+  useEffect(()=>{
+    console.log("changed");
+    console.log(connectMenu);
+    setDisableParam(connectMenu.length>0? false: true);
+  },[connectMenu]);
   const changeNameHandler = e => {
     setNewName(e.target.value);
   //  setDbInfos({...dbInfos, [e.target.name]: e.target.value})
@@ -127,9 +138,8 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     setConnectMenu((prevMenu) => [...prevMenu, newName]);
     setSelectedName(newName); 
     setIndex( connectMenu.length);
-    const dbInfo_new = { username:"postgres", host:"localhost", password: "5432", port: "", db: ""};
+    const dbInfo_new = { username:"postgres", host:"localhost", port: "5432", password: "password", db: ""};
     setDbInfos(dbInfo_new);
-
     setNewButtonOpen(false);
   };
 
@@ -166,7 +176,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const handleSaveNewDailog = () => {
     if(isUserNameValid()||isHostValid()||isPasswordValid()||isPortValid()||isDbValid()) {
       setError(true);      
-    } else {
+    } else {  
       const newvalue = {
         ...dbInfos,      connectname: selectedName
       };
@@ -179,11 +189,10 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         }
         return item;
       });
-
       if (!found) {
         newArray.push(newvalue); // If not found, push new value to array
       }
-
+      setSaveOpen(true);
       Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
     }
   }
@@ -203,10 +212,10 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         </IconButton>
 
       <DialogContent width={600} >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px'}}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
           <CustomButton variant="outlined" sx={{marginLeft: '2px'}} onClick={handleNewDailog}>New</CustomButton>
             <Dialog open={newButtonOpen} onClose={handleCloseNewDailog} disableRestoreFocus>
-              <DialogTitle>New Connection</DialogTitle>
+              <DialogTitle>Connect to PostgreSQL Host</DialogTitle>
               <DialogContent>
                 <CustomTextField
                   style={{width:300}}
@@ -228,19 +237,21 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
                 <Button onClick={handleOkayNewDailog} style={{marginRight:16}} variant="contained" >OK</Button>
               </DialogActions>
             </Dialog>          
-          <CustomButton onClick={handleSaveNewDailog} variant="outlined">Save</CustomButton>
+          <CustomButton onClick={handleSaveNewDailog} disabled={disableParam} variant="outlined">Save</CustomButton>
           {/* <CustomButton variant="outlined">Rename</CustomButton> */}
-          <CustomButton variant="outlined" onClick={handleDeleteNewDailog} >Delete</CustomButton>   
+          <CustomButton variant="outlined" disabled={disableParam} onClick={handleDeleteNewDailog} >Delete</CustomButton>   
         </div> 
         <div style={{  alignItems: 'center', paddingLeft: '4px'}}>
         <CustomInputLabel id="saved-connection-label" >Saved Connection</CustomInputLabel>
         <FormControl variant="outlined" fullWidth>
           <CustomSelect
+            disabled={disableParam}
             placeholder="Host Address"
             labelId="saved-connection-label"
             value={index}
             defaultValue={index}
             onChange={handleMenuChange}
+          
           >
             {connectMenu.map((item, index) => (
               <MenuItem key={index} value={index}>{item}</MenuItem>
@@ -250,6 +261,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomInputLabel id="saved-connection-label" >Host Address</CustomInputLabel>
         <CustomTextField
           autoFocus
+          disabled={disableParam}
           value={dbInfos.host}
           name="host"
           placeholder=""
@@ -265,6 +277,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomInputLabel id="saved-connection-label">Username</CustomInputLabel>
         <CustomTextField
           name="username"
+          disabled={disableParam}
           value={dbInfos.username}
           // placeholder="Username"
           error={error && isUserNameValid()}
@@ -279,6 +292,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomInputLabel id="saved-connection-label" >Password</CustomInputLabel>        
         <CustomTextField
           name="password"
+          disabled={disableParam}
           // placeholder="Password"
           value={dbInfos.password}
           type="text"
@@ -294,19 +308,20 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomTextField
           name="port"
           value={dbInfos.port}
+          disabled={disableParam}
           // placeholder="Port"
           type="text"
           error={error && isPortValid()}
           helperText={error && isPortValid()
             ? 'You have to input Username'
             : ''}
-
           fullWidth
           variant="outlined"
           onChange={changeHandler}
         />
-        <CustomInputLabel id="saved-connection-label" >DateBase Name</CustomInputLabel>                
+        <CustomInputLabel id="saved-connection-label" >DataBase Name</CustomInputLabel>                
         <CustomTextField
+          disabled={disableParam}          
           name="db"
           // placeholder="Database Name"
           type="text"
@@ -327,6 +342,12 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <Button variant="contained" style={{marginBottom: 20}}  onClick={handleClose}>Cancel</Button>
         <Button variant="contained" style={{marginRight:14,marginBottom: 20}} onClick={handleClick}>Connect</Button>
       </DialogActions>
+
+      <Snackbar open={saveOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={100} >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Database saved correctly.
+        </Alert>
+      </Snackbar>
     </Dialog>   
   );
 }
