@@ -91,7 +91,9 @@ export default function DropComponent() {
               <ul style={{ listStyleType: "none" }}>
                 <li className={classes.eventItem}>
                   <Box sx={{height: 24}}>
-                    {0 != relation.RTable.length  && <CloseIcon className={classes.iconStyle} onClick={(event) => handleJoinRemove(event, index)}/>}
+                    {index !== 0 && <CloseIcon className={classes.iconStyle} onClick={(event) => handleJoinRemove(event, index)}/>}
+
+                    {/* {0 != relation.RTable.length  && <CloseIcon className={classes.iconStyle} onClick={(event) => handleJoinRemove(event, index)}/>} */}
                   </Box>
                 </li>
                 {
@@ -100,8 +102,8 @@ export default function DropComponent() {
                       {i != relation.RFields.length - 1 && <CloseIcon className={classes.iconStyle} onClick={(event) => handleRemove(event, i, index)}/>}
                       {i == relation.RFields.length - 1 && (
                       <>
-                        <Button className={classes.btnStyle} onClick={(event) => handleClick(event, index)}>Add Field</Button>          
                         <CloseIcon className={classes.iconStyle} onClick={(event) => handleRemove(event, i, index)}/>
+                        <Button className={classes.btnStyle} onClick={(event) => handleClick(event, index)}>Add Field</Button>          
                       </>
                       )}                      
                     </li>
