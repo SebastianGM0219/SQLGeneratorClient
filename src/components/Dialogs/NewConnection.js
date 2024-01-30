@@ -125,8 +125,25 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const handleClick = e => {
     if(isUserNameValid()||isHostValid()||isPasswordValid()||isPortValid()||isDbValid()){
       setError(true);      
-    } else {
- 
+    } else {      
+      const newvalue = {
+        ...dbInfos,      connectname: selectedName
+      };
+
+      let found = false;          
+      let newArray = initialDbInfosArray.map((item) => {
+        if (item.connectname === newvalue.connectname) {
+          found = true;
+          return newvalue; // Update the array with the new value
+        }
+        return item;
+      });
+      if (!found) {
+        newArray.push(newvalue); // If not found, push new value to array
+      }
+      setSaveSnackOpen(true);
+      Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+
       dispatch(initAllDatabaseTable());
       dispatch(saveDbInformation({dbInfo:dbInfos}));
       dispatch(getTables());
@@ -134,6 +151,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       dispatch(initAllUtility());
       dispatch(initAllTable());
       handleConnect(dbInfos);
+      setSaveSnackOpen(false);
     }
   }
   const handleSaveClose = () => {
