@@ -181,7 +181,7 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
                           case 'Text':
                             IconComponent = <FontAwesomeIcon icon={faQuoteRight} size="1x" className={classes.iconStyle}/>;
                             break;
-                          case 'Number':
+                          case 'Integer':
                             IconComponent = <FontAwesomeIcon icon={faList12} size="1x" className={classes.iconStyle}/>;
                             break;
                           case 'Date':
