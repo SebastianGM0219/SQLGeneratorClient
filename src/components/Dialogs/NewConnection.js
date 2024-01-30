@@ -20,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
   fontSize: 12,
+  marginTop: 1,
   '& .MuiInputBase-input': {
     height: 0,
     fontSize: 14
@@ -188,15 +189,15 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   }
 
   return (  
-    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:10, paddingTop:20, paddingBottom:10} }}>
-      <DialogTitle sx={{marmarginBottom: '15px'}}>
-        New Connection
+    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:10} }}>
+      <DialogTitle sx={{marginLeft: '3px'}}>
+         New Connection
       </DialogTitle>
       <IconButton
           edge="end"
           color="inherit"
           onClick={handleClose}
-          style={{ position: 'absolute', right:43, top: 30 }}
+          style={{ position: 'absolute', right:40, top: 30 }}
         >
           <CloseIcon />
         </IconButton>
@@ -204,7 +205,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       <DialogContent width={600} >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px'}}>
           <CustomButton variant="outlined" sx={{marginLeft: '2px'}} onClick={handleNewDailog}>New</CustomButton>
-            <Dialog open={newButtonOpen} onClose={handleCloseNewDailog}>
+            <Dialog open={newButtonOpen} onClose={handleCloseNewDailog} disableRestoreFocus>
               <DialogTitle>New Connection</DialogTitle>
               <DialogContent>
                 <CustomTextField
@@ -219,12 +220,12 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
                   type="text"
                   fullWidth
                   variant="outlined"
-
+                  autoFocus
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleOkayNewDailog} variant="contained" >OK</Button>
-                <Button onClick={handleCloseNewDailog} variant="contained">Close</Button>
+                <Button onClick={handleCloseNewDailog}  variant="contained">Close</Button>
+                <Button onClick={handleOkayNewDailog} style={{marginRight:16}} variant="contained" >OK</Button>
               </DialogActions>
             </Dialog>          
           <CustomButton onClick={handleSaveNewDailog} variant="outlined">Save</CustomButton>
@@ -324,7 +325,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       </DialogContent>
       <DialogActions>
         <Button variant="contained" style={{marginBottom: 20}}  onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" style={{marginRight:14,marginBottom: 20}}onClick={handleClick}>Connect</Button>
+        <Button variant="contained" style={{marginRight:14,marginBottom: 20}} onClick={handleClick}>Connect</Button>
       </DialogActions>
     </Dialog>   
   );

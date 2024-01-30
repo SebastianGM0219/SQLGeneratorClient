@@ -35,7 +35,10 @@ const useStyles = makeStyles()((theme) => {
     },
     iconKey: {
       color: '#006fdd'
-    }
+    },
+    iconView: {
+      color: '#FFE300'
+    },
   };
 })
 export const TypeIcon = (props) => {
@@ -57,6 +60,8 @@ export const TypeIcon = (props) => {
       return <FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconTlue}/>;
     case "List":
       return <FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconTlue} />;
+    case "View":
+        return <FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconView} />;        
     case "None":
       return <FontAwesomeIcon icon={faCircleMinus} size="1x" className={classes.iconTlue} />;
     case "Multiple":  

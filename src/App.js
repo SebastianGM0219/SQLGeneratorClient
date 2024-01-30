@@ -521,7 +521,6 @@ function App() {
       crosstabValues.map((item) => {
         const { data: { table, field } } = item;
         let string = `COUNT(${table}.${field})`
-        cSelectQuery+=string;
       })
     }
     
