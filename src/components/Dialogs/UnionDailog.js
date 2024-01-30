@@ -134,7 +134,7 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
           <CloseIcon />
           </IconButton>        
         </DialogTitle>
-        <DialogContent> 
+        <DialogContent sx={{paddingBottom: '45px'}}> 
           <Box width = {1240}  >
              {isLoading && 
                 <div className={classes.loadingBox}>
