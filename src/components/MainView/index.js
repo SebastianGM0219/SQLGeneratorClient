@@ -33,7 +33,7 @@ const useStyles = makeStyles()((theme) => {
       padding: 0
     },
     restHeight: {
-      height: 'calc(100% - 28px)'
+      height: 'calc(100% - 50px)'
     }
   };
 })
@@ -68,7 +68,7 @@ export default function MainView() {
           </ToggleButtonGroup>
         </Box>
       </Box>
-      <Box  className={classes.restHeight}>
+      <Box sx={{display: "flex", flexDirection: "column", height: 700, overflow: "hidden", overflowY: "scroll"}} className={classes.restHeight}>
          {alignment==="builder" && <TabView />}
          {alignment!=="builder" && <CodeView />}
       </Box>      
