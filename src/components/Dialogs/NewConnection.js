@@ -56,10 +56,19 @@ const CustomSelect = styled(Select)(({ theme}) => ({
     transform: 'translate(14px, 19px) scale(1)'
   }
 }));
+
 const CustomInputLabel = styled(InputLabel)(({theme}) => ({
-  fontSize:'14px',
-  marginTop:12,
+  fontSize: '14px',
+  marginTop: 12,
 }));
+
+const CustomDialogTitle = styled(DialogTitle)(({theme}) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center'
+}));
+
+
 export default function NewConnection({ open, handleClose, handleConnect }) {
   const sessionDbInfos = Cookies.get('dbInfos');
   const initialDbInfosArray = sessionDbInfos ? JSON.parse(sessionDbInfos):[];
@@ -199,18 +208,17 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
 
   return (  
     <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:10} }}>
-      <DialogTitle sx={{marginLeft: '3px'}}>
-         New Connection
-      </DialogTitle>
-      <IconButton
+      <CustomDialogTitle sx={{marginLeft: '3px'}}>
+        New Connection
+        <IconButton
           edge="end"
           color="inherit"
           onClick={handleClose}
-          style={{ position: 'absolute', right:40, top: 30 }}
         >
           <CloseIcon />
         </IconButton>
-
+      </CustomDialogTitle>
+      
       <DialogContent width={600} >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
           <CustomButton variant="outlined" sx={{marginLeft: '2px'}} onClick={handleNewDailog}>New</CustomButton>
