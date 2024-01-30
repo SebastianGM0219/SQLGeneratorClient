@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://sql-generator-server.vercel.app/"
+  baseURL: "http://192.168.145.80:4000/"
 });
