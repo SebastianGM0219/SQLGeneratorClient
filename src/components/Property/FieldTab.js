@@ -20,10 +20,12 @@ import clsx from 'clsx';
 import FuncDropDownMenu from '../common/FuncDropDownMenu';
 import FieldDropBox from './FieldDrop/FieldDropBox';
 import AceEditor from "react-ace";
+import { useState,useEffect } from 'react';
 import { setIsUnique, setUniqueTable, setFuncIndex } from "../../slices/utility";
 import "ace-builds/src-noconflict/mode-mysql";
 import "ace-builds/src-noconflict/theme-textmate";
 import "ace-builds/src-noconflict/ext-language_tools";
+import zIndex from '@mui/material/styles/zIndex';
 //import  {updateItem}  from '../../slices/savedata'; // Import the setDuplicateState action from the duplicate slice
 
 const useStyles = makeStyles()((theme) => {
@@ -82,8 +84,13 @@ const useStyles = makeStyles()((theme) => {
       marginTop: 8,
       marginLeft: -6
     },
+    ScrollClass: {
+      '& .ace_scrollbar-h':{
+        zIndex: 1
+      }
+    }
   }
-});
+});     
 const QueryInput = styled(InputBase)(({ theme }) => ({
   width: '100%',
   '& .MuiInputBase-input': {
@@ -161,6 +168,24 @@ export default function FieldTab() {
 // Dispatch an action to update the state of the duplicate slice with the state from the first slice
   const dispatch = useDispatch();
   const aceEditorRef = React.useRef(null); // Create a reference to the AceEditor component
+
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolling(true);
+      } else {
+        setIsScrolling(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleAggreChange = (e) => {
     setAggreType(e.target.value);
@@ -362,7 +387,8 @@ export default function FieldTab() {
           </Box> 
           <Box>
             <AceEditor
-             width={400} height={200}
+                className={classes.ScrollClass}                
+                width={400} height={200}
                 placeholder="null"
                 mode="mysql"
                 theme="textmate"
