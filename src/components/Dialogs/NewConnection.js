@@ -81,6 +81,8 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const [error, setError] = React.useState(false);
   const [empty, SetEmpty] = React.useState(true);
   const [saveOpen, setSaveOpen] = React.useState(false);
+  const [saveSnackOpen, setSaveSnackOpen] = React.useState(false);
+
   const [disableParam, setDisableParam] = React.useState(initmenu.length>0? false: true);
 //  const dbInfo = useSelector(state => state.database.dbInfo);
   useEffect(() => {
@@ -125,7 +127,13 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       handleConnect(dbInfos);
     }
   }
+  const handleSaveClose = () => {
+    // if (reason === 'clickaway') {
+    //   return;
+    // }
 
+    setSaveSnackOpen(false);
+  };
   const handleNewDailog = () => {
     setNewButtonOpen(true);
   };
@@ -192,7 +200,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       if (!found) {
         newArray.push(newvalue); // If not found, push new value to array
       }
-      setSaveOpen(true);
+      setSaveSnackOpen(true);
       Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
     }
   }
@@ -339,11 +347,11 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
        
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" style={{marginBottom: 20}}  onClick={handleClose}>Cancel</Button>
+        <Button variant="contained" style={{marginBottom: 20}}  onClick={handleSaveClose}>Cancel</Button>
         <Button variant="contained" style={{marginRight:14,marginBottom: 20}} onClick={handleClick}>Connect</Button>
       </DialogActions>
 
-      <Snackbar open={saveOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={100} >
+      <Snackbar open={saveSnackOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={1000} onClose={handleSaveClose} >
         <Alert severity="success" sx={{ width: '100%' }}>
           Database saved correctly.
         </Alert>
