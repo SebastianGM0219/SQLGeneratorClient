@@ -60,10 +60,10 @@ export default function CreateViewDialog({ open, handleCreateViewClose, SaveView
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={handleClose} variant="contained">
             Close
           </Button>
-          <Button onClick={SaveClick}>
+          <Button onClick={SaveClick} variant="contained">
             Save
           </Button>
         </DialogActions>
