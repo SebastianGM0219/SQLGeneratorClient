@@ -31,6 +31,9 @@ const useStyles = makeStyles()((theme) => {
     iconTlue: {
       color: '#41d7d5'
     },
+    iconView: {
+      color: '#FFE300'
+    },
     iconKey: {
       color: '#006fdd'
     }
@@ -38,6 +41,8 @@ const useStyles = makeStyles()((theme) => {
 })
 export const TypeIcon = (props) => {
   const { classes } = useStyles();
+  console.log(props.fileType);
+  
   switch (props.fileType) {
     case "Date":
       return <FontAwesomeIcon icon={faCalendarDays} size="1x" className={classes.iconBrown}/>;
@@ -51,6 +56,8 @@ export const TypeIcon = (props) => {
       return <FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconTlue}/>;
     case "List":
       return <FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconTlue} />;
+    case "View":
+      return <FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconView} />;
     case "Key":
       return <FontAwesomeIcon icon={faKey} size="1x" className={classes.iconKey} />;
       default:

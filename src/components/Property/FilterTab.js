@@ -49,10 +49,8 @@ export default function FilterTab() {
   const [parameter, setParameter] = React.useState('');
   const [isParameter, setIsParameter] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
-
   const filterFields = useSelector(state => state.query.filterFields);
   const parameters = useSelector(state => state.utility.parameters);
-
   const dispatch = useDispatch();
 
   const handleParameter = (value, isParam) => {

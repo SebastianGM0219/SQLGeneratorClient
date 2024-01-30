@@ -119,20 +119,20 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
         onClose={handleAddTableClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{  style: { width:900, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:10} }}        
         disableRestoreFocus
       >
        <IconButton
           edge="end"
           color="inherit"
           onClick={handleClose}
-          style={{ position: 'absolute', right:23, top: 10 }}
+          style={{ position: 'absolute', right:43, top: 30 }}
         >
           <CloseIcon />
         </IconButton>
         <DialogTitle>Add Table Data
-        </DialogTitle>
-        <DialogContent>
-          <Box width={540} Height={400}>
+        </DialogTitle>        <DialogContent width={600}> 
+          <Box >
           <SearchTextField
             id="outlined-start-adornment"
             InputProps={{
