@@ -29,6 +29,8 @@ const FilterTextField = styled(TextField)(({ theme }) => ({
 export default function FilterValue({index, type, value, disabled}) {
   const dispatch = useDispatch();
   const curColumn = useSelector(state => state.query.filterFields[index]);
+  const selectedColumn = useSelector(state => state.utility.currentColumn);
+  const [isFocused, setIsFocused] = React.useState(false)
 
   let initialValue = "Empty String";
   if(value.isParam && value.parameter !== "") {
@@ -47,7 +49,15 @@ export default function FilterValue({index, type, value, disabled}) {
     }
     else cInitialValue = filterValue.default;
     setText(cInitialValue)
-  }, [curColumn]);
+
+    if(curColumn.filterVariant.length != 0) {
+      if(curColumn.filterVariant[0].data.table == selectedColumn.source && curColumn.filterVariant[0].data.field == selectedColumn.column) {
+        setIsFocused(true);
+      } else {
+        setIsFocused(false);
+      }
+    }
+  }, [curColumn, selectedColumn]);
 
   const handleFocus = (e) => {
     dispatch(setCurTab(1));
@@ -66,7 +76,13 @@ export default function FilterValue({index, type, value, disabled}) {
 
   return (
     <Box>
-      <FilterTextField onFocus={handleFocus} value={text} disabled={disabled}/>
+      {
+        isFocused ? 
+          <FilterTextField onFocus={handleFocus} value={text} disabled={disabled} focused/> 
+          :
+          <FilterTextField onFocus={handleFocus} value={text} disabled={disabled} /> 
+      }
+
     </Box>
   )
 }
