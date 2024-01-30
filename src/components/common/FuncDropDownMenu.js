@@ -6,7 +6,7 @@ import 'rsuite/dist/rsuite.min.css';
 import { makeStyles  } from 'tss-react/mui';
 import { alpha, styled } from '@mui/material/styles';
 import { Dropdown, ButtonToolbar, Popover, IconButton } from 'rsuite';
-import ArrowDownIcon from '@rsuite/icons/ArrowDown';
+import {ArrowDownIcon, ArrowRight} from '@rsuite/icons';
 import PlusIcon from '@rsuite/icons/Plus';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useDispatch, useSelector } from "react-redux";
@@ -209,19 +209,19 @@ const subButton = (props, ref) => {
       onMouseLeave={(e) => { e.target.style.backgroundColor = 'white' }}
     >
       {props.name}  
-      {/* <span
+      <span
         style={{
           position: 'absolute',
           right: '10px',
-          top: '50%',
-          transform: 'translateY(-100%) rotate(45deg)',
+          top: '62%',
+          transform: 'translateY(-100%) rotate(-45deg)',
           width: '0',
           height: '0',
           borderTop: '6px solid transparent',
           borderRight: '6px solid gray', // Changed border color to gray
           borderLeft: '6px solid transparent',
         }}
-      /> */}
+      />
     </button>
   );
 };
@@ -351,7 +351,7 @@ const FuncDropDownMenu = (props) => {
   }
   return (
     <Dropdown  renderToggle={renderButton}  placement="bottomEnd"> 
-      <Dropdown  renderToggle={(props) => subButton({ ...props, name: "Conversions" })}  trigger="hover"  placement="leftStart"  onSelect={handleSelect}> 
+      <Dropdown renderToggle={(props) => subButton({ ...props, name: "Conversions" })}  trigger="hover"  placement="leftStart"  onSelect={handleSelect}> 
             {DropItems}
       </Dropdown>
       <Dropdown  renderToggle={(props) => subButton({ ...props, name: "Strings" })}  trigger="hover"  placement="leftStart" onSelect={handleSelect}> 
