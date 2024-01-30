@@ -33,7 +33,7 @@ const useStyles = makeStyles()((theme) => {
       padding: 0
     },
     restHeight: {
-      height: 'calc(100% - 50px)'
+      height: 'calc(100% - 55px)'
     }
   };
 })

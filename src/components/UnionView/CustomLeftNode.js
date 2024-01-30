@@ -14,6 +14,7 @@ const useStyles = makeStyles()((theme) => {
     },
     itemStyle: {
       padding: 2,
+      marginTop: '10px',
       border: '1px solid #b6b6b6',
       borderRadius: 4,
       background: 'white',
