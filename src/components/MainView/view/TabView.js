@@ -136,7 +136,7 @@ export default function TabView() {
           if(aggreType !== "none")
             prev_name = `${aggreType}( ${prev_name} )`;
           if(header_name !== field)
-            selectQuery+=`${prev_name} as ${header_name} `;
+            selectQuery+=`${prev_name} as "${header_name}" `;
           if(header_name === field)
             selectQuery+=`${prev_name}`;
           if(index !== selectFields.length-1)
