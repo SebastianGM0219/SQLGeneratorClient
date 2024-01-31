@@ -546,7 +546,10 @@ function App() {
         setIsLoading(false);
       })
       .catch(err => {
-        console.log(err);
+        console.log("run query faild" + err);
+
+        setIsLoading(false);
+
         setOpenModal(true);
       })
     setParamDialog(false);
