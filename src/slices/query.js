@@ -606,11 +606,14 @@ export const querySlice = createSlice({
     },
     removeSelector: (state, action) => {
       const { id } = action.payload;
-      const find = state.selectFields.filter(item => item.id === id);
-      const jsonData = JSON.stringify(find);
-      const parsedData = JSON.parse(jsonData);
-      const tableValue = parsedData[0].data.table;
-      const relation = state.relationFields.filter(item => item.RTable[0] !== tableValue && item.LTable[0] !== tableValue);      
+      // const find = state.selectFields.filter(item => item.id === id);
+      // const jsonData = JSON.stringify(find);
+      // const parsedData = JSON.parse(jsonData);
+      // const tableValue = parsedData[0].data.table;
+      const newState_filter = state.selectFields.filter(item => item.id !== id).map(item => item.data.table);
+      const uniqueArray = [...new Set(newState_filter)];
+  
+      const relation = state.relationFields.filter(item => uniqueArray.includes(item.RTable[0])  && uniqueArray.includes(item.LTable[0]) );      
       const newState = state.selectFields.filter(item => item.id !== id);
       
       console.log("removeSelector");

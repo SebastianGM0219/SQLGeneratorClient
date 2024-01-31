@@ -113,10 +113,10 @@ export const SelectorNode = (props) => {
     const newState = items.filter(item => item.id !== id).map(item => item.data.table);
     const uniqueArray = [...new Set(newState)];
     const uniqueTableName = uniqueArray.join(' , ');
+    console.log("========unqiueTableName============");
+    console.log(uniqueTableName);
     dispatch(setUniqueTable(uniqueTableName));
     dispatch(removeSelector({id}));
-
-
   }
   
   const handleProperty = (e) => {
