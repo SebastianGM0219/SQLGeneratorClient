@@ -122,9 +122,9 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} disableRestoreFocus minWidth={1300} maxWidth={1300}> 
+    <Dialog open={open} onClose={handleClose} disableRestoreFocus PaperProps={{  style: { minWidth: 1300, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:0} }}> 
         <Modal open={openModal} param={{title: 'Failed', content: 'An error occured!'}} handleClose={handleCloseModal}/>
-        <DialogTitle  sx={{paddingLeft: '50px',borderBottom: '1px',paddingBottom:'5px',fontSize:'27px'}}>Build Union
+        <DialogTitle  sx={{paddingLeft: '50px',borderBottom: '1px',paddingBottom:'20px',fontSize:'27px'}}>Build Union
           <IconButton
             edge="end"
             color="inherit"
@@ -135,7 +135,7 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
           </IconButton>        
         </DialogTitle>
         <DialogContent sx={{paddingBottom: '45px'}}> 
-          <Box width = {1240}  >
+          <Box width = {1200}  >
              {isLoading && 
                 <div className={classes.loadingBox}>
                   <div className={classes.loadingContent}>
@@ -154,10 +154,10 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
                   </div>
                 </div>
               }
-              <Container spacing={0} sx={{margin: 0, padding: 0}} maxWidth={'1920'} minHeight={'1000'}>
-                <Box sx={{marginBottom:1}}>
-                  <Button onClick={handleRun} size="small" sx={{paddingLeft: '15px',  height:'33.25px',fontSize: 12, borderColor: '#CCCCCC', color: 'gray', paddingRight: '15px', display: 'flex', justifyContent: 'space-between'}} color = 'inherit' variant="outlined"   ><WifiIcon sx={{marginRight: '10px'}} fontSize= 'small' />Run</Button>
-                  <FormControl>
+              <Container spacing={0} sx={{marginBotom: 0, padding: 0}} maxWidth={'1920'} minHeight={'1000'}>
+                <Box sx={{marginBottom:1, display:"flex", alignItems:'center'}}>
+                  <Button onClick={handleRun} size="small" sx={{paddingLeft: '15px',  height:'24.25px',fontSize: 12, borderColor: '#CCCCCC', color: 'gray', paddingRight: '15px', display: 'flex', justifyContent: 'space-between'}} color = 'inherit' variant="outlined"   ><WifiIcon sx={{marginRight: '10px'}} fontSize= 'small' />Run</Button>
+                  <FormControl sx={{marginLeft: 4}}>
                     <RadioGroup
                       row
                       aria-labelledby="demo-row-radio-buttons-group-label"
@@ -165,9 +165,25 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
                       value={unionType}
                       onChange={handleUnionTypeChange}
                     >
-                      <FormControlLabel value="UNION ALL"  className={classes.fontSize} control={<Radio
-                      sx={{'& .MuiSvgIcon-root': {fontSize: 15,},}}/>} label={<Typography variant="body2" color="textSecondary">UNION ALL</Typography>}/>
-                      <FormControlLabel value="UNION" control={<Radio   sx={{ '& .MuiSvgIcon-root': { fontSize: 15}}}/>} label={<Typography variant="body2" color="textSecondary">UNION</Typography>} />
+                      <FormControlLabel 
+                        value="UNION ALL"  
+                        className={classes.fontSize} 
+                        control={
+                          <Radio sx={{'& .MuiSvgIcon-root': {fontSize: 15,},}}/>
+                        } 
+                        label={
+                          <Typography variant="body2" color="textSecondary">UNION ALL</Typography>
+                        }
+                      />
+                      <FormControlLabel 
+                        value="UNION" 
+                        control={
+                          <Radio sx={{'& .MuiSvgIcon-root': { fontSize: 15}}}/>
+                        } 
+                        label={
+                          <Typography variant="body2" color="textSecondary">UNION</Typography>
+                        } 
+                      />
                     </RadioGroup>
                   </FormControl>
                 </Box>
