@@ -101,11 +101,13 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
   };
 
   const handleAddOption = () => {
-    if(!options.includes(newOption))
+    if(!options.includes(newOption) && newOption.trim() !== ""){
       options.push(newOption);
+      setValue1(newOption);
+    }   
 //    setPreviousValue(value1);     
     setMinusDisable(true);
-    setValue1(newOption);        
+         
     setOpen(false); 
     dispatch(initAllState());
     dispatch(initAllUtility());

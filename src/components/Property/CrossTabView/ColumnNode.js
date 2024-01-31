@@ -29,6 +29,7 @@ const useStyles = makeStyles()((theme) => {
       backgroundColor: '#eeeeee',
       border: '1px #666666',
       borderStyle: 'dashed',
+      borderRadius: 4,
       padding: 3,
       margin: 4,
       minHeight: 32

@@ -203,7 +203,11 @@ const subButton = (props, ref) => {
 
         backgroundColor: 'white',
         position: 'relative',
-        padding: '10px 20px 10px 12px'
+        padding: '10px 20px 10px 12px',
+        display: 'flex',
+        justifyContent:'space-between',
+        alignItems: 'center',
+        width: '150px'
       }}
       onMouseEnter={(e) => { e.target.style.backgroundColor = '#E9F3FF' }} // Change background color on mouse enter
       onMouseLeave={(e) => { e.target.style.backgroundColor = 'white' }}
@@ -211,9 +215,7 @@ const subButton = (props, ref) => {
       {props.name}  
       <span
         style={{
-          position: 'absolute',
-          right: '10px',
-          top: '62%',
+          marginTop: '15px',
           transform: 'translateY(-100%) rotate(-45deg)',
           width: '0',
           height: '0',

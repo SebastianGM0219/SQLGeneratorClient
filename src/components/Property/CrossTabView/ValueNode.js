@@ -33,7 +33,7 @@ const useStyles = makeStyles()((theme) => {
       borderStyle: 'dashed',
       borderRadius: 4,
       padding: 6,
-      marginBottom: 4
+      margin: 4,
     },
     tempDropString: {
       textAlign: 'center',
