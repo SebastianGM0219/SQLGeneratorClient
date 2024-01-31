@@ -496,11 +496,11 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         />
         <CustomInputLabel id="saved-connection-label" >Password</CustomInputLabel>
         <CustomTextField
+          type="password"
           name="password"
           disabled={disableParam}
           // placeholder="Password"
           value={dbInfos?.password}
-          type="text"
           error={error && isPasswordValid()}
           helperText={error && isPasswordValid()
             ? 'You have to input Username'
@@ -544,7 +544,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
        
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" style={{marginBottom: 20}}  onClick={handleSaveClose}>Cancel</Button>
+        <Button variant="contained" style={{marginBottom: 20}}  onClick={handleClose}>Cancel</Button>
         <Button variant="contained" style={{marginRight:14,marginBottom: 20}} onClick={handleClick}>Connect</Button>
       </DialogActions>
 

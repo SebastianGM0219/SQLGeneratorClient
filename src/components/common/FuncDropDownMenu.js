@@ -250,7 +250,7 @@ const FuncDropDownMenu = (props) => {
    if(eventKey === "length")
       props.setCalcCommand(props.calcCommand+"LENGTH( 'string_value' )");
    if(eventKey === "substr")
-      props.setCalcCommand(props.calcCommand+"SUBSTR( 'string_value' , 'start_position\n      'length_value' )");
+      props.setCalcCommand(props.calcCommand+"SUBSTR( 'string_value' , 'start_position' , \n     'length_value' )");
    if(eventKey === "trim")
       props.setCalcCommand(props.calcCommand+"TRIM( 'string_value' )");
    if(eventKey === "upper")
