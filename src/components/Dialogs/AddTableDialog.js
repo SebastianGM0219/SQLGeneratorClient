@@ -27,7 +27,6 @@ const useStyles = makeStyles()((theme) => {
       borderRight: '1px solid #aaa'
     },
     listBoxStyle: {
-      borderRight: '1px solid #aaa',
       height: 350,
       overflowY: 'auto',      
     },
@@ -45,8 +44,49 @@ const useStyles = makeStyles()((theme) => {
     iconStyle: {
       margin:4,
       marginRight: 4,
-      color: '#1976d2',
       width: 16
+    },
+    iconBlue: {
+      margin:4,
+      marginRight: 4,
+      width: 16,
+      color: '#158CE2'
+    },
+    iconBrown: {
+      margin:4,
+      marginRight: 4,
+      width: 16,
+      color: '#e1713b'
+    },
+    iconOrange: {
+      margin:4,
+      marginRight: 4,
+      width: 16,
+      color: '#e9d39f'
+    },
+    iconGreen: {
+      margin:4,
+      marginRight: 4,
+      width: 16,
+      color: '#6dafa7'
+    },
+    iconTlue: {
+      margin:4,
+      marginRight: 4,
+      width: 16,
+      color: '#41d7d5'
+    },
+    iconView: {
+      margin:4,
+      marginRight: 4,
+      width: 16,
+      color: '#FFE300'
+    },
+    iconKey: {
+      margin:4,
+      marginRight: 4,
+      width: 16,
+      color: '#006fdd'
     },
     DialogButtonStyle: {
       padding: '4px 24px',
@@ -177,7 +217,7 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
                   }))}
                 </Box>
               </Grid>
-              <Grid item md={5}>
+              <Grid item md={5} className={classes.listBoxStyle}>
                 <Box>
                   {selectedItem && items && items.map((item => {
                     let displayData;
@@ -190,16 +230,16 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
 
                         switch (column.type) {
                           case 'TimeStamp':
-                            IconComponent = <FontAwesomeIcon icon={faClockFour} size="1x" className={classes.iconStyle}/>;
+                            IconComponent = <FontAwesomeIcon icon={faClockFour} size="1x" className={classes.iconOrange} />;
                             break;
                           case 'Text':
-                            IconComponent = <FontAwesomeIcon icon={faQuoteRight} size="1x" className={classes.iconStyle}/>;
+                            IconComponent = <FontAwesomeIcon icon={faQuoteRight} size="1x" className={classes.iconBlue}/>;
                             break;
                           case 'Integer':
-                            IconComponent = <FontAwesomeIcon icon={faList12} size="1x" className={classes.iconStyle}/>;
+                            IconComponent = <FontAwesomeIcon icon={faList12} size="1x" className={classes.iconGreen}/>;
                             break;
                           case 'Date':
-                            IconComponent = <FontAwesomeIcon icon={faCalendarDays} size="1x" className={classes.iconStyle}/>;
+                            IconComponent = <FontAwesomeIcon icon={faCalendarDays} size="1x" className={classes.iconBrown}/>;
                             break;                            
                           default:
                             IconComponent = <FontAwesomeIcon icon={faCalendarDays} size="1x" className={classes.iconStyle}/>;
@@ -207,8 +247,9 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
                         return (
                           <Box className={classes.fieldBoxStyle} key={labelID}>
                             {IconComponent}
-                            <Typography sx={{paddingLeft: '4px'}}>{column.name}</Typography>
+                            <Typography sx={{paddingLeft: '6px'}}>{column.name.toUpperCase()}</Typography>
                           </Box>
+                          
                         )
                       })
                       return displayData
