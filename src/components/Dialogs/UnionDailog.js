@@ -122,20 +122,19 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} disableRestoreFocus PaperProps={{  style: { minWidth: 1300, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:0} }}> 
+    <Dialog open={open} onClose={handleClose} disableRestoreFocus PaperProps={{  style: { minWidth: 1300} }}> 
         <Modal open={openModal} param={{title: 'Failed', content: 'An error occured!'}} handleClose={handleCloseModal}/>
-        <DialogTitle  sx={{paddingLeft: '50px',borderBottom: '1px',paddingBottom:'20px',fontSize:'27px'}}>Build Union
+        <DialogTitle  sx={{padding: '16px 48px',borderBottom: '1px', fontSize:'27px', display:'flex', justifyContent:'space-between'}}>Build Union
           <IconButton
             edge="end"
             color="inherit"
             onClick={handleCloseUnionDialog}
-            style={{ position: 'absolute', right:50 }}
           >
-          <CloseIcon />
+            <CloseIcon />
           </IconButton>        
         </DialogTitle>
         <DialogContent sx={{paddingBottom: '45px'}}> 
-          <Box width = {1200}  >
+          <Box>
              {isLoading && 
                 <div className={classes.loadingBox}>
                   <div className={classes.loadingContent}>
