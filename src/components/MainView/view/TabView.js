@@ -16,6 +16,8 @@ import { setCurSelectorTab } from '../../../slices/utility';
 import { runQuery,testQuery} from '../../../slices/query';
 import { setCodeSQL, setEdited } from '../../../slices/utility';
 import { Alert } from '@mui/material';
+const { Parser } = require('node-sql-parser');
+const parser = new Parser();
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -476,25 +478,37 @@ export default function TabView() {
     }
     if(selectFields.length>0)
     {
-    dispatch(testQuery(queryInfo))
+
+      try {
+        parser.parse(query);
+//        console.log('The SQL query is valid.');
+            setSnackMessage("Query Syntax is good");
+            setSuccessOpen(true);
+            setFailOpen(false);
+      } catch (error) {
+        setSnackMessage("Invalid Syntax");
+        setSuccessOpen(false);
+        setFailOpen(true);
+ //       console.error('Invalid query syntax:', error.message);
+      }
+/*    dispatch(testQuery(queryInfo))
     .then(data =>{
 
-        if(selectFields.length>0)
-        {
-        if(data.payload === "Query Syntax is good")
-        {
-          setSnackMessage(data.payload);
-          setSuccessOpen(true);
-          setFailOpen(false);
-        }
-        else 
-        {
-          setSnackMessage(data.payload);
-          setSuccessOpen(false);
-          setFailOpen(true);
-        }
+        if(selectFields.length>0) {
+          if(data.payload === "Query Syntax is good") {
+            setSnackMessage(data.payload);
+            setSuccessOpen(true);
+            setFailOpen(false);
+          } else 
+          {
+            setSnackMessage(data.payload);
+            setSuccessOpen(false);
+            setFailOpen(true);
+          }
         }
     })
+            */
+
     }
     else
     {
