@@ -41,8 +41,7 @@ const useStyles = makeStyles()((theme) => {
 })
 export const TypeIcon = (props) => {
   const { classes } = useStyles();
-  console.log(props.fileType);
-  
+    
   switch (props.fileType) {
     case "Date":
       return <FontAwesomeIcon icon={faCalendarDays} size="1x" className={classes.iconBrown}/>;

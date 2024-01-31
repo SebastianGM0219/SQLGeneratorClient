@@ -36,17 +36,20 @@ const useStyles = makeStyles()((theme) => {
 
 export default function CrossTab() {
   const { classes } = useStyles();
-  const [isCrossTab, setIsCrossTab] = React.useState(false);
+  const isCrossTab = useSelector(state => state.utility.isCrossTab);
+  // const [isCrossTab, setIsCrossTab] = React.useState(false);
 
   const dispatch = useDispatch();
 
   const handleSwitch = (e) => {
-    setIsCrossTab(e.target.checked);
+    // setIsCrossTab(e.target.checked);
     dispatch(setCrossTab(e.target.checked));
     if(e.target.checked) {
       dispatch(formatCrossFields());
     }
   }
+
+  console.log("CrossTab console", isCrossTab)
 
   return (
     <Box>
@@ -55,7 +58,7 @@ export default function CrossTab() {
       </Box>
       <Box>
         <Box>
-          <FormControlLabel sx={{ml: 0, mt: 0.5, mb: 0.5}} control={<Switch value={isCrossTab} onChange={handleSwitch} />} label='Enable Crosstab'/>
+          <FormControlLabel sx={{ml: 0, mt: 0.5, mb: 0.5}} control={<Switch checked={isCrossTab} onChange={handleSwitch} />} label='Enable Crosstab'/>
         </Box>
         {
           isCrossTab && (

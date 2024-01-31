@@ -14,9 +14,9 @@ const useStyles = makeStyles()((theme) => {
     },
     itemStyle: {
       padding: 2,
-      marginTop: '10px',
       border: '1px solid #b6b6b6',
       borderRadius: 4,
+      marginBottom: 4,
       background: 'white',
       position: 'relative',
       '&:hover': {
@@ -25,6 +25,7 @@ const useStyles = makeStyles()((theme) => {
     },
     itemSelectStyle:{
       padding: 2,
+      marginBottom: 4,
       border: '1px solid #26b6b6',
       borderRadius: 4,
       margin: 4,

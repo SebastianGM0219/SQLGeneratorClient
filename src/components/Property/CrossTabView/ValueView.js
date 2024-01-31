@@ -12,8 +12,10 @@ const DropBox = styled(Box)(({theme}) => ({
     listStyleType: 'none',
     marginBlockStart: 0,
     marginBlockEnd: 0,
-    paddingInlineStart: 0
-  }
+    paddingInlineStart: 0,
+    height: '100%'
+  },
+  height: '100%'
 }));
 
 const ValueView = () => {

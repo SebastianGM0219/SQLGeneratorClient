@@ -11,6 +11,7 @@ const useStyles = makeStyles()((theme) => {
       paddingLeft: 8
     },
     itemStyle: {
+      display: 'flex',
       padding: 3,
       border: '1px solid #b6b6b6',
       margin: 4,

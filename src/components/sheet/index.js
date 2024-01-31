@@ -2,14 +2,20 @@ import React, { useRef } from 'react';
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion from '@mui/material/Accordion';
-import BackupIcon from '@mui/icons-material/Backup';
+import DownloadIcon from '@mui/icons-material/Download';
 import MuiAccordionSummary from '@mui/material/AccordionSummary'
 import MuiAccordionDetails from '@mui/material/AccordionDetails'
 import { Box, Typography, Button } from '@mui/material';
 import Sheet from './Sheet'
 import { setSheetOpened } from '../../slices/utility';
+import { edit } from 'ace-builds';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -53,6 +59,8 @@ export default function Result() {
   const buttonRef = useRef();
   const dispatch = useDispatch();
   const [expanded, setExpanded] = React.useState(isSheetOpened);
+  const [exportFileName, setExportFileName] = React.useState("output.csv");
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const isConnected = useSelector(state => state.database.success);
 
   React.useEffect(() => {
@@ -66,8 +74,34 @@ export default function Result() {
     });
   }
 
+  const CustomTextField = styled(TextField)(({ theme }) => ({
+    fontSize: 12,
+    marginTop: 1,
+    '& .MuiInputBase-input': {
+      height: 0,
+      fontSize: 12
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: 12,
+      transform: 'translate(14px, 9px) scale(1)'
+    }
+  }));
+
+
   const exportCSV = (event) => {
     buttonRef.current.link.click();
+  }
+
+  const handleOpenEditDialog = () => {
+    setEditDialogOpen(true);
+  }
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+  }
+
+  const handleChangeExportFileName = (e) => {
+    setExportFileName(e.target.value)
   }
 
   return (
@@ -75,16 +109,39 @@ export default function Result() {
       <Accordion expanded={expanded} onChange={handleChange}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
           <Typography sx={{margin: 1}}>Result</Typography>
-          <Button   disabled= {!isConnected}  sx={{border: '1px solid #ccc', borderRadius: 2, marginLeft: '15px', padding: '5px 10px', textTransform: 'none'}} onClick={exportCSV}>
-           <BackupIcon style={{ marginRight: '5px' }} />
+          <Button   disabled= {!data.fields.length}  sx={{border: '1px solid #ccc', borderRadius: 2, marginLeft: '15px', padding: '5px 10px', textTransform: 'none'}} onClick={handleOpenEditDialog}>
+           <DownloadIcon style={{ marginRight: '5px' }} />
             Export
           </Button>
-          <CSVLink data={data.rows} filename='output.csv' style={{display: 'none'}} ref={buttonRef}>Export</CSVLink>
+          <CSVLink data={data.rows} filename={exportFileName} style={{display: 'none'}} ref={buttonRef}>Export</CSVLink>
         </AccordionSummary>
         <AccordionDetails>
           <Sheet/>
         </AccordionDetails>
       </Accordion>
+
+      <Dialog 
+        PaperProps={{  style: { width:400, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:20} }} 
+        open={editDialogOpen} onClose={handleCloseEditDialog} 
+        disableRestoreFocus
+      >
+        <DialogTitle>Edit Export File Name</DialogTitle>
+          <DialogContent>      
+            <CustomTextField
+              name="exportfilename"
+              value={exportFileName}
+              type="text"
+              fullWidth
+              variant="outlined"
+              onChange={handleChangeExportFileName}
+              autoFocus
+            />
+          </DialogContent>
+          <DialogActions sx={{display:'block', padding:'4px 24px'}}>
+            <Button variant="contained" sx={{float: 'right', marginLeft: '15px'}} onClick={handleCloseEditDialog}>Cancel</Button>
+            <Button variant="contained" sx={{float: 'right'}} onClick={exportCSV}>OK</Button>
+          </DialogActions>
+      </Dialog>
     </Box>
   );
 }

@@ -17,10 +17,13 @@ import Select from '@mui/material/Select';
 import Cookies from 'js-cookie';
 import {getTables, addUpdateItem} from '../../slices/table';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { Snackbar, Alert } from '@mui/material';
+import { faL } from '@fortawesome/free-solid-svg-icons';
+import DialogContentText from '@mui/material/DialogContentText';
 const CustomTextField = styled(TextField)(({ theme }) => ({
   fontSize: 12,
   marginTop: 1,
+  // pointerEvents: 'none',
   '& .MuiInputBase-input': {
     height: 0,
     fontSize: 14
@@ -54,10 +57,19 @@ const CustomSelect = styled(Select)(({ theme}) => ({
     transform: 'translate(14px, 19px) scale(1)'
   }
 }));
+
 const CustomInputLabel = styled(InputLabel)(({theme}) => ({
-  fontSize:'14px',
-  marginTop:12,
+  fontSize: '14px',
+  marginTop: 12,
 }));
+
+const CustomDialogTitle = styled(DialogTitle)(({theme}) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center'
+}));
+
+
 export default function NewConnection({ open, handleClose, handleConnect }) {
   const sessionDbInfos = Cookies.get('dbInfos');
   const initialDbInfosArray = sessionDbInfos ? JSON.parse(sessionDbInfos):[];
@@ -68,6 +80,11 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     port: '',
     db: ''
   };
+  // let flag = 0;
+  let index_flag = 0;
+  const [saveDisable, setSaveDisable] = useState(true);
+  const [flag, setFlag] = useState(0);
+  const [duplicateAlert, setDuplicateAlert] =useState(false);
   const initmenu = initialDbInfosArray?initialDbInfosArray.map(item => item.connectname):[];
   const [dbInfos, setDbInfos] = useState(initialDbInfos);
   const [newButtonOpen, setNewButtonOpen] = useState(false);
@@ -77,66 +94,270 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const [selectedName, setSelectedName] = useState(""); 
   const dispatch = useDispatch();
   const [error, setError] = React.useState(false);
+  const [empty, SetEmpty] = React.useState(true);
+  const [saveOpen, setSaveOpen] = React.useState(false);
+  const [saveSnackOpen, setSaveSnackOpen] = React.useState(false);
+  const [openAlertSave, setOpenAlertSave] = React.useState(false);
+  const [openAlertSave1, setOpenAlertSave1] = React.useState(false);
+
+  const [disableParam, setDisableParam] = React.useState(initmenu.length>0? false: true);
 //  const dbInfo = useSelector(state => state.database.dbInfo);
+  const [started, setStarted] = React.useState(false);
   useEffect(() => {
-    localStorage.setItem('dbQuery',"");
+//    localStorage.setItem('dbQuery',"");
+    // const sessionDbInfos = Cookies.get('dbInfos');
+    // const initialDbInfosArray = sessionDbInfos ? JSON.parse(sessionDbInfos):[];
+    // const initialDbInfos =initialDbInfosArray&&initialDbInfosArray[0]? initialDbInfosArray[0] : {
+    //   host: '',
+    //   username: '',
+    //   password: '',
+    //   port: '',
+    //   db: ''
+    // };
+
+    // const initmenu = initialDbInfosArray?initialDbInfosArray.map(item => item.connectname):[];
+    // setDbInfos(initialDbInfos);
+    // setConnectMenu(initmenu);
   }, []);  
 
+  useEffect(()=>{
+
+    setDisableParam(connectMenu.length>0? false: true);
+
+  },[connectMenu]);
+
+  useEffect(()=>{
+    setSaveDisable(false);
+
+  },[dbInfos,flag]);
   const changeNameHandler = e => {
     setNewName(e.target.value);
   //  setDbInfos({...dbInfos, [e.target.name]: e.target.value})
   }
+
   const changeHandler = e => {
+    
     setDbInfos({...dbInfos, [e.target.name]: e.target.value})
   }
+
   const isUserNameValid = (url) =>
     dbInfos.username==="";
+
   const isHostValid = (url) =>
     dbInfos.host==="";
+
   const isPasswordValid = (url) =>
    dbInfos.password==="";
+
   const isPortValid = (url) =>
     dbInfos.port==="";
+
   const isDbValid = (url) =>
     dbInfos.db==="";
     
   const handleClick = e => {
     if(isUserNameValid()||isHostValid()||isPasswordValid()||isPortValid()||isDbValid()){
       setError(true);      
-    } else {
- 
-      dispatch(initAllDatabaseTable());
-      dispatch(saveDbInformation({dbInfo:dbInfos}));
-      dispatch(getTables());
-      dispatch(initAllState());
-      dispatch(initAllUtility());
-      dispatch(initAllTable());
-      handleConnect(dbInfos);
+    } else {      
+      // if(flag===0)
+      // {
+          const newvalue = {
+            ...dbInfos,      connectname: selectedName
+          };
+      
+          console.log("initialDbInfosArray");
+          console.log(initialDbInfosArray);
+          let found = false;          
+          let newArray = initialDbInfosArray.map((item) => {
+            if (item.connectname === newvalue.connectname) {
+              found = true;
+              return newvalue; // Update the array with the new value
+            }
+            return item;
+          });
+          console.log(found);
+          if (!found) {
+            newArray.push(newvalue); // If not found, push new value to array
+          }
+          console.log(newArray);
+
+      //      setSaveSnackOpen(true);
+          Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+    //    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+      
+        dispatch(initAllDatabaseTable());
+        dispatch(saveDbInformation({dbInfo:dbInfos}));
+        dispatch(getTables());
+        dispatch(initAllState());
+        dispatch(initAllUtility());
+        dispatch(initAllTable());
+        handleConnect(dbInfos);
+        setOpenAlertSave1(false);
+        setFlag(0);
+//       }
+//       else
+//       {
+// //        setOpenAlertSave1(true);
+//       }
+//      setSaveOpen(open);
+//      setSaveSnackOpen(false);
     }
   }
 
+  const closeDuplicateAlert = () => {
+    setDuplicateAlert(false);
+  }
+  const handleSaveClose = () => {
+    // if (reason === 'clickaway') {
+    //   return;
+    // }
+
+    setSaveSnackOpen(false);
+  };
+
+  const closeAgreeAlertSave = () => {
+    setSelectedName(connectMenu[index_flag]);
+    setIndex(index_flag);
+    setDbInfos(initialDbInfosArray[index_flag]);
+    setOpenAlertSave(false);
+    setFlag(0);
+    const newvalue = {
+      ...dbInfos,      connectname: selectedName
+    };
+
+    let found = false;          
+    let newArray = initialDbInfosArray.map((item) => {
+      if (item.connectname === newvalue.connectname) {
+        found = true;
+        return newvalue; // Update the array with the new value
+      }
+      return item;
+    });
+    if (!found) {
+      newArray.push(newvalue); // If not found, push new value to array
+    }
+//      setSaveSnackOpen(true);
+    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+
+  };
+
+  const closeDisAgreeAlertSave = () => {
+    setSelectedName(connectMenu[index_flag]);
+    setIndex(index_flag);
+    setSaveDisable(true);
+
+    setDbInfos(initialDbInfosArray[index_flag]);
+    setOpenAlertSave(false);
+    const updatedMenu = connectMenu.filter((_, index) => index !== initialDbInfosArray.length);
+    setConnectMenu(updatedMenu);    
+    setFlag(0);
+  };
+
+
+  const closeAgreeAlertSave1 = () => {
+    // setSelectedName(index_flag);
+    // setIndex(index_flag);
+    // setDbInfos(initialDbInfosArray[index_flag]);
+    // setOpenAlertSave(false);
+    // setFlag(0);
+    const newvalue = {
+      ...dbInfos,      connectname: selectedName
+    };
+
+    let found = false;          
+    let newArray = initialDbInfosArray.map((item) => {
+      if (item.connectname === newvalue.connectname) {
+        found = true;
+        return newvalue; // Update the array with the new value
+      }
+      return item;
+    });
+    if (!found) {
+      newArray.push(newvalue); // If not found, push new value to array
+    }
+//      setSaveSnackOpen(true);
+    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+//    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+  
+    dispatch(initAllDatabaseTable());
+    dispatch(saveDbInformation({dbInfo:dbInfos}));
+    dispatch(getTables());
+    dispatch(initAllState());
+    dispatch(initAllUtility());
+    dispatch(initAllTable());
+    handleConnect(dbInfos);
+    setOpenAlertSave1(false);
+    setFlag(0);
+  };
+
+  const closeDisAgreeAlertSave1 = () => {
+
+    // setSelectedName(0);
+    // setIndex(0);
+    // setDbInfos(initialDbInfosArray[0]);
+    // setOpenAlertSave(false);
+    // const updatedMenu = connectMenu.filter((_, index) => index !== initialDbInfosArray.length);
+    // setConnectMenu(updatedMenu);  
+
+
+    dispatch(initAllDatabaseTable());
+        dispatch(saveDbInformation({dbInfo:dbInfos}));
+        dispatch(getTables());
+        dispatch(initAllState());
+        dispatch(initAllUtility());
+        dispatch(initAllTable());
+        handleConnect(dbInfos);
+        setOpenAlertSave1(false);
+        setFlag(0);
+  };
   const handleNewDailog = () => {
-    setNewButtonOpen(true);
+    // console.log("hereee=============e");
+    setNewName("New Connection");
+    if(flag === 1&&connectMenu.length>0)
+    {
+      setOpenAlertSave(true);
+    }
+    else
+      setNewButtonOpen(true);
   };
 
   const handleCloseNewDailog = () => {
     setNewButtonOpen(false);
   };
 
-  const handleOkayNewDailog = () => {    
+  const handleOkayNewDailog = () => {   
+    if(!connectMenu.some((value) => value === newName))
+    {
     setConnectMenu((prevMenu) => [...prevMenu, newName]);
     setSelectedName(newName); 
     setIndex( connectMenu.length);
-    const dbInfo_new = { username:"postgres", host:"localhost", password: "5432", port: "", db: ""};
+    const dbInfo_new = { username:"postgres", host:"localhost", port: "5432", password: "password", db: ""};
     setDbInfos(dbInfo_new);
-
     setNewButtonOpen(false);
+
+    setFlag(1);
+    setSaveDisable(true);
+    }
+    else
+    {
+      setDuplicateAlert(true);
+    }
   };
 
   const handleMenuChange = (event) => {
-    setSelectedName(event.target.value);
-    setIndex(event.target.value);
-    setDbInfos(initialDbInfosArray[event.target.value]);
+
+    setSaveDisable(true);
+    if(flag === 1) {
+      index_flag = event.target.value;
+      setOpenAlertSave(true);
+    } else {
+      index_flag = event.target.value;
+      console.log("menuchange");
+      console.log(event.target.value);
+      setSelectedName(connectMenu[event.target.value]);
+      setIndex(event.target.value);
+      setDbInfos(initialDbInfosArray[event.target.value]);
+    }
   }
   
   const handleDeleteNewDailog = () => {
@@ -166,7 +387,8 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const handleSaveNewDailog = () => {
     if(isUserNameValid()||isHostValid()||isPasswordValid()||isPortValid()||isDbValid()) {
       setError(true);      
-    } else {
+    } else {  
+      setFlag(0);
       const newvalue = {
         ...dbInfos,      connectname: selectedName
       };
@@ -179,44 +401,38 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         }
         return item;
       });
-
       if (!found) {
         newArray.push(newvalue); // If not found, push new value to array
       }
-
+//      setSaveSnackOpen(true);
       Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+      setSaveDisable(true)
     }
   }
 
   return (  
     <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:10} }}>
-      <DialogTitle sx={{marginLeft: '3px'}}>
-         New Connection
-      </DialogTitle>
-      <IconButton
+      <CustomDialogTitle sx={{marginLeft: '3px'}}>
+         Connect to PostgreSQL Host
+        <IconButton
           edge="end"
           color="inherit"
           onClick={handleClose}
-          style={{ position: 'absolute', right:40, top: 30 }}
         >
           <CloseIcon />
         </IconButton>
-
+      </CustomDialogTitle>
+      
       <DialogContent width={600} >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px'}}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
           <CustomButton variant="outlined" sx={{marginLeft: '2px'}} onClick={handleNewDailog}>New</CustomButton>
             <Dialog open={newButtonOpen} onClose={handleCloseNewDailog} disableRestoreFocus>
               <DialogTitle>New Connection</DialogTitle>
               <DialogContent>
                 <CustomTextField
                   style={{width:300}}
-                  defaultValue="New connection"
+                  value={newName}
                   onChange= {changeNameHandler}
-                  // placeholder="Username"
-                  // error={error && isUserNameValid()}
-                  // helperText={error && isUserNameValid()
-                  //   ? 'You have to input Username'
-                  //   : ''}
                   type="text"
                   fullWidth
                   variant="outlined"
@@ -228,19 +444,19 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
                 <Button onClick={handleOkayNewDailog} style={{marginRight:16}} variant="contained" >OK</Button>
               </DialogActions>
             </Dialog>          
-          <CustomButton onClick={handleSaveNewDailog} variant="outlined">Save</CustomButton>
-          {/* <CustomButton variant="outlined">Rename</CustomButton> */}
-          <CustomButton variant="outlined" onClick={handleDeleteNewDailog} >Delete</CustomButton>   
+          <CustomButton onClick={handleSaveNewDailog} disabled={disableParam||saveDisable} variant="outlined">Save</CustomButton>
+          <CustomButton variant="outlined" disabled={disableParam} onClick={handleDeleteNewDailog} >Delete</CustomButton>   
         </div> 
         <div style={{  alignItems: 'center', paddingLeft: '4px'}}>
         <CustomInputLabel id="saved-connection-label" >Saved Connection</CustomInputLabel>
         <FormControl variant="outlined" fullWidth>
           <CustomSelect
+            disabled={disableParam}
             placeholder="Host Address"
             labelId="saved-connection-label"
             value={index}
             defaultValue={index}
-            onChange={handleMenuChange}
+            onChange={handleMenuChange}          
           >
             {connectMenu.map((item, index) => (
               <MenuItem key={index} value={index}>{item}</MenuItem>
@@ -250,7 +466,8 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomInputLabel id="saved-connection-label" >Host Address</CustomInputLabel>
         <CustomTextField
           autoFocus
-          value={dbInfos.host}
+          disabled={disableParam}
+          value={dbInfos?.host}
           name="host"
           placeholder=""
           type="text"
@@ -265,7 +482,8 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomInputLabel id="saved-connection-label">Username</CustomInputLabel>
         <CustomTextField
           name="username"
-          value={dbInfos.username}
+          disabled={disableParam}
+          value={dbInfos?.username}
           // placeholder="Username"
           error={error && isUserNameValid()}
           helperText={error && isUserNameValid()
@@ -276,41 +494,43 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
           variant="outlined"
           onChange={changeHandler}
         />
-        <CustomInputLabel id="saved-connection-label" >Password</CustomInputLabel>        
+        <CustomInputLabel id="saved-connection-label" >Password</CustomInputLabel>
         <CustomTextField
+          type="password"
           name="password"
+          disabled={disableParam}
           // placeholder="Password"
-          value={dbInfos.password}
-          type="text"
+          value={dbInfos?.password}
           error={error && isPasswordValid()}
           helperText={error && isPasswordValid()
             ? 'You have to input Username'
-            : ''}          
+            : ''}
           fullWidth
           variant="outlined"
           onChange={changeHandler}
         />
-        <CustomInputLabel id="saved-connection-label" >Port</CustomInputLabel>                
+        <CustomInputLabel id="saved-connection-label" >Port</CustomInputLabel>
         <CustomTextField
           name="port"
-          value={dbInfos.port}
+          value={dbInfos?.port}
+          disabled={disableParam}
           // placeholder="Port"
           type="text"
           error={error && isPortValid()}
           helperText={error && isPortValid()
             ? 'You have to input Username'
             : ''}
-
           fullWidth
           variant="outlined"
           onChange={changeHandler}
         />
-        <CustomInputLabel id="saved-connection-label" >DateBase Name</CustomInputLabel>                
+        <CustomInputLabel id="saved-connection-label" >DataBase Name</CustomInputLabel>                
         <CustomTextField
+          disabled={disableParam}          
           name="db"
           // placeholder="Database Name"
           type="text"
-          value={dbInfos.db}
+          value={dbInfos?.db}
           error={error && isDbValid()}
           helperText={error && isDbValid()
             ? 'You have to input Username'
@@ -327,6 +547,78 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <Button variant="contained" style={{marginBottom: 20}}  onClick={handleClose}>Cancel</Button>
         <Button variant="contained" style={{marginRight:14,marginBottom: 20}} onClick={handleClick}>Connect</Button>
       </DialogActions>
+
+      <Snackbar open={saveSnackOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={1000} onClose={handleSaveClose} >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Database saved correctly.
+        </Alert>
+      </Snackbar>
+
+      <Dialog
+        open={openAlertSave}
+        // onClose={closeAlertSave}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"POSTSQL Professional"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You've changed your connection Details. 
+            Do you want to save changes?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDisAgreeAlertSave}>Disagree</Button>
+          <Button onClick={closeAgreeAlertSave} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openAlertSave1}
+        // onClose={closeAlertSave}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"POSTSQL Professional"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You've changed your connection Details. 
+            Do you want to save changes?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDisAgreeAlertSave1}>Disagree</Button>
+          <Button onClick={closeAgreeAlertSave1} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={duplicateAlert}
+        // onClose={closeAlertSave}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"POSTSQL Professional"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Connection already exists, Please enter a unique name
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDuplicateAlert}>Okay</Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>   
+
   );
 }

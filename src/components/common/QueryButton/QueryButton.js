@@ -58,7 +58,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
 
   const CustomTextField = styled(TextField)(({ theme }) => ({
     fontSize: 12,
-    width: 300,
+    marginTop: 1,
     '& .MuiInputBase-input': {
       height: 0,
       fontSize: 12
@@ -101,10 +101,13 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
   };
 
   const handleAddOption = () => {
-    options.push(newOption);
+    if(!options.includes(newOption) && newOption.trim() !== ""){
+      options.push(newOption);
+      setValue1(newOption);
+    }   
 //    setPreviousValue(value1);     
     setMinusDisable(true);
-    setValue1(newOption);        
+         
     setOpen(false); 
     dispatch(initAllState());
     dispatch(initAllUtility());
@@ -234,7 +237,11 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
         </ButtonGroup>      
         <Button disabled= {!isConnected} onClick={handleOpenUnionDialog} size="small" sx={{paddingLeft: '20px',  height:'33.25px',fontSize: 12, borderColor: '#CCCCCC', paddingRight: '20px', marginLeft: '18px'}} color = 'inherit' variant="outlined"   ><ExpandIcon fontSize='medium' />Union</Button>
       </div>
-      <Dialog open={open} onClose={handleDialogClose} disableRestoreFocus>
+      <Dialog 
+        PaperProps={{  style: { width:400, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:20} }} 
+        open={open} onClose={handleDialogClose} 
+        disableRestoreFocus
+      >
         <DialogTitle>Add New Query</DialogTitle>
           <DialogContent>      
             <CustomTextField
@@ -247,9 +254,9 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
               autoFocus
             />
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDialogClose}>Cancel</Button>
-            <Button onClick={handleAddOption}>Add</Button>
+          <DialogActions sx={{display:'block', padding:'4px 24px'}}>
+            <Button variant="contained" sx={{float: 'right', marginLeft: '15px'}} onClick={handleDialogClose}>Cancel</Button>
+            <Button variant="contained" sx={{float: 'right'}}onClick={handleAddOption}>Add</Button>
           </DialogActions>
       </Dialog>
       <UnionDialog open={unionOpen} handleCloseUnionDialog={handleCloseUnionDialog} queryName={options}/> 
