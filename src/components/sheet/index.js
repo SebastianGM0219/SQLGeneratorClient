@@ -59,7 +59,7 @@ export default function Result() {
   const buttonRef = useRef();
   const dispatch = useDispatch();
   const [expanded, setExpanded] = React.useState(isSheetOpened);
-  const [exportFileName, setExportFileName] = React.useState("output.csv");
+  const [exportFileName, setExportFileName] = React.useState("output");
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const isConnected = useSelector(state => state.database.success);
 
