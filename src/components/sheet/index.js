@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion from '@mui/material/Accordion';
-import BackupIcon from '@mui/icons-material/Backup';
+import DownloadIcon from '@mui/icons-material/Download';
 import MuiAccordionSummary from '@mui/material/AccordionSummary'
 import MuiAccordionDetails from '@mui/material/AccordionDetails'
 import { Box, Typography, Button } from '@mui/material';
@@ -76,7 +76,7 @@ export default function Result() {
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
           <Typography sx={{margin: 1}}>Result</Typography>
           <Button   disabled= {!isConnected}  sx={{border: '1px solid #ccc', borderRadius: 2, marginLeft: '15px', padding: '5px 10px', textTransform: 'none'}} onClick={exportCSV}>
-           <BackupIcon style={{ marginRight: '5px' }} />
+           <DownloadIcon style={{ marginRight: '5px' }} />
             Export
           </Button>
           <CSVLink data={data.rows} filename='output.csv' style={{display: 'none'}} ref={buttonRef}>Export</CSVLink>

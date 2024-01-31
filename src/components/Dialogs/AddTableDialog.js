@@ -47,6 +47,10 @@ const useStyles = makeStyles()((theme) => {
       marginRight: 4,
       color: '#1976d2',
       width: 16
+    },
+    DialogButtonStyle: {
+      padding: '4px 24px',
+      display: 'block'
     }
   };
 })
@@ -64,6 +68,13 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
     fontSize: 12
   }
 }));
+
+const CustomDialogTitle = styled(DialogTitle)(({theme}) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center'
+}));
+
 
 export default function AddTableDialog({ open, handleTableClose,handleAddTableClose }) {
   const dispatch = useDispatch();
@@ -119,19 +130,21 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
         onClose={handleAddTableClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        PaperProps={{  style: { width:900, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:10} }}        
+        PaperProps={{  style: { width:900, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:20} }}        
         disableRestoreFocus
       >
-       <IconButton
-          edge="end"
-          color="inherit"
-          onClick={handleClose}
-          style={{ position: 'absolute', right:43, top: 30 }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogTitle>Add Table Data
-        </DialogTitle>        <DialogContent width={600}> 
+        <CustomDialogTitle>
+          Add Table Data
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        </CustomDialogTitle>
+
+      <DialogContent width={600}> 
           <Box >
           <SearchTextField
             id="outlined-start-adornment"
@@ -194,7 +207,7 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
                         return (
                           <Box className={classes.fieldBoxStyle} key={labelID}>
                             {IconComponent}
-                            <Typography>{column.name}</Typography>
+                            <Typography sx={{paddingLeft: '4px'}}>{column.name}</Typography>
                           </Box>
                         )
                       })
@@ -207,13 +220,13 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
           </Box>
           </Box>
       </DialogContent>
-      <DialogActions sx ={{marginBottom: '10px'}}>
-         <Button variant="contained" onClick={handleClose} >
-           Cancel
-         </Button>        
-         <Button variant="contained" sx={{marginRight: '15px'}} onClick={handleSubmit} >
+      <DialogActions className={classes.DialogButtonStyle}>              
+        <Button variant="contained" sx={{float: 'right', marginLeft: '15px'}} onClick={handleSubmit} >
            OK
          </Button>
+         <Button variant="contained" sx={{float: 'right'}} onClick={handleClose} >
+           Cancel
+         </Button> 
       </DialogActions>
     </Dialog>
   );
