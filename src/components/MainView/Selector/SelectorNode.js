@@ -135,10 +135,10 @@ export const SelectorNode = (props) => {
       <Box className={data.aggreType !== "none"?classes.blockStyle: classes.noneStyle}>
         <Box className={classes.agreePosition}>
           <Functions className={data.aggreType === "sum"?classes.sigmaStyle: classes.noneStyle}/>
-          {data.aggreType === "avg"&&<p className={data.aggreType === "avg"?classes.fontSigma1: classes.noneStyle}> Avg</p> }
-          {data.aggreType === "max"&&<p className={data.aggreType === "max"?classes.fontSigma1: classes.noneStyle}> Max</p> }
-          {data.aggreType === "min"&&<p className={data.aggreType === "min"?classes.fontSigma1: classes.noneStyle}> Min</p> }
-          {data.aggreType === "count"&&<p className={data.aggreType === "count"?classes.fontSigma1: classes.noneStyle}> N</p> }
+          {data.aggreType === "avg" && <p className={data.aggreType === "avg"?classes.fontSigma1: classes.noneStyle}> Avg</p> }
+          {data.aggreType === "max" && <p className={data.aggreType === "max"?classes.fontSigma1: classes.noneStyle}> Max</p> }
+          {data.aggreType === "min" && <p className={data.aggreType === " min"?classes.fontSigma1: classes.noneStyle}> Min</p> }
+          {data.aggreType === "count" && <p className={data.aggreType === "count"?classes.fontSigma1: classes.noneStyle}> N</p> }
         </Box>                                                                                                                                                                                                                                                                                                                                                                                        
       </Box>
 
@@ -148,7 +148,7 @@ export const SelectorNode = (props) => {
         </Grid>
         <Grid item xs={4}>
           <Box className={classes.boxStyle}>
-            <Box> 
+            <Box>
               <TypeIcon droppable={false} type={data?.hasKey?'List':'Table'} />
             </Box>
             <Box className={classes.labelGridItem}>
@@ -163,7 +163,7 @@ export const SelectorNode = (props) => {
             </Box>
             <Box className={classes.labelGridItem}>
               <Typography variant="body2">{`${data.columnId}`}</Typography>
-            </Box>
+            </Box>            
           </Box>
         </Grid>
       </Grid>
