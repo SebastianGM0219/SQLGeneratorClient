@@ -171,6 +171,8 @@ export default function FieldTab() {
 
   const [isScrolling, setIsScrolling] = useState(false);
 
+  const [cursorPosition, setCursorPosition] = useState({row:0, column:0})
+  
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -382,7 +384,7 @@ export default function FieldTab() {
                 </Box>
               </Grid>
               <Grid item className={classes.boxStyle} xs={3}>
-                <FuncDropDownMenu focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand}/>              
+                <FuncDropDownMenu focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand} cursor={cursorPosition}/>              
               </Grid>  
           </Box> 
           <Box>
@@ -394,6 +396,10 @@ export default function FieldTab() {
                 theme="textmate"
                 name="blah2"
                 onChange={onChange}
+                onCursorChange={(selection) => {
+                  console.log(calcCommand.split('\n'))
+                  setCursorPosition(selection.getCursor())
+                }}
                 fontSize={14}
                 showPrintMargin={true}
                 showGutter={true}

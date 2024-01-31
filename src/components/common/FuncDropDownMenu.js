@@ -231,54 +231,86 @@ const FuncDropDownMenu = (props) => {
   const {classes} = useStyles();
   const {focusEditor} = props;
   const dispatch = useDispatch();
+
+  const insertAt = (str, sub, pos) => `${str.slice(0, pos)}${sub}${str.slice(pos)}`;
+
+  const insertSyntax = (command, sub, cursor) => {
+    let result = "";
+    command.split('\n').forEach((value, index) => {
+      if(index !== cursor.row){
+        result += value;
+      }
+      else{
+        result += insertAt(value, sub, cursor.column)
+      }
+      if(index !== command.split('\n').length - 1)
+        result += '\n';
+    })
+    return result
+  }
   
+  console.log(props.calcCommand, typeof props.calcCommand)
+
   const handleSelect = (eventKey, event) => {
     focusEditor();
     if(eventKey === "cast")
-      props.setCalcCommand(props.calcCommand+"CAST({'string'} AS integer)");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "CAST({'string'} AS integer)", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"CAST({'string'} AS integer)");
     if(eventKey === "try")
-      props.setCalcCommand(props.calcCommand+"try({'string'} AS integer)");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "try({'string'} AS integer)", props.cursor))
     if(eventKey === "typeof")
-      props.setCalcCommand(props.calcCommand+"typeof({'string'} AS integer)");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "typeof({'string'} AS integer)", props.cursor))
 
 
 //STRINGS
    if(eventKey === "concat")
-      props.setCalcCommand(props.calcCommand+"CONCAT( 'string_value_1' , \n      'string_value_2')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "CONCAT( 'string_value_1' , \n      'string_value_2')", props.cursor))
    if(eventKey === "replace")
-      props.setCalcCommand(props.calcCommand+"REPLACE ( 'string_value_1' ,'search', 'replace')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "REPLACE ( 'string_value_1' ,'search', 'replace')", props.cursor))
    if(eventKey === "reverse")
-      props.setCalcCommand(props.calcCommand+"reverse( 'string_value' )");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "reverse( 'string_value' )", props.cursor))
    if(eventKey === "length")
-      props.setCalcCommand(props.calcCommand+"LENGTH( 'string_value' )");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "LENGTH( 'string_value' )", props.cursor)) 
    if(eventKey === "substr")
-      props.setCalcCommand(props.calcCommand+"SUBSTR( 'string_value' , 'start_position' , \n     'length_value' )");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "SUBSTR( 'string_value' , 'start_position' , \n     'length_value' )", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"SUBSTR( 'string_value' , 'start_position' , \n     'length_value' )");
    if(eventKey === "trim")
-      props.setCalcCommand(props.calcCommand+"TRIM( 'string_value' )");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "TRIM( 'string_value' )", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"TRIM( 'string_value' )");
    if(eventKey === "upper")
-      props.setCalcCommand(props.calcCommand+"UPPER( 'string_value') ");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "UPPER( 'string_value') ", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"UPPER( 'string_value') ");
    if(eventKey === "lower")
-      props.setCalcCommand(props.calcCommand+"LOWER( 'string_value') ");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "LOWER( 'string_value') ", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"LOWER( 'string_value') ");
    if(eventKey === "split_part")
-      props.setCalcCommand(props.calcCommand+"SPLIT_PART( 'string_value' , 'delimeter', 'index') ");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "SPLIT_PART( 'string_value' , 'delimeter', 'index') ", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"SPLIT_PART( 'string_value' , 'delimeter', 'index') ");
    if(eventKey === "w_right")
-      props.setCalcCommand(props.calcCommand+"W_RIGHT( 'string_value', 'optional_length_value' )");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "W_RIGHT( 'string_value', 'optional_length_value' )", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"W_RIGHT( 'string_value', 'optional_length_value' )");
    if(eventKey === "w_left")
-      props.setCalcCommand(props.calcCommand+"W_LEFT( 'string_value', 'optional_length_value' )");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "W_LEFT( 'string_value', 'optional_length_value' )", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"W_LEFT( 'string_value', 'optional_length_value' )");
 
 
 
 //conditional
     if(eventKey === "if")
-      props.setCalcCommand(props.calcCommand+"CASE\n    WHEN 'condition'  THEN result END");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "CASE\n    WHEN 'condition'  THEN result END", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"CASE\n    WHEN 'condition'  THEN result END");
     if(eventKey === "case")
-      props.setCalcCommand(props.calcCommand+"CASE\n    WHEN 'condition'  THEN result \nEND");
+    props.setCalcCommand(insertSyntax(props.calcCommand, "CASE\n    WHEN 'condition'  THEN result \nEND", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"CASE\n    WHEN 'condition'  THEN result \nEND");
     if(eventKey === "coalesce")
-      props.setCalcCommand(props.calcCommand+"coalesce(value1,value2,value3)");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "coalesce(value1,value2,value3)", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"coalesce(value1,value2,value3)");
     if(eventKey === "is not null")
-      props.setCalcCommand(props.calcCommand+"IS NOT NULL");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "IS NOT NULL", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"IS NOT NULL");
     if(eventKey === "is null")
-      props.setCalcCommand(props.calcCommand+"IS NULL");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "IS NULL", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"IS NULL");
 
   //     CASE
   //     WHEN condition THEN result
@@ -293,58 +325,82 @@ const FuncDropDownMenu = (props) => {
     
 
     if(eventKey === "sum")
-      props.setCalcCommand(props.calcCommand+"SUM()");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "SUM()", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"SUM()");
     if(eventKey === "avg")
-      props.setCalcCommand(props.calcCommand+"AVG()");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "AVG()", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"AVG()");
     if(eventKey === "count")
-      props.setCalcCommand(props.calcCommand+"COUNT()");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "COUNT()", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"COUNT()");
     if(eventKey === "min")
-      props.setCalcCommand(props.calcCommand+"MIN()");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "MIN()", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"MIN()");
     if(eventKey === "max")
-      props.setCalcCommand(props.calcCommand+"MAX()");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "MAX()", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"MAX()");
     
 
 
     if(eventKey === "+")
-      props.setCalcCommand(props.calcCommand+"+");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "+", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"+");
     if(eventKey === "-")
-      props.setCalcCommand(props.calcCommand+"-");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "-", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"-");
     if(eventKey === "/")
-      props.setCalcCommand(props.calcCommand+"/");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "/", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"/");
     if(eventKey === "*")
-      props.setCalcCommand(props.calcCommand+"*");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "*", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"*");
     if(eventKey === "%")
-      props.setCalcCommand(props.calcCommand+"%");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "%", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"%");
     if(eventKey === "abs")
-      props.setCalcCommand(props.calcCommand+"abs(number)");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "abs(number)", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"abs(number)");
     if(eventKey === "round")
-      props.setCalcCommand(props.calcCommand+"round(number)");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "round(number)", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"round(number)");
     if(eventKey === "truncate")
-      props.setCalcCommand(props.calcCommand+"truncate(number)");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "truncate(number)", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"truncate(number)");
 
     //day
     if(eventKey === "day")
-      props.setCalcCommand(props.calcCommand+"DAY('date or timestamps')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "DAY('date or timestamps')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"DAY('date or timestamps')");
     if(eventKey === "month")
-      props.setCalcCommand(props.calcCommand+"MONTH('date or timestamps')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "MONTH('date or timestamps')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"MONTH('date or timestamps')");
     if(eventKey === "year")
-      props.setCalcCommand(props.calcCommand+"YEAR('date or timestamps')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "YEAR('date or timestamps')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"YEAR('date or timestamps')");
     if(eventKey === "quarter")
-      props.setCalcCommand(props.calcCommand+"QUARTER('date or timestamps')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "QUARTER('date or timestamps')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"QUARTER('date or timestamps')");
     if(eventKey === "current_date")
-      props.setCalcCommand(props.calcCommand+"CURRENT_DATE");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "CURRENT_DATE", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"CURRENT_DATE");
     if(eventKey === "date")
-      props.setCalcCommand(props.calcCommand+"DATE('value')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "DATE('value')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"DATE('value')");
     if(eventKey === "date_add")
-      props.setCalcCommand(props.calcCommand+"DATE_ADD('unit_value', 'value', 'timestamps_value')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "DATE_ADD('unit_value', 'value', 'timestamps_value')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"DATE_ADD('unit_value', 'value', 'timestamps_value')");
     if(eventKey === "date_format")
-      props.setCalcCommand(props.calcCommand+"DATE_FORMAT('timestamp', 'format')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "DATE_FORMAT('timestamp', 'format')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"DATE_FORMAT('timestamp', 'format')");
     if(eventKey === "date_diff")
-      props.setCalcCommand(props.calcCommand+"DATE_DIFF('unit_value', 'timestamps_value', 'timestamps_value_2')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "DATE_DIFF('unit_value', 'timestamps_value', 'timestamps_value_2')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"DATE_DIFF('unit_value', 'timestamps_value', 'timestamps_value_2')");
     if(eventKey === "date_now")
-      props.setCalcCommand(props.calcCommand+"NOW()");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "NOW()", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"NOW()");
     if(eventKey === "eomonth")
-      props.setCalcCommand(props.calcCommand+"EOMONTH('date_value', 'month_number_value')");
+      props.setCalcCommand(insertSyntax(props.calcCommand, "EOMONTH('date_value', 'month_number_value')", props.cursor))
+      // props.setCalcCommand(props.calcCommand+"EOMONTH('date_value', 'month_number_value')");
 
     //JSON
 

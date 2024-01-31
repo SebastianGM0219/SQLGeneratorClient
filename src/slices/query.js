@@ -90,12 +90,9 @@ export const runQuery = createAsyncThunk(
   async (queryInfo) => {
     try {
       const res = await QueryService.runQuery(queryInfo);
-      console.log("results");
-      console.log(res);
       return res.data;
     } catch (error) {
-      console.log(error);
-      console.log('results');
+   
       throw(error);
     }
   }
