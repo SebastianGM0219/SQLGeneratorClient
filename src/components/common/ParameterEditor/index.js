@@ -256,6 +256,7 @@ export default function ParameterEditor({type, data, onSelectParamter, isDisable
         <Button 
           className={classes.buttonStyle}
           onClick={handleClick}
+          disabled={disabled}
         >
           <TuneIcon/>
         </Button>

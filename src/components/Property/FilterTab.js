@@ -93,7 +93,7 @@ export default function FilterTab() {
   return (
     <Box sx={{position: 'relative', height: '100%'}}>
       <Box sx={{ position: 'absolute', bottom: 4, left: 12}}>
-        <Button variant='contained' disabled={disabled} onClick={handleApply}>Apply</Button>
+        <Button variant='contained' disabled={disabled||!(filterFields.length - 1)} onClick={handleApply}>Apply</Button>
       </Box>
       <Box className={classes.headerBox}>
         <Typography className={classes.headerFont}>Filter Propterties</Typography>
@@ -139,7 +139,7 @@ export default function FilterTab() {
             </Grid>
             <Grid item xs={9}>
               <Box>
-                <ParameterEditor type={currentColumn.data.type} data={currentColumn.data.value} isDisable={currentColumn.data.isParam} onSelectParamter={handleParameter} />
+                <ParameterEditor type={currentColumn.data.type} data={currentColumn.data.value} isDisable={!(filterFields.length - 1)} onSelectParamter={handleParameter} />
               </Box>
             </Grid>
           </Grid>

@@ -340,13 +340,15 @@ function App() {
       }
 
       setIsLoading(true);
-      dispatch(runQuery(queryInfo))
+            dispatch(runQuery(queryInfo))
         .then(data => {
           dispatch(setSheetOpened(true));
           setIsLoading(false);
         })
         .catch(err => {
           console.log(err);
+          setIsLoading(false);
+
           setOpenModal(true);
         })
     }
@@ -540,13 +542,16 @@ function App() {
     
 
     setIsLoading(true);
-    dispatch(runQuery(queryInfo))
+        dispatch(runQuery(queryInfo))
       .then(data => {
         dispatch(setSheetOpened(true));
         setIsLoading(false);
       })
       .catch(err => {
-        console.log(err);
+        console.log("run query faild" + err);
+
+        setIsLoading(false);
+
         setOpenModal(true);
       })
     setParamDialog(false);

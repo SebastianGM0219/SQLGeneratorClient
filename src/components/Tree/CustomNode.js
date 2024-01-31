@@ -114,7 +114,7 @@ export const CustomNode = (props) => {
     <div
       className={`tree-node ${styles.root}`}
       style={{ paddingInlineStart: indent }}
-      onContextMenu={handleContextMenu}
+//      onContextMenu={handleContextMenu}
       onSelect={()=>{    setContextMenuOpen(false);
       }}
     >

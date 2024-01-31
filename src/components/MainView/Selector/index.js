@@ -182,82 +182,82 @@ function Selector() {
             else
             {
                let m1,m2;            
-               for(m1 = 0 ;m1 < array1.length; m1++)
-                 for(m2 = 0 ;m2 < array2.length; m2++)
-                  {
-                    let left = uniqueArray[i];
-                    let right =newArray[0];
-                    if(array1[m1].name!=='id' || array2[m2].name!=='id')
-                    {
-                     let command = `SELECT
-                     CASE
-                         WHEN (
-                            SELECT COUNT(*)
-                             FROM (
-                                 SELECT DISTINCT ${array1[m1].name}
-                                 FROM ${left}
-                             ) AS c1
-                         ) = (
-                             SELECT COUNT(*)
-                             FROM (
-                                 SELECT DISTINCT ${array1[m1].name}
-                                 FROM ${left}
-                                 WHERE ${array1[m1].name} IN (SELECT DISTINCT ${array2[m2].name} FROM ${right})
-                             ) AS c2
-                         )
-                         OR
-                         (
-                            SELECT COUNT(*)
-                            FROM (
-                                SELECT DISTINCT ${array2[m2].name}
-                                FROM ${right}
-                            ) AS c1
-                         ) =
-                         (
-                           SELECT COUNT(*)
-                            FROM (
-                              SELECT DISTINCT ${array2[m2].name}
-                              FROM ${right}
-                              WHERE ${array2[m2].name} IN (SELECT DISTINCT ${array1[m1].name} FROM ${left})
-                           ) AS c2
-                         ) 
-                          THEN 'yes'
-                         ELSE 'no'
-                     END AS result;`
-                    let query=command;
-                     const queryInfo= {
-                      query: query
-                    }
+//                for(m1 = 0 ;m1 < array1.length; m1++)
+//                  for(m2 = 0 ;m2 < array2.length; m2++)
+//                   {
+//                     let left = uniqueArray[i];
+//                     let right =newArray[0];
+//                     if(array1[m1].name!=='id' || array2[m2].name!=='id')
+//                     {
+//                      let command = `SELECT
+//                      CASE
+//                          WHEN (
+//                             SELECT COUNT(*)
+//                              FROM (
+//                                  SELECT DISTINCT ${array1[m1].name}
+//                                  FROM ${left}
+//                              ) AS c1
+//                          ) = (
+//                              SELECT COUNT(*)
+//                              FROM (
+//                                  SELECT DISTINCT ${array1[m1].name}
+//                                  FROM ${left}
+//                                  WHERE ${array1[m1].name} IN (SELECT DISTINCT ${array2[m2].name} FROM ${right})
+//                              ) AS c2
+//                          )
+//                          OR
+//                          (
+//                             SELECT COUNT(*)
+//                             FROM (
+//                                 SELECT DISTINCT ${array2[m2].name}
+//                                 FROM ${right}
+//                             ) AS c1
+//                          ) =
+//                          (
+//                            SELECT COUNT(*)
+//                             FROM (
+//                               SELECT DISTINCT ${array2[m2].name}
+//                               FROM ${right}
+//                               WHERE ${array2[m2].name} IN (SELECT DISTINCT ${array1[m1].name} FROM ${left})
+//                            ) AS c2
+//                          ) 
+//                           THEN 'yes'
+//                          ELSE 'no'
+//                      END AS result;`
+//                     let query=command;
+//                      const queryInfo= {
+//                       query: query
+//                     }
 
-                    try{
+//                     try{
 
-                    const res =  await QueryService.runQuery(queryInfo);
-                    const data = res.data;
-                      if (data && data.payload) {
-                        const { fields, rows } = data.payload;
-                        if(rows[0].result==="yes" )
-                        {
-                          let table_right = [],field_right = [];
-                          let table_left = [],field_left = [];
-                          table_left.push(uniqueArray[i]);
-                          field_left.push( uniqueArray[i]+ '.' + array1[m1].name);
-                          table_right.push( newArray[0]); 
-                          field_right.push( newArray[0] + '.' + array2[m2].name);
+//                     const res =  await QueryService.runQuery(queryInfo);
+//                     const data = res.data;
+//                       if (data && data.payload) {
+//                         const { fields, rows } = data.payload;
+//                         if(rows[0].result==="yes" )
+//                         {
+//                           let table_right = [],field_right = [];
+//                           let table_left = [],field_left = [];
+//                           table_left.push(uniqueArray[i]);
+//                           field_left.push( uniqueArray[i]+ '.' + array1[m1].name);
+//                           table_right.push( newArray[0]); 
+//                           field_right.push( newArray[0] + '.' + array2[m2].name);
 
-                          dispatch(AddRelationData({leftTable:table_left, rightTable: table_right, leftField:field_left, rightField: field_right}));
-//                          i= uniqueArray.length-1;                     
-                          break;
-                        }
-                      } else {
-                        // Handle the case when data.payload is undefined
-                        console.log('data.payload is undefined');
-                        break;
-                      }
-                    } catch{
-                        break;                      
-                    }
-                  }
-                }
+//                           dispatch(AddRelationData({leftTable:table_left, rightTable: table_right, leftField:field_left, rightField: field_right}));
+// //                          i= uniqueArray.length-1;                     
+//                           break;
+//                         }
+//                       } else {
+//                         // Handle the case when data.payload is undefined
+//                         console.log('data.payload is undefined');
+//                         break;
+//                       }
+//                     } catch{
+//                         break;                      
+//                     }
+//                   }
+//                 }
             }
           }
 

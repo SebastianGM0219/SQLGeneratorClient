@@ -94,11 +94,12 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const [selectedName, setSelectedName] = useState(""); 
   const dispatch = useDispatch();
   const [error, setError] = React.useState(false);
-  const [empty, SetEmpty] = React.useState(true);
-  const [saveOpen, setSaveOpen] = React.useState(false);
-  const [saveSnackOpen, setSaveSnackOpen] = React.useState(false);
+  const [empty, setEmpty] = React.useState(false);
   const [openAlertSave, setOpenAlertSave] = React.useState(false);
   const [openAlertSave1, setOpenAlertSave1] = React.useState(false);
+  const [saveSnackOpen, setSaveSnackOpen] = React.useState(false);
+  const [deleteSnackOpen, setDeleteSnackOpen] = React.useState(false);
+
 
   const [disableParam, setDisableParam] = React.useState(initmenu.length>0? false: true);
 //  const dbInfo = useSelector(state => state.database.dbInfo);
@@ -205,12 +206,12 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     setDuplicateAlert(false);
   }
   const handleSaveClose = () => {
-    // if (reason === 'clickaway') {
-    //   return;
-    // }
-
     setSaveSnackOpen(false);
-  };
+  }
+  const handleDeleteClose = () => {
+    setDeleteSnackOpen(false);
+  }
+
 
   const closeAgreeAlertSave = () => {
     setSelectedName(connectMenu[index_flag]);
@@ -307,6 +308,11 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         setOpenAlertSave1(false);
         setFlag(0);
   };
+
+  const closeEmpty = () => {
+    setEmpty(false)
+  }
+
   const handleNewDailog = () => {
     // console.log("hereee=============e");
     setNewName("New Connection");
@@ -322,7 +328,11 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     setNewButtonOpen(false);
   };
 
-  const handleOkayNewDailog = () => {   
+  const handleOkayNewDailog = () => { 
+    if(newName.trim()===""){
+      setEmpty(true);
+      return
+    }  
     if(!connectMenu.some((value) => value === newName))
     {
     setConnectMenu((prevMenu) => [...prevMenu, newName]);
@@ -377,6 +387,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     }
 
     Cookies.set('dbInfos', JSON.stringify(initialDbInfosArray),{ expires: 30 });
+    setDeleteSnackOpen(true)
   }
 
   const handleSaveNewDailog = () => {
@@ -402,11 +413,12 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
 //      setSaveSnackOpen(true);
       Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
       setSaveDisable(true)
+      setSaveSnackOpen(true)
     }
   }
 
   return (  
-    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:10} }}>
+    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width: 600, padding: 20} }}>
       <CustomDialogTitle sx={{marginLeft: '3px'}}>
          Connect to PostgreSQL Host
         <IconButton
@@ -538,14 +550,20 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         </div>
        
       </DialogContent>
-      <DialogActions>
-        <Button variant="contained" style={{marginBottom: 20}}  onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" style={{marginRight:14,marginBottom: 20}} onClick={handleClick}>Connect</Button>
+      <DialogActions sx={{display:'block', padding:'4px 24px'}}>
+        <Button variant="contained" sx={{float: 'right'}} onClick={handleClick}>Connect</Button>
+        <Button variant="contained" sx={{float: 'right', marginRight: '15px'}} onClick={handleClose}>Cancel</Button>
       </DialogActions>
 
-      <Snackbar open={saveSnackOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={1000} onClose={handleSaveClose} >
-        <Alert severity="success" sx={{ width: '100%' }}>
+      <Snackbar open={saveSnackOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={2000} onClose={handleSaveClose} >
+        <Alert severity="success" variant='filled' sx={{ width: '100%' }}>
           Database saved correctly.
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={deleteSnackOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={2000} onClose={handleDeleteClose} >
+        <Alert severity="error" variant='filled' sx={{ width: '100%' }}>
+          Database deleted correctly.
         </Alert>
       </Snackbar>
 
@@ -572,6 +590,28 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         </DialogActions>
       </Dialog>
 
+      <Dialog
+        open={empty}
+        // onClose={closeAlertSave}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Warning"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Connection Name is Empty!
+            Input connection name correctly!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEmpty} autoFocus>
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+      
       <Dialog
         open={openAlertSave1}
         // onClose={closeAlertSave}
