@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://sql-generator-server.vercel.app/"
+  baseURL: "https://sql-generator-server-eight.vercel.app/"
 });
