@@ -199,7 +199,7 @@ export default function AddTableDialog({ open, handleTableClose,handleAddTableCl
           />
           <Box className={classes.boxStyle} >
             <Grid container >
-              <Grid item md={7} className={classes.listBoxStyle} >
+              <Grid item md={7} sx={{borderRight: '1px solid #ccc'}}className={classes.listBoxStyle} >
                 <Box>
                   {items && items.map((item => {
                     const labelId = `checkbox-list-label-${item.name}`;
