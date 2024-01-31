@@ -58,8 +58,6 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   }
 
   const isViewType = isView(text);  
-  console.log("ViewType" + isViewType);
-
   
   const handleChange = (event) => {
     const checked = event.target.checked;

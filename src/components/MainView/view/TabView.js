@@ -471,18 +471,13 @@ export default function TabView() {
       setDefaultList(query);
     }
     dispatch(setCodeSQL(query));
-    console.log("dispatch");
-    console.log(query);
     const queryInfo= {
       query: query
     }
-    console.log("==u have to chage");
-    console.log(selectFields);
     if(selectFields.length>0)
     {
     dispatch(testQuery(queryInfo))
     .then(data =>{
-        console.log(data);
 
         if(selectFields.length>0)
         {

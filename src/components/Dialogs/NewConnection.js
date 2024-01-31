@@ -165,8 +165,6 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
             ...dbInfos,      connectname: selectedName
           };
       
-          console.log("initialDbInfosArray");
-          console.log(initialDbInfosArray);
           let found = false;          
           let newArray = initialDbInfosArray.map((item) => {
             if (item.connectname === newvalue.connectname) {
@@ -179,7 +177,6 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
           if (!found) {
             newArray.push(newvalue); // If not found, push new value to array
           }
-          console.log(newArray);
 
       //      setSaveSnackOpen(true);
           Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
@@ -352,8 +349,6 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       setOpenAlertSave(true);
     } else {
       index_flag = event.target.value;
-      console.log("menuchange");
-      console.log(event.target.value);
       setSelectedName(connectMenu[event.target.value]);
       setIndex(event.target.value);
       setDbInfos(initialDbInfosArray[event.target.value]);

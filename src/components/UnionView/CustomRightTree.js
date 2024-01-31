@@ -40,9 +40,6 @@ export default function CustomRightTree(props) {
   const dispatch = useDispatch();
   const handleDrop = (newTree) => {
 
-    console.log("====newTree");
-    console.log(newTree);
-    console.log("====newTree");
 //    setTreeData(newTree);
 
 //    dispatch(setUnionData(newData));
@@ -56,8 +53,6 @@ export default function CustomRightTree(props) {
 //    setTreeData(rightdata);
   if(!rightdata.includes(undefined) ){
     dispatch(setRightUnionData({right:rightdata}));
-//    console.log()
-//    dispatch(delLeftData({right:newTree}));
     }
   };
 

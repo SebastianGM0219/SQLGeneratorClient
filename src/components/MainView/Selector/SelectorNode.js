@@ -12,6 +12,8 @@ import Functions from '@mui/icons-material/Functions';
 import { setCurTab } from '../../../slices/utility';
 import TableService from '../../../services/TableService'
 import { addRelation, setRelationData,initRelation} from "../../../slices/query"
+import { setUniqueTable } from "../../../slices/utility";
+
 import { array } from "prop-types";
 
 const useStyles = makeStyles()((theme) => {
@@ -94,7 +96,9 @@ export const SelectorNode = (props) => {
  
   const indent = props.depth * 24;
   const [visible, setVisible] = React.useState(false);
-  const dispatch = useDispatch();                                                                                                                                                                                                   
+  const dispatch = useDispatch();        
+  const items = useSelector(state => state.query.selectFields);
+                                                                                                                                                                                           
   const showCloseButton = (e) => {
     setVisible(true);
   }
@@ -104,7 +108,15 @@ export const SelectorNode = (props) => {
   }
   
   const handleClick = (e) => {
+
+//    const tableNameArray = items.map(item=> item.data.table);
+    const newState = items.filter(item => item.id !== id).map(item => item.data.table);
+    const uniqueArray = [...new Set(newState)];
+    const uniqueTableName = uniqueArray.join(' , ');
+    dispatch(setUniqueTable(uniqueTableName));
     dispatch(removeSelector({id}));
+
+
   }
   
   const handleProperty = (e) => {

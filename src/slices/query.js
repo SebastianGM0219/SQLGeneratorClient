@@ -90,7 +90,6 @@ export const runQuery = createAsyncThunk(
   async (queryInfo) => {
     try {
       const res = await QueryService.runQuery(queryInfo);
-      console.log("monkey==========");
       return res.data;
     } catch (error) {
       console.log('rrr');
@@ -105,8 +104,6 @@ export const testQuery = createAsyncThunk(
   async (queryInfo) => {
     try {
       const res = await QueryService.testQuery(queryInfo);
-      console.log("test==========");
-      console.log(res);
       return res.data.res;
     } catch (error) {
       console.log('rrr');
@@ -229,13 +226,10 @@ export const querySlice = createSlice({
  
       let sqlQuery = command;
       sqlQuery = deleteSpace(sqlQuery);
-      console.log(sqlQuery);
 
       const selectRegex = /SELECT(.*?)FROM/i;
       const selectMatch = sqlQuery.match(selectRegex);
       const select = selectMatch ? selectMatch[1].trim() : '';
-
-      console.log(select);
 
       //handle select
 
@@ -349,11 +343,6 @@ export const querySlice = createSlice({
         const orderBy = orderByMatch ? orderByMatch[1].trim() : '';
         const select_new = select.trim(); 
         const field_array=select_new.split(",").map(item => item.trim());
-        console.log("===field_array");
-        console.log(select);
-
-        console.log(field_array);
-        console.log("===field_array");
 
 /*        for(let i = 0; i < field_array.length; i++) {
            const parent = field_array[i].split(".")[0];
@@ -533,10 +522,7 @@ export const querySlice = createSlice({
     removeFieldCalcDrop: (state, action) => {
       const { id } = action.payload;
 //      let removedIndex = -1;
-      console.log(JSON.parse(JSON.stringify(state.fieldCalcDrop)));
       const newState = state.fieldCalcDrop.filter(item =>  (item.filterVariant && item.filterVariant.length === 0) || item.filterVariant && item.filterVariant[0] &&item.filterVariant[0].id !==id);
-
-
       state.fieldCalcDrop = newState;
 
     },
@@ -626,12 +612,27 @@ export const querySlice = createSlice({
       const tableValue = parsedData[0].data.table;
       const relation = state.relationFields.filter(item => item.RTable[0] !== tableValue && item.LTable[0] !== tableValue);      
       const newState = state.selectFields.filter(item => item.id !== id);
+      
+      console.log("removeSelector");
+      console.log(newState);
+
+  
       state.selectFields = newState;
       state.relationFields = relation;
+        if(relation.length===0)
+      {
+         state.relationFields.push({
+        LTable: [],
+        RTable: [],
+        LFields: [""],
+        RFields: [""],
+        Operator: [0],
+        joinType: 0
+      });
+      }
       if(state.clickField &&id === state.clickField.id)
       {
         state.clickField = {};
-        console.log(state.clickField);
       }
     },
 
@@ -643,15 +644,12 @@ export const querySlice = createSlice({
 */
        const { id, name, aggreType} = action.payload;
       
-       console.log(JSON.parse(JSON.stringify(state.selectFields)));
        const updatedFields = state.selectFields.map(item => {
         if (item.id === id) {
-          console.log(item);
           return {...item, data: { ...item.data, header_name: name, aggreType: aggreType}};          
         }
         return item;
       });
-      console.log(updatedFields);
 
       state.selectFields = updatedFields;
     }, 
@@ -687,10 +685,7 @@ export const querySlice = createSlice({
     clickSelector: (state, action) => {
       const { id } = action.payload;
       const newState = state.selectFields.find(item => item.id === id);
-
       state.clickField = newState; 
-      console.log("here=======");
-      console.log(state.clickField);
       if(state.clickField && state.clickField.data&&action.payload.id.includes("function"))
       {
         if (!state.clickField?.data?.dropbox) {

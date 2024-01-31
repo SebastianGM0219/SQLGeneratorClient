@@ -34,15 +34,10 @@ export default function CustomLeftTree(props) {
   const { classes } = useStyles();
 
   const queryData = useSelector(state => state.union.leftTree);
-  console.log("leftTree");
-  console.log(queryData);
   const dispatch = useDispatch();
 //  const [treeData, setTreeData] = useState(queryData);
   const handleDrop = (newTree) => {
 
-    console.log("====newTree");
-    console.log(newTree);
-    console.log("====newTree");
   //    setTreeData(newTree);
 
   //    dispatch(setUnionData(newData));
@@ -53,7 +48,6 @@ export default function CustomLeftTree(props) {
       parent: item.parent,
       text: item.text
     })); 
-    console.log(leftdata);
   //    setTreeData(rightdata);
   if(!leftdata.includes(undefined) ){
     dispatch(setLeftUnionData1({left:leftdata}));

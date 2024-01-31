@@ -21,15 +21,9 @@ export default function CodeView() {
   const [defaultList, setDefaultList] = React.useState('');
   const items = useSelector(state => state.union.rightTree);
   const unionType = useSelector(state => state.union.unionType);
-  // console.log("==============");
-  // console.log(items);
 
   React.useEffect(()=>{
     setDefaultList("");
-/*    console.log("my items");
-    console.log(items);
-    console.log("my items");
-*/
     let string = "";
     items.map((item,index) => {
       string += "(\n";
