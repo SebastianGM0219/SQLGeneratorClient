@@ -18,7 +18,8 @@ import Cookies from 'js-cookie';
 import {getTables, addUpdateItem} from '../../slices/table';
 import CloseIcon from '@mui/icons-material/Close';
 import { Snackbar, Alert } from '@mui/material';
-
+import { faL } from '@fortawesome/free-solid-svg-icons';
+import DialogContentText from '@mui/material/DialogContentText';
 const CustomTextField = styled(TextField)(({ theme }) => ({
   fontSize: 12,
   marginTop: 1,
@@ -79,6 +80,11 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     port: '',
     db: ''
   };
+  // let flag = 0;
+  let index_flag = 0;
+  const [saveDisable, setSaveDisable] = useState(true);
+  const [flag, setFlag] = useState(0);
+  const [duplicateAlert, setDuplicateAlert] =useState(false);
   const initmenu = initialDbInfosArray?initialDbInfosArray.map(item => item.connectname):[];
   const [dbInfos, setDbInfos] = useState(initialDbInfos);
   const [newButtonOpen, setNewButtonOpen] = useState(false);
@@ -91,34 +97,46 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const [empty, SetEmpty] = React.useState(true);
   const [saveOpen, setSaveOpen] = React.useState(false);
   const [saveSnackOpen, setSaveSnackOpen] = React.useState(false);
-
+  const [openAlertSave, setOpenAlertSave] = React.useState(false);
   const [disableParam, setDisableParam] = React.useState(initmenu.length>0? false: true);
 //  const dbInfo = useSelector(state => state.database.dbInfo);
+  const [started, setStarted] = React.useState(false);
   useEffect(() => {
     localStorage.setItem('dbQuery',"");
-
   }, []);  
 
   useEffect(()=>{
     console.log("changed");
     console.log(connectMenu);
     setDisableParam(connectMenu.length>0? false: true);
+
   },[connectMenu]);
+
+  useEffect(()=>{
+    setSaveDisable(false);
+  },[dbInfos]);
   const changeNameHandler = e => {
     setNewName(e.target.value);
   //  setDbInfos({...dbInfos, [e.target.name]: e.target.value})
   }
+
   const changeHandler = e => {
+    
     setDbInfos({...dbInfos, [e.target.name]: e.target.value})
   }
+
   const isUserNameValid = (url) =>
     dbInfos.username==="";
+
   const isHostValid = (url) =>
     dbInfos.host==="";
+
   const isPasswordValid = (url) =>
    dbInfos.password==="";
+
   const isPortValid = (url) =>
     dbInfos.port==="";
+
   const isDbValid = (url) =>
     dbInfos.db==="";
     
@@ -154,6 +172,10 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       setSaveSnackOpen(false);
     }
   }
+
+  const closeDuplicateAlert = () => {
+    setDuplicateAlert(false);
+  }
   const handleSaveClose = () => {
     // if (reason === 'clickaway') {
     //   return;
@@ -161,27 +183,90 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
 
     setSaveSnackOpen(false);
   };
+
+  const closeAgreeAlertSave = () => {
+    setSelectedName(index_flag);
+    setIndex(index_flag);
+    setDbInfos(initialDbInfosArray[index_flag]);
+    setOpenAlertSave(false);
+    setFlag(0);
+    const newvalue = {
+      ...dbInfos,      connectname: selectedName
+    };
+
+    let found = false;          
+    let newArray = initialDbInfosArray.map((item) => {
+      if (item.connectname === newvalue.connectname) {
+        found = true;
+        return newvalue; // Update the array with the new value
+      }
+      return item;
+    });
+    if (!found) {
+      newArray.push(newvalue); // If not found, push new value to array
+    }
+//      setSaveSnackOpen(true);
+    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+
+  };
+
+  const closeDisAgreeAlertSave = () => {
+    setSelectedName(index_flag);
+    setIndex(index_flag);
+    setDbInfos(initialDbInfosArray[index_flag]);
+    setOpenAlertSave(false);
+    const updatedMenu = connectMenu.filter((_, index) => index !== index_flag);
+    setConnectMenu(updatedMenu);    
+    setFlag(0);
+  };
+
   const handleNewDailog = () => {
-    setNewButtonOpen(true);
+    if(flag === 1)
+    {
+      setOpenAlertSave(false);
+    }
+    else
+      setNewButtonOpen(true);
   };
 
   const handleCloseNewDailog = () => {
     setNewButtonOpen(false);
   };
 
-  const handleOkayNewDailog = () => {    
+  const handleOkayNewDailog = () => {   
+     
+    if(!connectMenu.some((value) => value === newName))
+    {
     setConnectMenu((prevMenu) => [...prevMenu, newName]);
     setSelectedName(newName); 
     setIndex( connectMenu.length);
     const dbInfo_new = { username:"postgres", host:"localhost", port: "5432", password: "password", db: ""};
     setDbInfos(dbInfo_new);
     setNewButtonOpen(false);
+    console.log("start===============");
+    console.log(flag);
+    setFlag(1);
+    setSaveDisable(false);
+    }
+    else
+    {
+      setDuplicateAlert(true);
+    }
   };
 
   const handleMenuChange = (event) => {
-    setSelectedName(event.target.value);
-    setIndex(event.target.value);
-    setDbInfos(initialDbInfosArray[event.target.value]);
+    console.log("=========flag");
+    console.log(flag);
+    setSaveDisable(true);
+    if(flag === 1) {
+      index_flag = event.target.value;
+      setOpenAlertSave(true);
+    } else {
+      index_flag = event.target.value;
+      setSelectedName(event.target.value);
+      setIndex(event.target.value);
+      setDbInfos(initialDbInfosArray[event.target.value]);
+    }
   }
   
   const handleDeleteNewDailog = () => {
@@ -212,6 +297,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     if(isUserNameValid()||isHostValid()||isPasswordValid()||isPortValid()||isDbValid()) {
       setError(true);      
     } else {  
+      setFlag(0);
       const newvalue = {
         ...dbInfos,      connectname: selectedName
       };
@@ -227,15 +313,16 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       if (!found) {
         newArray.push(newvalue); // If not found, push new value to array
       }
-      setSaveSnackOpen(true);
+//      setSaveSnackOpen(true);
       Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+      setSaveDisable(true)
     }
   }
 
   return (  
     <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:10} }}>
       <CustomDialogTitle sx={{marginLeft: '3px'}}>
-        New Connection
+         Connect to PostgreSQL Host
         <IconButton
           edge="end"
           color="inherit"
@@ -249,17 +336,12 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
           <CustomButton variant="outlined" sx={{marginLeft: '2px'}} onClick={handleNewDailog}>New</CustomButton>
             <Dialog open={newButtonOpen} onClose={handleCloseNewDailog} disableRestoreFocus>
-              <DialogTitle>Connect to PostgreSQL Host</DialogTitle>
+              <DialogTitle>New Connection</DialogTitle>
               <DialogContent>
                 <CustomTextField
                   style={{width:300}}
                   defaultValue="New connection"
                   onChange= {changeNameHandler}
-                  // placeholder="Username"
-                  // error={error && isUserNameValid()}
-                  // helperText={error && isUserNameValid()
-                  //   ? 'You have to input Username'
-                  //   : ''}
                   type="text"
                   fullWidth
                   variant="outlined"
@@ -271,8 +353,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
                 <Button onClick={handleOkayNewDailog} style={{marginRight:16}} variant="contained" >OK</Button>
               </DialogActions>
             </Dialog>          
-          <CustomButton onClick={handleSaveNewDailog} disabled={disableParam} variant="outlined">Save</CustomButton>
-          {/* <CustomButton variant="outlined">Rename</CustomButton> */}
+          <CustomButton onClick={handleSaveNewDailog} disabled={disableParam||saveDisable} variant="outlined">Save</CustomButton>
           <CustomButton variant="outlined" disabled={disableParam} onClick={handleDeleteNewDailog} >Delete</CustomButton>   
         </div> 
         <div style={{  alignItems: 'center', paddingLeft: '4px'}}>
@@ -284,8 +365,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
             labelId="saved-connection-label"
             value={index}
             defaultValue={index}
-            onChange={handleMenuChange}
-          
+            onChange={handleMenuChange}          
           >
             {connectMenu.map((item, index) => (
               <MenuItem key={index} value={index}>{item}</MenuItem>
@@ -296,7 +376,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomTextField
           autoFocus
           disabled={disableParam}
-          value={dbInfos.host}
+          value={dbInfos?.host}
           name="host"
           placeholder=""
           type="text"
@@ -312,7 +392,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
         <CustomTextField
           name="username"
           disabled={disableParam}
-          value={dbInfos.username}
+          value={dbInfos?.username}
           // placeholder="Username"
           error={error && isUserNameValid()}
           helperText={error && isUserNameValid()
@@ -323,7 +403,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
           variant="outlined"
           onChange={changeHandler}
         />
-        <CustomInputLabel id="saved-connection-label" >Password</CustomInputLabel>        
+        <CustomInputLabel id="saved-connection-label" >Password</CustomInputLabel>
         <CustomTextField
           name="password"
           disabled={disableParam}
@@ -333,15 +413,15 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
           error={error && isPasswordValid()}
           helperText={error && isPasswordValid()
             ? 'You have to input Username'
-            : ''}          
+            : ''}
           fullWidth
           variant="outlined"
           onChange={changeHandler}
         />
-        <CustomInputLabel id="saved-connection-label" >Port</CustomInputLabel>                
+        <CustomInputLabel id="saved-connection-label" >Port</CustomInputLabel>
         <CustomTextField
           name="port"
-          value={dbInfos.port}
+          value={dbInfos?.port}
           disabled={disableParam}
           // placeholder="Port"
           type="text"
@@ -359,7 +439,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
           name="db"
           // placeholder="Database Name"
           type="text"
-          value={dbInfos.db}
+          value={dbInfos?.db}
           error={error && isDbValid()}
           helperText={error && isDbValid()
             ? 'You have to input Username'
@@ -382,6 +462,50 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
           Database saved correctly.
         </Alert>
       </Snackbar>
+
+      <Dialog
+        open={openAlertSave}
+        // onClose={closeAlertSave}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"POSTSQL Professional"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You've changed your connection Details. 
+            Do you want to save changes?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDisAgreeAlertSave}>Disagree</Button>
+          <Button onClick={closeAgreeAlertSave} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={duplicateAlert}
+        // onClose={closeAlertSave}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"POSTSQL Professional"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Connection already exists, Please enter a unique name
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDuplicateAlert}>Okay</Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>   
+
+    
   );
 }
