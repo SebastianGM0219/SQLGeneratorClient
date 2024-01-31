@@ -271,7 +271,6 @@ function Selector() {
       hader: ''
     };
     
-    console.log("unqiueArrray");
     newTree.forEach(newItem => {
       let count = 0;
       treeData.forEach(preItem => {

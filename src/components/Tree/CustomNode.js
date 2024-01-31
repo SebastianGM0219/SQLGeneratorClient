@@ -110,8 +110,6 @@ export const CustomNode = (props) => {
   //    setFailOpen(true);
   //  })
   }
-  console.log(data?.type);
-  console.log(isView(props.node.data.table));
   return (
     <div
       className={`tree-node ${styles.root}`}

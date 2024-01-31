@@ -49,8 +49,6 @@ export default function CrossTab() {
     }
   }
 
-  console.log("CrossTab console", isCrossTab)
-
   return (
     <Box>
       <Box className={classes.headerBox}>

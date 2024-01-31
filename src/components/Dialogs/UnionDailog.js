@@ -93,7 +93,6 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
 
   const handleUnionTypeChange = (event) => {
     setUnionType(event.target.value);
-    console.log(event.target.value);
     dispatch(setUnionGlobalType({unionType:event.target.value}));
   };
 

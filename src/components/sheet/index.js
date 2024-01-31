@@ -59,7 +59,7 @@ export default function Result() {
   const buttonRef = useRef();
   const dispatch = useDispatch();
   const [expanded, setExpanded] = React.useState(isSheetOpened);
-  const [exportFileName, setExportFileName] = React.useState("output.csv");
+  const [exportFileName, setExportFileName] = React.useState("output");
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const isConnected = useSelector(state => state.database.success);
 
@@ -90,6 +90,7 @@ export default function Result() {
 
   const exportCSV = (event) => {
     buttonRef.current.link.click();
+    handleCloseEditDialog();
   }
 
   const handleOpenEditDialog = () => {
@@ -138,8 +139,8 @@ export default function Result() {
             />
           </DialogContent>
           <DialogActions sx={{display:'block', padding:'4px 24px'}}>
-            <Button variant="contained" sx={{float: 'right', marginLeft: '15px'}} onClick={handleCloseEditDialog}>Cancel</Button>
             <Button variant="contained" sx={{float: 'right'}} onClick={exportCSV}>OK</Button>
+            <Button variant="contained" sx={{float: 'right', marginRight: '15px'}} onClick={handleCloseEditDialog}>Cancel</Button>
           </DialogActions>
       </Dialog>
     </Box>

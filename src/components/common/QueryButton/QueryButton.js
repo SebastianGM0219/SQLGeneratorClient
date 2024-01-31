@@ -155,14 +155,9 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
     const updatedOptions = options.filter((option, index )=> option !== value1);
     const index = options.findIndex((option) => option === value1);    
     if(options.length === 1) {
-      console.log("cant delete");
     } else if(index>=1) {
       let sessionDbInfos = localStorage.getItem('dbQuery');
-
       let newinitialDbInfosArray= sessionDbInfos ? JSON.parse(sessionDbInfos):[];
-
-      console.log(newinitialDbInfosArray);
-      console.log("session=========");
       let sessionDbInfosarray= JSON.parse(sessionDbInfos);
 
       newinitialDbInfosArray.splice(index,1);
@@ -255,8 +250,8 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
             />
           </DialogContent>
           <DialogActions sx={{display:'block', padding:'4px 24px'}}>
-            <Button variant="contained" sx={{float: 'right', marginLeft: '15px'}} onClick={handleDialogClose}>Cancel</Button>
             <Button variant="contained" sx={{float: 'right'}}onClick={handleAddOption}>Add</Button>
+            <Button variant="contained" sx={{float: 'right', marginRight: '15px'}} onClick={handleDialogClose}>Cancel</Button>
           </DialogActions>
       </Dialog>
       <UnionDialog open={unionOpen} handleCloseUnionDialog={handleCloseUnionDialog} queryName={options}/> 

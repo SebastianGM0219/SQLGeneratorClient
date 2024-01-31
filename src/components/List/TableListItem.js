@@ -18,7 +18,7 @@ const useStyles = makeStyles()((theme) => {
     },
     iconStyle: {
       verticalAlign: 'middle',
-      color: '#1976d2',
+      color: '#41d7d5',
       marginRight: 16,
       width: 20
     },
@@ -58,8 +58,6 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   }
 
   const isViewType = isView(text);  
-  console.log("ViewType" + isViewType);
-
   
   const handleChange = (event) => {
     const checked = event.target.checked;
@@ -81,7 +79,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
       {isViewType==='1' ?(<FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconViewStyle}/>):
         (hasKey?<FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconStyle}/>:
           <FontAwesomeIcon ic on={faTableCells} size="1x" className={classes.iconStyle}/>)}
-      {text}
+      {text.toUpperCase()}
     </Box>
   )
 }
