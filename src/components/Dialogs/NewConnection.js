@@ -98,23 +98,38 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   const [saveOpen, setSaveOpen] = React.useState(false);
   const [saveSnackOpen, setSaveSnackOpen] = React.useState(false);
   const [openAlertSave, setOpenAlertSave] = React.useState(false);
+  const [openAlertSave1, setOpenAlertSave1] = React.useState(false);
+
   const [disableParam, setDisableParam] = React.useState(initmenu.length>0? false: true);
 //  const dbInfo = useSelector(state => state.database.dbInfo);
   const [started, setStarted] = React.useState(false);
   useEffect(() => {
-    localStorage.setItem('dbQuery',"");
+//    localStorage.setItem('dbQuery',"");
+    // const sessionDbInfos = Cookies.get('dbInfos');
+    // const initialDbInfosArray = sessionDbInfos ? JSON.parse(sessionDbInfos):[];
+    // const initialDbInfos =initialDbInfosArray&&initialDbInfosArray[0]? initialDbInfosArray[0] : {
+    //   host: '',
+    //   username: '',
+    //   password: '',
+    //   port: '',
+    //   db: ''
+    // };
+
+    // const initmenu = initialDbInfosArray?initialDbInfosArray.map(item => item.connectname):[];
+    // setDbInfos(initialDbInfos);
+    // setConnectMenu(initmenu);
   }, []);  
 
   useEffect(()=>{
-    console.log("changed");
-    console.log(connectMenu);
+
     setDisableParam(connectMenu.length>0? false: true);
 
   },[connectMenu]);
 
   useEffect(()=>{
     setSaveDisable(false);
-  },[dbInfos]);
+
+  },[dbInfos,flag]);
   const changeNameHandler = e => {
     setNewName(e.target.value);
   //  setDbInfos({...dbInfos, [e.target.name]: e.target.value})
@@ -144,32 +159,48 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     if(isUserNameValid()||isHostValid()||isPasswordValid()||isPortValid()||isDbValid()){
       setError(true);      
     } else {      
-      const newvalue = {
-        ...dbInfos,      connectname: selectedName
-      };
+      // if(flag===0)
+      // {
+          const newvalue = {
+            ...dbInfos,      connectname: selectedName
+          };
+      
+          console.log("initialDbInfosArray");
+          console.log(initialDbInfosArray);
+          let found = false;          
+          let newArray = initialDbInfosArray.map((item) => {
+            if (item.connectname === newvalue.connectname) {
+              found = true;
+              return newvalue; // Update the array with the new value
+            }
+            return item;
+          });
+          console.log(found);
+          if (!found) {
+            newArray.push(newvalue); // If not found, push new value to array
+          }
+          console.log(newArray);
 
-      let found = false;          
-      let newArray = initialDbInfosArray.map((item) => {
-        if (item.connectname === newvalue.connectname) {
-          found = true;
-          return newvalue; // Update the array with the new value
-        }
-        return item;
-      });
-      if (!found) {
-        newArray.push(newvalue); // If not found, push new value to array
-      }
-      setSaveSnackOpen(true);
-      Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
-
-      dispatch(initAllDatabaseTable());
-      dispatch(saveDbInformation({dbInfo:dbInfos}));
-      dispatch(getTables());
-      dispatch(initAllState());
-      dispatch(initAllUtility());
-      dispatch(initAllTable());
-      handleConnect(dbInfos);
-      setSaveSnackOpen(false);
+      //      setSaveSnackOpen(true);
+          Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+    //    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+      
+        dispatch(initAllDatabaseTable());
+        dispatch(saveDbInformation({dbInfo:dbInfos}));
+        dispatch(getTables());
+        dispatch(initAllState());
+        dispatch(initAllUtility());
+        dispatch(initAllTable());
+        handleConnect(dbInfos);
+        setOpenAlertSave1(false);
+        setFlag(0);
+//       }
+//       else
+//       {
+// //        setOpenAlertSave1(true);
+//       }
+//      setSaveOpen(open);
+//      setSaveSnackOpen(false);
     }
   }
 
@@ -185,7 +216,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   };
 
   const closeAgreeAlertSave = () => {
-    setSelectedName(index_flag);
+    setSelectedName(connectMenu[index_flag]);
     setIndex(index_flag);
     setDbInfos(initialDbInfosArray[index_flag]);
     setOpenAlertSave(false);
@@ -211,19 +242,80 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   };
 
   const closeDisAgreeAlertSave = () => {
-    setSelectedName(index_flag);
+    setSelectedName(connectMenu[index_flag]);
     setIndex(index_flag);
+    setSaveDisable(true);
+
     setDbInfos(initialDbInfosArray[index_flag]);
     setOpenAlertSave(false);
-    const updatedMenu = connectMenu.filter((_, index) => index !== index_flag);
+    const updatedMenu = connectMenu.filter((_, index) => index !== initialDbInfosArray.length);
     setConnectMenu(updatedMenu);    
     setFlag(0);
   };
 
+
+  const closeAgreeAlertSave1 = () => {
+    // setSelectedName(index_flag);
+    // setIndex(index_flag);
+    // setDbInfos(initialDbInfosArray[index_flag]);
+    // setOpenAlertSave(false);
+    // setFlag(0);
+    const newvalue = {
+      ...dbInfos,      connectname: selectedName
+    };
+
+    let found = false;          
+    let newArray = initialDbInfosArray.map((item) => {
+      if (item.connectname === newvalue.connectname) {
+        found = true;
+        return newvalue; // Update the array with the new value
+      }
+      return item;
+    });
+    if (!found) {
+      newArray.push(newvalue); // If not found, push new value to array
+    }
+//      setSaveSnackOpen(true);
+    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+//    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
+  
+    dispatch(initAllDatabaseTable());
+    dispatch(saveDbInformation({dbInfo:dbInfos}));
+    dispatch(getTables());
+    dispatch(initAllState());
+    dispatch(initAllUtility());
+    dispatch(initAllTable());
+    handleConnect(dbInfos);
+    setOpenAlertSave1(false);
+    setFlag(0);
+  };
+
+  const closeDisAgreeAlertSave1 = () => {
+
+    // setSelectedName(0);
+    // setIndex(0);
+    // setDbInfos(initialDbInfosArray[0]);
+    // setOpenAlertSave(false);
+    // const updatedMenu = connectMenu.filter((_, index) => index !== initialDbInfosArray.length);
+    // setConnectMenu(updatedMenu);  
+
+
+    dispatch(initAllDatabaseTable());
+        dispatch(saveDbInformation({dbInfo:dbInfos}));
+        dispatch(getTables());
+        dispatch(initAllState());
+        dispatch(initAllUtility());
+        dispatch(initAllTable());
+        handleConnect(dbInfos);
+        setOpenAlertSave1(false);
+        setFlag(0);
+  };
   const handleNewDailog = () => {
-    if(flag === 1)
+    // console.log("hereee=============e");
+    setNewName("New Connection");
+    if(flag === 1&&connectMenu.length>0)
     {
-      setOpenAlertSave(false);
+      setOpenAlertSave(true);
     }
     else
       setNewButtonOpen(true);
@@ -234,7 +326,6 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   };
 
   const handleOkayNewDailog = () => {   
-     
     if(!connectMenu.some((value) => value === newName))
     {
     setConnectMenu((prevMenu) => [...prevMenu, newName]);
@@ -243,10 +334,9 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
     const dbInfo_new = { username:"postgres", host:"localhost", port: "5432", password: "password", db: ""};
     setDbInfos(dbInfo_new);
     setNewButtonOpen(false);
-    console.log("start===============");
-    console.log(flag);
+
     setFlag(1);
-    setSaveDisable(false);
+    setSaveDisable(true);
     }
     else
     {
@@ -255,15 +345,16 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
   };
 
   const handleMenuChange = (event) => {
-    console.log("=========flag");
-    console.log(flag);
+
     setSaveDisable(true);
     if(flag === 1) {
       index_flag = event.target.value;
       setOpenAlertSave(true);
     } else {
       index_flag = event.target.value;
-      setSelectedName(event.target.value);
+      console.log("menuchange");
+      console.log(event.target.value);
+      setSelectedName(connectMenu[event.target.value]);
       setIndex(event.target.value);
       setDbInfos(initialDbInfosArray[event.target.value]);
     }
@@ -340,7 +431,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
               <DialogContent>
                 <CustomTextField
                   style={{width:300}}
-                  defaultValue="New connection"
+                  value={newName}
                   onChange= {changeNameHandler}
                   type="text"
                   fullWidth
@@ -408,7 +499,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
           name="password"
           disabled={disableParam}
           // placeholder="Password"
-          value={dbInfos.password}
+          value={dbInfos?.password}
           type="text"
           error={error && isPasswordValid()}
           helperText={error && isPasswordValid()
@@ -487,6 +578,29 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       </Dialog>
 
       <Dialog
+        open={openAlertSave1}
+        // onClose={closeAlertSave}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"POSTSQL Professional"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You've changed your connection Details. 
+            Do you want to save changes?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDisAgreeAlertSave1}>Disagree</Button>
+          <Button onClick={closeAgreeAlertSave1} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
         open={duplicateAlert}
         // onClose={closeAlertSave}
         aria-labelledby="alert-dialog-title"
@@ -506,6 +620,5 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       </Dialog>
     </Dialog>   
 
-    
   );
 }
