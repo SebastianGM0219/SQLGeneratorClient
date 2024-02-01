@@ -250,7 +250,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
             />
           </DialogContent>
           <DialogActions sx={{display:'block', padding:'4px 24px'}}>
-            <Button variant="contained" sx={{float: 'right'}}onClick={handleAddOption}>Add</Button>
+            <Button variant="contained" sx={{float: 'right'}} onClick={handleAddOption}>Add</Button>
             <Button variant="contained" sx={{float: 'right', marginRight: '15px'}} onClick={handleDialogClose}>Cancel</Button>
           </DialogActions>
       </Dialog>
