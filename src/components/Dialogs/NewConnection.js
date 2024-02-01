@@ -433,7 +433,7 @@ export default function NewConnection({ open, handleClose, handleConnect }) {
       <DialogContent width={600} >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
           <CustomButton variant="outlined" sx={{marginLeft: '2px'}} onClick={handleNewDailog}>New</CustomButton>
-            <Dialog open={newButtonOpen} onClose={handleCloseNewDailog} disableRestoreFocus>
+            <Dialog PaperProps={{  style: { width:400, padding: 20} }} open={newButtonOpen} onClose={handleCloseNewDailog} disableRestoreFocus>
               <DialogTitle>New Connection</DialogTitle>
               <DialogContent>
                 <CustomTextField

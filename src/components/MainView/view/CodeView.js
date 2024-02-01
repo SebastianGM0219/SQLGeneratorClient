@@ -49,7 +49,13 @@ export default function CodeView() {
   useEffect(() => {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
-    fromTable = `FROM ${uniqueTable}`;    
+
+    let modifiedTable = uniqueTable.replace("None", "");
+    //    uniqueTable = modifiedTable;
+    
+        fromTable = `FROM ${modifiedTable}`;    
+    
+             
     queryData.relationFields.forEach((item, index) => {
       if(item.LTable.length>0){
         if(index === 0) fromTable = `FROM ${item.LTable[0]}`;
@@ -275,9 +281,11 @@ export default function CodeView() {
               const extractedValue = matchResult[1];
               updatedString = updatedString.replace(matchResult[0], `EXTRACT(QUARTER FROM ${extractedValue})`);
             }
-
+            
+            if(updatedString === "")
+              updatedString = null;
             updatedString += " as ";
-            updatedString += header_name;
+            updatedString += `"${header_name}"`;
             if(index !== selectFields.length-1)
               selectQuery += updatedString+ ", \n";         
             else

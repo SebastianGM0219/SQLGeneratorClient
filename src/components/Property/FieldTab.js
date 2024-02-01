@@ -7,7 +7,7 @@ import ParameterEditor from '../common/ParameterEditor';
 import { setFieldCalcDrop, setFilterValue } from '../../slices/query';
 import TypeSelector from '../common/TypeSelector';
 import { alpha, styled } from '@mui/material/styles';
-import { CheckBox, TextFields } from '@mui/icons-material';
+import { CheckBox, LocalConvenienceStoreOutlined, TextFields } from '@mui/icons-material';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { runQuery } from '../../slices/query';
@@ -207,14 +207,22 @@ export default function FieldTab() {
     //=============in case of multiple function===========
     if(!clickField.id.includes("function"))
     {
-  
       dispatch(setValueSelector({id:clickField.id, name: name, aggreType: aggreType}));
     }
     else
     {
       //dispatch(setSourceColumnSelector({id:newTree[0].id, sourceColumn: newTree[0].data.header_name, source: newTree[0].data.table,field:newTree[0].data.field,type:newTree[0].data.type}));
       if(fieldCalcDrop[0] && fieldCalcDrop[0].filterVariant && fieldCalcDrop[0].filterVariant[0] && fieldCalcDrop[0].filterVariant[0].data) {
-        tableNameArray=(fieldCalcDrop[0].filterVariant[0].data.table);
+
+    
+        const  old_uniqueArray = tableNameArray.split(',').map(item => item.trim());
+  //      const diff = uniqueArray.filter(item => !old_uniqueArray.includes(item));
+        console.log("=============old============");
+        console.log(old_uniqueArray);
+        console.log(fieldCalcDrop[0].filterVariant[0].data.table);
+        if(!old_uniqueArray.includes(fieldCalcDrop[0].filterVariant[0].data.table))
+            tableNameArray+=' ,'+fieldCalcDrop[0].filterVariant[0].data.table;
+//        tableNameArray=(fieldCalcDrop[0].filterVariant[0].data.table);
         //const isUnique = tableNameArray==uniqueTable?true:false;
         // const uniqueTableName = uniqueArray.length===1?uniqueArray[0]: '';
         // const uniqueArray = [...new Set(tableNameArray)];

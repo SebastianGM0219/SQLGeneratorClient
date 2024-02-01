@@ -77,7 +77,10 @@ export default function TabView() {
   React.useEffect(() => {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
-    fromTable = `FROM ${uniqueTable}`;    
+    let modifiedTable = uniqueTable.replace("None", "");
+//    uniqueTable = modifiedTable;
+
+    fromTable = `FROM ${modifiedTable}`;    
     queryData.relationFields.forEach((item, index) => {
       if(item.LTable.length>0){
         if(index === 0) fromTable = `FROM ${item.LTable[0]}`;
@@ -304,8 +307,10 @@ export default function TabView() {
               updatedString = updatedString.replace(matchResult[0], `EXTRACT(QUARTER FROM ${extractedValue})`);
             }
 
+            if(updatedString === "")
+              updatedString = null;
             updatedString += " as ";
-            updatedString += header_name;
+            updatedString += `"${header_name}"`;
             if(index !== selectFields.length-1)
               selectQuery += updatedString+ ", \n";         
             else

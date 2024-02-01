@@ -93,7 +93,6 @@ export const SelectorNode = (props) => {
   const { classes } = useStyles();
   const {isSelected} = props;
   const { data, id } = props.node;
- 
   const indent = props.depth * 24;
   const [visible, setVisible] = React.useState(false);
   const dispatch = useDispatch();        
@@ -156,6 +155,7 @@ export const SelectorNode = (props) => {
             </Box>
           </Box>
         </Grid>
+
         <Grid item xs={4}>
           <Box className={classes.boxStyle}>
             <Box>
