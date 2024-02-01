@@ -9,7 +9,6 @@ import { makeStyles  } from 'tss-react/mui';
 import { Oval } from  'react-loader-spinner';
 import { AppBar, Box, Container, Grid, Paper, Toolbar, Button, Typography, Snackbar } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
-
 import MuiAlert from "@mui/material/Alert";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AddTableDialog from "./components/Dialogs/AddTableDialog";
@@ -357,8 +356,6 @@ function App() {
       let query = GetQueryBasedOnParam();
       // console.log("app.jst");
       // console.log(query);
-      console.log("ful");
-      console.log(query);
       const queryInfo= {
         query: query
       }
@@ -434,21 +431,45 @@ function App() {
   
     const typeAry1 = ['=', '!=', '>', '>=', '<', '<='];
     const typeAry2 = ['=', '!=', 'Like', 'Not Like'];
+    // queryData.filterFields.forEach((item, index) => {
+    //   if(index !== queryData.filterFields.length-1) {
+    //     const {filterVariant, filterValue, operator, type} = item;
+    //     const { data: { table, field }} = filterVariant[0];
+    //     let typeOperator = typeAry1[operator];
+    //     if(type === "Text") typeOperator = typeAry2[operator];
+    //     let filterText = "";
+    //     if(filterValue.isParam){
+    //       const parameterName = filterValue.parameter;
+    //       parameters.forEach(item => {
+    //         if(item.name===parameterName)
+    //         {
+    //           filterText = item.value;
+    //           console.log("exchange============");
+    //           console.log(filterText);
+    //           console.log(filterValue.parameter);
+    //           console.log("exchange============");
+
+    //         }
+    //       })
+    //     }
+    //     else filterText = filterValue.default;
+    //     filterFields.push({table, field, typeOperator, value: filterText, type});
+    //   }
+
+      
+    // })
+
     queryData.filterFields.forEach((item, index) => {
       if(index !== queryData.filterFields.length-1) {
         const {filterVariant, filterValue, operator, type} = item;
         const { data: { table, field }} = filterVariant[0];
         let typeOperator = typeAry1[operator];
         if(type === "Text") typeOperator = typeAry2[operator];
-        let filterText = "";
-        if(filterValue.isParam){
-          const parameterName = filterValue.parameter;
-          parameters.forEach(item => {
-            if(item.name===parameterName) filterText = item.value;
-          })
+        if(filterValue.isParam) {
+          filterFields.push({table, field, typeOperator, value: '@'+filterValue.parameter, type});
+        } else {
+          filterFields.push({table, field, typeOperator, value: filterValue.default, type});
         }
-        else filterText = filterValue.default;
-        filterFields.push({table, field, typeOperator, value: filterText, type});
       }
     })
 
@@ -824,6 +845,51 @@ function App() {
     }
     if(edited || isCrossTab) query = codeSQL;
 
+
+    queryData.filterFields.forEach((item, index) => {
+      if(index !== queryData.filterFields.length-1) {
+        const {filterVariant, filterValue, operator, type} = item;
+        const { data: { table, field }} = filterVariant[0];
+        let typeOperator = typeAry1[operator];
+        if(type === "Text") typeOperator = typeAry2[operator];
+        let filterText = "";
+        if(filterValue.isParam){
+          const parameterName = filterValue.parameter;
+          parameters.forEach(item => {
+            if(item.name===parameterName)
+            {
+              filterText = item.value;
+              console.log("exchange============");
+              console.log(filterText);
+              console.log(filterValue.parameter);
+              console.log("exchange============");
+              query = query.replace("@"+filterValue.parameter,filterText );
+
+            }
+          })
+        }
+        else filterText = filterValue.default;
+        filterFields.push({table, field, typeOperator, value: filterText, type});
+      }
+
+      
+    })
+    // queryData.filterFields.forEach((item, index) => {
+    //   if(index !== queryData.filterFields.length-1) {
+    //     const {filterVariant, filterValue, operator, type} = item;
+    //     const { data: { table, field }} = filterVariant[0];
+    //     let typeOperator = typeAry1[operator];
+    //     if(type === "Text") typeOperator = typeAry2[operator];
+    //     if(filterValue.isParam) {
+    //       filterFields.push({table, field, typeOperator, value: '@'+filterValue.parameter, type});
+    //     } else {
+    //       filterFields.push({table, field, typeOperator, value: filterValue.default, type});
+    //     }
+    //   }
+    // })
+
+    console.log(query);
+
     return query;
   }
   const handleRun = () => {
@@ -964,7 +1030,7 @@ function App() {
           onClose={() => setRunQuerySuccess(false)}
           severity="success"
           sx={{ width: "100%" }}
-        >
+        > 
           {notifyContents.runQuerySuccess}
         </Alert>
       </Snackbar>
