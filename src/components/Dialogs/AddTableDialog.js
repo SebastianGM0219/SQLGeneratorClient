@@ -26,7 +26,7 @@ import { faClockFour } from "@fortawesome/free-regular-svg-icons";
 import IconButton from "@mui/material/IconButton";
 import TableListItem from "../List/TableListItem";
 import { useDispatch, useSelector } from "react-redux";
-import { getTables, updateItem } from "../../slices/table";
+import { getTables, updateItem} from "../../slices/table";
 import { initForeignTable } from "../../slices/query";
 import { makeStyles } from "tss-react/mui";
 import { initAllTable } from "../../slices/table";
@@ -159,6 +159,7 @@ export default function AddTableDialog({
   const isConnected = useSelector((state) => state.database.success);
   const items = useSelector((state) => state.table);
   const [selectedItem, setSelectedItem] = React.useState("");
+  const [checkedItems, setCheckedItems] = React.useState([]);
   const [filter, setFilter] = React.useState("");
   const { classes } = useStyles();
 
@@ -178,7 +179,7 @@ export default function AddTableDialog({
       getForeignTables().then((rows) => {
         dispatch(initForeignTable({ foreginTable: rows }));
       });
-      dispatch(initAllTable());
+      // dispatch(initAllTable());
     }
   }, [isConnected]);
 
@@ -195,12 +196,27 @@ export default function AddTableDialog({
   };
 
   const handleSubmit = () => {
+    dispatch(updateItem({checkedItems: checkedItems}))
     handleAddTableClose();
   };
 
   const handleCheckboxChange = ({ text, checked }) => {
-    dispatch(updateItem({ text, checked }));
-  };
+    let existingItem = checkedItems.find(item => item.name === text)
+    let tmpCheckedItems = []
+    if(!existingItem){
+      setCheckedItems([...checkedItems, {name:text, checked:checked}])
+    }
+    else{
+      tmpCheckedItems = checkedItems.map(item => {
+        if(item.name === text)
+          return {name:item.name, checked:checked};
+        else 
+          return item
+      })
+      setCheckedItems(tmpCheckedItems)
+    }
+  }
+
 
   return (
     <Dialog
@@ -267,7 +283,7 @@ export default function AddTableDialog({
             <Grid container>
               <Grid
                 item
-                md={7}
+                md={6}
                 sx={{ borderRight: "1px solid #ccc" }}
                 className={classes.listBoxStyle}
               >
@@ -291,7 +307,7 @@ export default function AddTableDialog({
                     })}
                 </Box>
               </Grid>
-              <Grid item md={5} className={classes.listBoxStyle}>
+              <Grid item md={6} className={classes.listBoxStyle}>
                 <Box>
                   {selectedItem &&
                     items &&

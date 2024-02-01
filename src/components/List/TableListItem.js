@@ -43,7 +43,7 @@ const ListCheckBox = styled(Checkbox)(({theme})=> ({
 }));
 
 export default function TableListItem({ isChecked, hasKey, text, onClick, onCheckboxChange }) {
-//  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(isChecked);
   const {classes} = useStyles();
 
   const tables = useSelector(state => state.table); 
@@ -61,7 +61,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   
   const handleChange = (event) => {
     const checked = event.target.checked;
-//    setChecked(checked);
+    setChecked(checked);
     onCheckboxChange({ text, checked });
   }
 
@@ -72,7 +72,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   return (
     <Box className={classes.boxStyle} onClick={handleClick}>
       <ListCheckBox 
-        checked={isChecked} 
+        checked={checked}
         className={classes.checkStyle}
         onChange={handleChange}                                                                                                                                                                                              
       />

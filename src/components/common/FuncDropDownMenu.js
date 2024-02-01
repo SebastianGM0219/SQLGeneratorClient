@@ -249,7 +249,7 @@ const FuncDropDownMenu = (props) => {
     return result
   }
   
-  console.log(props.calcCommand, typeof props.calcCommand)
+  console.log(props.cursor, props.calcCommand)
 
   const handleSelect = (eventKey, event) => {
     focusEditor();
