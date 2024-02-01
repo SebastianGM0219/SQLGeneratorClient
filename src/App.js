@@ -92,7 +92,7 @@ function App() {
   const [addDialog, setAddDialog] = React.useState(false);
   const [paramDialog, setParamDialog] = React.useState(false);
   const [createViewDialog, setCreateViewDialog] = React.useState(false);
-
+  const [paramDialogForView, setParamDialogForView] = React.useState(false);
   const dispatch = useDispatch();
 
   const isConnected = useSelector(state => state.database.success);
@@ -137,6 +137,10 @@ function App() {
     setFailOpen(false);
   };
 
+  const handleShowCreateView = () => {
+    setParamDialogForView(false);
+    setCreateViewDialog(true);
+  };
   const handleAddTableClose = () => {
     setAddDialog(false);
     dispatch(setTreeOpened(true));
@@ -146,12 +150,20 @@ function App() {
 
   }
   const handleParamClose = () => {
+    
     setParamDialog(false);
+    setParamDialogForView(false);
+
   }
 
   const handleCreateView = () => {
-    
-    setCreateViewDialog(true);
+    if(parameters.length>0 && !edited) {
+      setParamDialogForView(true);
+    }
+    else
+    {
+      setCreateViewDialog(true);
+    }
   }
   const handleCreateViewClose = () => {
     setCreateViewDialog(false);
@@ -332,7 +344,8 @@ function App() {
       if(isCrossTab && crosstabColumns.length>1) query+=groupByQuery+'\n';
   
       if(edited || isCrossTab) query = codeSQL;*/
-      let query = codeSQL;
+      
+      let query = GetQueryBasedOnParam();
       // console.log("app.jst");
       // console.log(query);
       const queryInfo= {
@@ -354,47 +367,29 @@ function App() {
     }
   }
 
- 
+  const SaveView = (viewName) => {
 
-  const SaveView =  (viewName) => {
+    const queryCommand = GetQueryBasedOnParam();
+      let query=`CREATE VIEW ${viewName} AS ${queryCommand}`; 
+      const queryInfo= {
+      query: query
+    }
 
-    const queryCommand = codeSQL;
-    let query=`CREATE VIEW ${viewName} AS ${queryCommand}`; 
-    const queryInfo= {
-     query: query
-   }
-
-   dispatch(runQuery(queryInfo))
-   .then(async(data) => {
-      setCreateViewDialog(false);
+    dispatch(runQuery(queryInfo))
+    .then(async(data) => {
+        setCreateViewDialog(false);
         const res = await TableService.getTables();
         dispatch(addUpdateItem({newArray: res.data}));            
-   })
-   .catch();
+    })
+    .catch();
 
-  //  dispatch(connectDB(dbInfos))
-  //  .unwrap()
-  //  .then(data => {
-  //     if(data.success){ 
-  //       setAddDialog(false);
-  //       setSuccessOpen(true);
-  //       setSuccess(true)
-  //     }
-  //     else {
-  //       setFailOpen(true);
-  //       setSuccess(false);
-  //     }
-  //  })
-  //  .catch(err => {
-  //    setFailOpen(true);
-  //  })
   }
-
-  const handleRun = () => {
+  
+  const GetQueryBasedOnParam = () => {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
     queryData.relationFields.forEach((item, index) => {
-      if(item.LTable.length>0){
+      if(item.LTable.length > 0) {
         if(index === 0) fromTable = item.LTable[0];
         joinFields.push({
           joinTable: item.RTable[0],
@@ -406,7 +401,7 @@ function App() {
       }
     });
     queryData.sortFields.forEach((item, index) => {
-      if(index !== queryData.sortFields.length-1){
+      if(index !== queryData.sortFields.length-1) {
         const { data: {field, table, sortType} } = item; 
         sortFields.push({
           field,
@@ -435,8 +430,8 @@ function App() {
         filterFields.push({table, field, typeOperator, value: filterText, type});
       }
     })
-    joinArray = joinCommand.match(/\bAND\b|\bOR\b/g);
 
+    joinArray = joinCommand.match(/\bAND\b|\bOR\b/g);
     let selectQuery = 'SELECT ';
 
     selectFields.map((item, index) => {
@@ -464,17 +459,18 @@ function App() {
 
         joinQuery+=`${joinString}\n`;
     });
+
     let sortQuery = "ORDER BY";
     sortFields.forEach((item, index) => {
         sortQuery += ` ${item.table}.${item.field} ${item.sortType}`
         if(index !== sortFields.length-1) sortQuery+=',';
     })
 
-
     let whereQuery = 'WHERE ';
 
     filterFields.map((item, index) => {
-      if(index>0){
+
+      if(index>0) {
         whereQuery+= `\n      ${joinArray[index-1]} `
       }
 
@@ -483,14 +479,13 @@ function App() {
       let condition = ''; 
       if(item.typeOperator === 'Like' || item.typeOperator === 'Not Like') {
         condition = item.table+'.'+item.field+' '+item.typeOperator.toUpperCase()+' '+`'%${item.value}%'`;
-      }
-      else
+      } else {
         condition = item.table+'.'+item.field+item.typeOperator+valueString;
+      }
       whereQuery += condition;
     })
 
     let query='';
-
     let groupByQuery = 'GROUP BY';
     let cSelectQuery = 'SELECT ';
     
@@ -524,119 +519,126 @@ function App() {
       })
     }
     
-    if(selectFields.length>0){
-      if(isCrossTab) query +=cSelectQuery +'\n';
-      else query+=selectQuery+'\n';
+    if(selectFields.length>0) {
+      if(isCrossTab) {
+        query += cSelectQuery +'\n';
+      } else {
+        query += selectQuery+'\n';
+      }
     } 
     if(fromTable) query+=fromQuery+'\n';
     if(joinFields.length>0) query+=joinQuery;
     if(filterFields.length>0) query+=whereQuery+'\n';
     if(!isCrossTab && sortFields.length>0) query+=sortQuery+'\n';
     if(isCrossTab && crosstabColumns.length>1) query+=groupByQuery+'\n';
-
-
     if(edited || isCrossTab) query = codeSQL;
-    const queryInfo= {
+    return query;
+  }
+  const handleRun = () => {
+   
+    const query = GetQueryBasedOnParam();
+    const queryInfo = {
       query: query
     }
     
-
     setIsLoading(true);
-        dispatch(runQuery(queryInfo))
+    dispatch(runQuery(queryInfo))
       .then(data => {
         dispatch(setSheetOpened(true));
         setIsLoading(false);
       })
       .catch(err => {
         console.log("run query faild" + err);
-
         setIsLoading(false);
-
         setOpenModal(true);
-      })
+    })
     setParamDialog(false);
   }
 
   return (    
-  <Box sx={{ display: 'flex' }}>
-    {isLoading && 
-      <div className={classes.loadingBox}>
-        <div className={classes.loadingContent}>
-          <Oval
-            height={50}
-            width={50}
-            color="#2761c7"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-            ariaLabel='oval-loading'
-            secondaryColor="#2761c7"
-            strokeWidth={3}
-            strokeWidthSecondary={3}
-          />
+  
+    <Box sx={{ display: 'flex' }}>
+      { isLoading && 
+        <div className={classes.loadingBox}>
+          <div className={classes.loadingContent}>
+            <Oval
+              height={50}
+              width={50}
+              color="#2761c7"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel='oval-loading'
+              secondaryColor="#2761c7"
+              strokeWidth={3}
+              strokeWidthSecondary={3}
+            />
+          </div>
         </div>
-      </div>
-    }
-    <AppBar>
-      <Toolbar
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          px: [1],
-        }}
-      >
-        {/* <Button color="inherit" onClick={handleClickOpen} disabled={!isConnected}>Connect</Button> */}
-        <Button variant="inherit"   onClick={handleClickOpen}  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <SaveIcon />  <Typography style={{ fontSize: 12 }}>Connect</Typography></Button>        
-        <Button variant="inherit"   onClick={handleRunQuery}  disabled= {!isConnected} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <WifiIcon  />  <Typography style={{ fontSize: 12 }}>Run query</Typography></Button>        
-        <Button variant="inherit"   onClick={handleReset}  disabled= {!isConnected} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <RefreshIcon />  <Typography style={{ fontSize: 12 }}>Reset</Typography></Button>        
-        <Button variant="inherit"   onClick={handleCreateView}  disabled= {!isConnected} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <DescriptionIcon />  <Typography style={{ fontSize: 12 }}>Create View</Typography></Button>        
+      }
 
-        {/* <Button color="inherit" onClick={handleCreateView}>Create View</Button> */}
-      </Toolbar>
-    </AppBar>
-    <Box component="main" className={classes.boxStyle}>
-      <Toolbar />
-      <Container spacing={0} sx={{margin: 0, padding: 0}} maxWidth={'1920'}>
-        <Grid container>
-          <Grid item xs={3}>
-            <Item sx={{ height: 600}}>
-              <Box className={classes.treeBoxStyle}>
-                <Typography>Source</Typography>
-                <Button color="inherit" onClick={handleClickAddTables} disabled={!success}>Add table data</Button>
-              </Box>
-              <Box className={classes.treeHeight}>
-                {isTreeOpened && <CustomTreeView />}
-              </Box>
-            </Item>
+      <AppBar>
+        <Toolbar
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            px: [1],
+          }}
+        >
+          {/* <Button color="inherit" onClick={handleClickOpen} disabled={!isConnected}>Connect</Button> */}
+          <Button variant="inherit"   onClick={handleClickOpen}  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <SaveIcon />  <Typography style={{ fontSize: 12 }}>Connect</Typography></Button>
+          <Button variant="inherit"   onClick={handleRunQuery}  disabled= {!isConnected} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <WifiIcon  />  <Typography style={{ fontSize: 12 }}>Run query</Typography></Button>
+          <Button variant="inherit"   onClick={handleReset}  disabled= {!isConnected} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <RefreshIcon />  <Typography style={{ fontSize: 12 }}>Reset</Typography></Button>
+          <Button variant="inherit"   onClick={handleCreateView}  disabled= {!isConnected} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> <DescriptionIcon />  <Typography style={{ fontSize: 12 }}>Create View</Typography></Button>
+          {/* <Button color="inherit" onClick={handleCreateView}>Create View</Button> */}
+        </Toolbar>
+      </AppBar>
+
+      <Box component="main" className={classes.boxStyle}>
+        <Toolbar />
+        <Container spacing={0} sx={{margin: 0, padding: 0}} maxWidth={'1920'}>
+          <Grid container>
+            <Grid item xs={3}>
+              <Item sx={{ height: 600}}>
+                <Box className={classes.treeBoxStyle}>
+                  <Typography>Source</Typography>
+                  <Button color="inherit" onClick={handleClickAddTables} disabled={!success}>Add table data</Button>
+                </Box>
+                <Box className={classes.treeHeight}>
+                  {isTreeOpened && <CustomTreeView />}
+                </Box>
+              </Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item sx={{ height: 600}}><MainView/></Item>
+            </Grid>
+            <Grid item xs={3}>
+              <Item sx={{ height: 600, padding: 0}}><PropertyView/></Item>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <Item sx={{ height: 600}}><MainView/></Item>
-          </Grid>
-          <Grid item xs={3}>
-            <Item sx={{ height: 600, padding: 0}}><PropertyView/></Item>
-          </Grid>
-        </Grid>
-        <Result sx={{position: 'fixed', bottom: 0}}/>
-      </Container>
+          <Result sx={{position: 'fixed', bottom: 0}}/>
+        </Container>
+      </Box>
+      <NewConnection open={open} handleClose={handleClose} handleConnect={handleConnect}/>
+      <Modal open={openModal} param={{title: 'Failed', content: 'An error occured!'}} handleClose={handleCloseModal}/>
+      <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose}/>
+      <ParameterDialog open={paramDialog} handleParamClose={handleParamClose} flag={1} handleRun={handleRun} handleShowCreateView={handleShowCreateView}/>
+      <ParameterDialog open={paramDialogForView} handleParamClose={handleParamClose} flag={2} handleRun={handleRun} handleShowCreateView={handleShowCreateView} />
+      <CreateViewDialog open={createViewDialog} handleCreateViewClose={handleCreateViewClose} SaveView={SaveView} />
+
+      <Snackbar open={successOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={500} onClose={handleSuccessClose}>
+        <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
+          You connect to the database successfully.
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={failOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={2000} onClose={handleFailClose}>
+        <Alert onClose={handleFailClose} severity="error" sx={{ width: '100%' }}>
+          You can't connect to the database.
+        </Alert>
+      </Snackbar>      
     </Box>
-    <NewConnection open={open} handleClose={handleClose} handleConnect={handleConnect}/>
-    <Modal open={openModal} param={{title: 'Failed', content: 'An error occured!'}} handleClose={handleCloseModal}/>
-    <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose}/>
-    <ParameterDialog open={paramDialog} handleParamClose={handleParamClose} handleRun={handleRun} />
-    <CreateViewDialog open={createViewDialog} handleCreateViewClose={handleCreateViewClose} SaveView={SaveView} />
-
-    <Snackbar open={successOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={500} onClose={handleSuccessClose}>
-      <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
-        You connect to the database successfully.
-      </Alert>
-    </Snackbar>
-    <Snackbar open={failOpen} sx={{ width: 500 }} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} autoHideDuration={2000} onClose={handleFailClose}>
-      <Alert onClose={handleFailClose} severity="error" sx={{ width: '100%' }}>
-        You can't connect to the database.
-      </Alert>
-    </Snackbar>
-  </Box>
   );
 }
 

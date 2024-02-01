@@ -112,8 +112,6 @@ export const SelectorNode = (props) => {
     const newState = items.filter(item => item.id !== id).map(item => item.data.table);
     const uniqueArray = [...new Set(newState)];
     const uniqueTableName = uniqueArray.join(' , ');
-    console.log("========unqiueTableName============");
-    console.log(uniqueTableName);
     dispatch(setUniqueTable(uniqueTableName));
     dispatch(removeSelector({id}));
   }
@@ -136,7 +134,7 @@ export const SelectorNode = (props) => {
           <Functions className={data.aggreType === "sum"?classes.sigmaStyle: classes.noneStyle}/>
           {data.aggreType === "avg" && <p className={data.aggreType === "avg"?classes.fontSigma1: classes.noneStyle}> Avg</p> }
           {data.aggreType === "max" && <p className={data.aggreType === "max"?classes.fontSigma1: classes.noneStyle}> Max</p> }
-          {data.aggreType === "min" && <p className={data.aggreType === " min"?classes.fontSigma1: classes.noneStyle}> Min</p> }
+          {data.aggreType === "min" && <p className={data.aggreType === "min"?classes.fontSigma1: classes.noneStyle}> Min</p> }
           {data.aggreType === "count" && <p className={data.aggreType === "count"?classes.fontSigma1: classes.noneStyle}> N</p> }
         </Box>                                                                                                                                                                                                                                                                                                                                                                                        
       </Box>
