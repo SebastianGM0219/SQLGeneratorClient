@@ -49,7 +49,13 @@ export default function CodeView() {
   useEffect(() => {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
-    fromTable = `FROM ${uniqueTable}`;    
+
+    let modifiedTable = uniqueTable.replace("None", "");
+    //    uniqueTable = modifiedTable;
+    
+        fromTable = `FROM ${modifiedTable}`;    
+    
+             
     queryData.relationFields.forEach((item, index) => {
       if(item.LTable.length>0){
         if(index === 0) fromTable = `FROM ${item.LTable[0]}`;
