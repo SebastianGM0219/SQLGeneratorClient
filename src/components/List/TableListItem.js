@@ -43,12 +43,12 @@ const ListCheckBox = styled(Checkbox)(({theme})=> ({
 }));
 
 export default function TableListItem({ isChecked, hasKey, text, onClick, onCheckboxChange }) {
-//  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(isChecked);
   const {classes} = useStyles();
 
   const tables = useSelector(state => state.table); 
   const isView = (name) => {
-    const filterTable = tables.filter(item => item.name ===name)[0];
+  const filterTable = tables.filter(item => item.name ===name)[0];
     // console.log("valueeee");
     // console.log(filterTable?filterTable.table_type.isView:0);
     // console.log("valueeee");
@@ -61,7 +61,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   
   const handleChange = (event) => {
     const checked = event.target.checked;
-//    setChecked(checked);
+    setChecked(checked);
     onCheckboxChange({ text, checked });
   }
 
@@ -72,7 +72,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   return (
     <Box className={classes.boxStyle} onClick={handleClick}>
       <ListCheckBox 
-        checked={isChecked} 
+        checked={checked} 
         className={classes.checkStyle}
         onChange={handleChange}                                                                                                                                                                                              
       />

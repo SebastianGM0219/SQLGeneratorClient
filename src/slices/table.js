@@ -34,21 +34,27 @@ const tableSlice = createSlice({
       return action.payload;
     },
     updateItem: (state, action) => {
-      const newState = state.map(item => {
-        if(item.name === action.payload.text)
-        {
-          const newItem = {
-            name: item.name,
-            isChecked: action.payload.checked,
-            hasKey: item.hasKey,
-            columns: item.columns,
-            table_type: item.table_type
+      let array = action.payload.checkedItems;
+      let newState = [...state]
+
+      for(let i = 0; i < array.length; i++) {
+        const tmpState = newState.map((item) => {
+          if(item.name === array[i].name)
+          {
+            const newItem = {
+              name: item.name,
+              isChecked: array[i].checked,
+              hasKey: item.hasKey,
+              columns: item.columns,
+              table_type: item.table_type
+            }
+            return newItem;
           }
-          return newItem;
-        }
-        return item;
-      })
-      return newState;
+          return item;
+        })
+        newState = [...tmpState]
+      }
+      return newState
     },
 
     addUpdateItem: (state, action) => {
