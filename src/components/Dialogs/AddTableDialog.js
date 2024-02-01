@@ -348,7 +348,7 @@ export default function AddTableDialog({
                                   <FontAwesomeIcon
                                     icon={faCalendarDays}
                                     size="1x"
-                                    className={classes.iconStyle}
+                                    className={classes.iconBrown}
                                   />
                                 );
                             }

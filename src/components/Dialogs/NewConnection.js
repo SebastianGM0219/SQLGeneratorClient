@@ -379,7 +379,6 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
       onClose={handleClose}
       maxWidth={"xs"}
       PaperProps={{ style: { width: 600, padding: 20 } }}
-      sx={{opacity:isLoading ? 0.8: 1}}
     >
       <CustomDialogTitle sx={{ marginLeft: "3px" }}>
         Connect to PostgreSQL Host
