@@ -86,22 +86,22 @@ export default function CodeView() {
         const {filterVariant, filterValue, operator, type} = item;
         const { data: { table, field }} = filterVariant[0];
         let typeOperator = typeAry1[operator];
-        // if(type === "Text") typeOperator = typeAry2[operator];
-        // if(filterValue.isParam) {
-        //   filterFields.push({table, field, typeOperator, value: '@'+filterValue.parameter, type});
-        // } else {
-        //   filterFields.push({table, field, typeOperator, value: filterValue.default, type});
-        // }
         if(type === "Text") typeOperator = typeAry2[operator];
-        let filterText = "";
-        if(filterValue.isParam){
-          const parameterName = filterValue.parameter;
-          parameters.forEach(item => {
-            if(item.name===parameterName) filterText = item.value;
-          })
+        if(filterValue.isParam) {
+          filterFields.push({table, field, typeOperator, value: '@'+filterValue.parameter, type});
+        } else {
+          filterFields.push({table, field, typeOperator, value: filterValue.default, type});
         }
-        else filterText = filterValue.default;
-        filterFields.push({table, field, typeOperator, value: filterText, type});
+        // if(type === "Text") typeOperator = typeAry2[operator];
+        // let filterText = "";
+        // if(filterValue.isParam){
+        //   const parameterName = filterValue.parameter;
+        //   parameters.forEach(item => {
+        //     if(item.name===parameterName) filterText = item.value;
+        //   })
+        // }
+        // else filterText = filterValue.default;
+        // filterFields.push({table, field, typeOperator, value: filterText, type});
 
       }
     })

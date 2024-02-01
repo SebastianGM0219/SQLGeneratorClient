@@ -106,13 +106,12 @@ export const CustomRightNode = (props) =>{
         <Box className={classes.closePosition}>
           <CloseIcon className={classes.iconStyle} onClick={handleClick}/>
         </Box>
-      </Box>      
+      </Box>
       <Grid container>
         <Grid item xs={4}  className={classes.boxStyle}>
           <Typography variant="body2" className={classes.paddingText} >{text}</Typography>
-        </Grid>     
+        </Grid>
       </Grid>
-  </Box>
-
+    </Box>
   );
 }
