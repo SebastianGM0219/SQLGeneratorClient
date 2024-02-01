@@ -9,7 +9,7 @@ import { makeStyles  } from 'tss-react/mui';
 import { Oval } from  'react-loader-spinner';
 import { AppBar, Box, Container, Grid, Paper, Toolbar, Button, Typography, Snackbar } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
-<<<<<<< HEAD
+
 import MuiAlert from "@mui/material/Alert";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AddTableDialog from "./components/Dialogs/AddTableDialog";
@@ -37,33 +37,6 @@ import TableService from "./services/TableService";
 import { SelectPicker } from "rsuite";
 import { notifyContents } from "./components/common/Notification";
 
-
-=======
-import MuiAlert from '@mui/material/Alert';
-import DescriptionIcon from '@mui/icons-material/Description';
-import AddTableDialog from './components/Dialogs/AddTableDialog';
-import NewConnection from './components/Dialogs/NewConnection';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import SearchIcon from '@mui/icons-material/Search';
-import SaveIcon from '@mui/icons-material/Save';
-import WifiIcon from '@mui/icons-material/PlayCircle';
-import Modal from './components/Dialogs/Modal';
-import CustomTreeView from './components/Tree/CustomTreeView';
-import MainView from './components/MainView';
-import PropertyView from './components/Property'
-import Result from './components/sheet';
-import {getTables, addUpdateItem} from './slices/table'
-import ParameterDialog from './components/Dialogs/ParameterDialog';
-import CreateViewDialog from './components/Dialogs/CreateViewDailog';
-import { initAllState} from "./slices/query";
-import { initAllUtility} from "./slices/utility";
-import { initAllDatabaseTable} from "./slices/database";
-import { initAllTable} from "./slices/table";
-import {connectDB} from './slices/database'
-import { runQuery } from './slices/query';
-import {setTreeOpened, setSheetOpened} from './slices/utility'
-import TableService from './services/TableService'
->>>>>>> 9a7eefa1a522593239a8d5909beb9fc314492d0c
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -587,12 +560,8 @@ function App() {
         console.log("run query faild" + err);
         setIsLoading(false);
         setOpenModal(true);
-<<<<<<< HEAD
         setRunQueryFail(true);
       });
-=======
-    })
->>>>>>> 9a7eefa1a522593239a8d5909beb9fc314492d0c
     setParamDialog(false);
   }
 
