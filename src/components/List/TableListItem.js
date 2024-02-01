@@ -46,7 +46,8 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   const [checked, setChecked] = React.useState(isChecked);
   const {classes} = useStyles();
 
-  const tables = useSelector(state => state.table); 
+  const tables = useSelector(state => state.table);
+  const uniqueTable = useSelector(state => state.utility.uniqueTable); 
   const isView = (name) => {
   const filterTable = tables.filter(item => item.name ===name)[0];
     // console.log("valueeee");
@@ -72,7 +73,8 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   return (
     <Box className={classes.boxStyle} onClick={handleClick}>
       <ListCheckBox 
-        checked={checked} 
+        checked={checked}
+        disabled={uniqueTable.includes(text)} 
         className={classes.checkStyle}
         onChange={handleChange}                                                                                                                                                                                              
       />
