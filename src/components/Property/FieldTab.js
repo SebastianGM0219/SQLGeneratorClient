@@ -405,7 +405,6 @@ export default function FieldTab() {
                 name="blah2"
                 onChange={onChange}
                 onCursorChange={(selection) => {
-                  console.log(calcCommand.split('\n'))
                   setCursorPosition(selection.getCursor())
                 }}
                 fontSize={14}
