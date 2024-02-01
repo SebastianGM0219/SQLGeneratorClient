@@ -233,7 +233,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
         <Button disabled= {!isConnected} onClick={handleOpenUnionDialog} size="small" sx={{paddingLeft: '20px',  height:'33.25px',fontSize: 12, borderColor: '#CCCCCC', paddingRight: '20px', marginLeft: '18px'}} color = 'inherit' variant="outlined"   ><ExpandIcon fontSize='medium' />Union</Button>
       </div>
       <Dialog 
-        PaperProps={{  style: { width:400, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:20} }} 
+        PaperProps={{  style: { width:400, padding: 20} }} 
         open={open} onClose={handleDialogClose} 
         disableRestoreFocus
       >
@@ -250,7 +250,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
             />
           </DialogContent>
           <DialogActions sx={{display:'block', padding:'4px 24px'}}>
-            <Button variant="contained" sx={{float: 'right'}}onClick={handleAddOption}>Add</Button>
+            <Button variant="contained" sx={{float: 'right'}} onClick={handleAddOption}>Add</Button>
             <Button variant="contained" sx={{float: 'right', marginRight: '15px'}} onClick={handleDialogClose}>Cancel</Button>
           </DialogActions>
       </Dialog>

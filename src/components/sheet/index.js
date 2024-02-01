@@ -13,6 +13,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import MuiAccordionSummary from '@mui/material/AccordionSummary'
 import MuiAccordionDetails from '@mui/material/AccordionDetails'
 import { Box, Typography, Button } from '@mui/material';
+import { Snackbar, Alert } from "@mui/material";
 import Sheet from './Sheet'
 import { setSheetOpened } from '../../slices/utility';
 import { edit } from 'ace-builds';
@@ -61,6 +62,7 @@ export default function Result() {
   const [expanded, setExpanded] = React.useState(isSheetOpened);
   const [exportFileName, setExportFileName] = React.useState("output");
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
+  const [isSuccessExport, setIsSuccessExport] = React.useState(false)
   const isConnected = useSelector(state => state.database.success);
 
   React.useEffect(() => {
@@ -91,6 +93,7 @@ export default function Result() {
   const exportCSV = (event) => {
     buttonRef.current.link.click();
     handleCloseEditDialog();
+    setIsSuccessExport(true)
   }
 
   const handleOpenEditDialog = () => {
@@ -103,6 +106,10 @@ export default function Result() {
 
   const handleChangeExportFileName = (e) => {
     setExportFileName(e.target.value)
+  }
+
+  const handleSuccesExport = () => {
+    setIsSuccessExport(false)
   }
 
   return (
@@ -143,6 +150,18 @@ export default function Result() {
             <Button variant="contained" sx={{float: 'right', marginRight: '15px'}} onClick={handleCloseEditDialog}>Cancel</Button>
           </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={isSuccessExport}
+        sx={{ width: 500 }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        autoHideDuration={2000}
+        onClose={handleSuccesExport}
+      >
+        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+          Export Success
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

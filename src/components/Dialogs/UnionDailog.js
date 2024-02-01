@@ -154,7 +154,7 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
               }
               <Container spacing={0} sx={{marginBotom: 0, padding: 0}} maxWidth={'1920'} minHeight={'1000'}>
                 <Box sx={{marginBottom:1, display:"flex", alignItems:'center'}}>
-                  <Button onClick={handleRun} size="small" sx={{paddingLeft: '15px',  height:'24.25px',fontSize: 12, borderColor: '#CCCCCC', color: 'gray', paddingRight: '15px', display: 'flex', justifyContent: 'space-between'}} color = 'inherit' variant="outlined"   ><WifiIcon sx={{marginRight: '10px'}} fontSize= 'small' />Run</Button>
+                  <Button onClick={handleRun} size="small" sx={{padding: '16px 24px',  height:'24.25px',fontSize: 12, borderColor: '#CCCCCC', color: 'gray', paddingRight: '15px', display: 'flex', justifyContent: 'space-between'}} color = 'inherit' variant="outlined"   ><WifiIcon sx={{marginRight: '10px'}} fontSize= 'small' />Run</Button>
                   <FormControl sx={{marginLeft: 4}}>
                     <RadioGroup
                       row
