@@ -44,6 +44,9 @@ import { runQuery } from "./slices/query";
 import { setTreeOpened, setSheetOpened } from "./slices/utility";
 import TableService from "./services/TableService";
 import { SelectPicker } from "rsuite";
+import { notifyContents } from "./components/common/Notification";
+
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -101,6 +104,9 @@ function App() {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [failOpen, setFailOpen] = React.useState(false);
+  const [runQuerySuccess, setRunQuerySuccess] = React.useState(false)
+  const [runQueryFail, setRunQueryFail] = React.useState(false)
+
   const [addDialog, setAddDialog] = React.useState(false);
   const [paramDialog, setParamDialog] = React.useState(false);
   const [createViewDialog, setCreateViewDialog] = React.useState(false);
@@ -361,11 +367,12 @@ function App() {
         .then((data) => {
           dispatch(setSheetOpened(true));
           setIsLoading(false);
+          setRunQuerySuccess(true);
         })
         .catch((err) => {
           console.log(err);
           setIsLoading(false);
-
+          setRunQueryFail(true);
           setOpenModal(true);
         });
     }
@@ -589,13 +596,14 @@ function App() {
       .then((data) => {
         dispatch(setSheetOpened(true));
         setIsLoading(false);
+        setRunQuerySuccess(true);
       })
       .catch((err) => {
         console.log("run query faild" + err);
 
         setIsLoading(false);
-
         setOpenModal(true);
+        setRunQueryFail(true);
       });
     setParamDialog(false);
   };
@@ -763,9 +771,10 @@ function App() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          You connect to the database successfully.
+          {notifyContents.newConnectSuccess}
         </Alert>
       </Snackbar>
+
       <Snackbar
         open={failOpen}
         sx={{ width: 500 }}
@@ -778,7 +787,39 @@ function App() {
           severity="error"
           sx={{ width: "100%" }}
         >
-          You can't connect to the database.
+          {notifyContents.newConnectFail}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={runQuerySuccess}
+        sx={{ width: 500 }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        autoHideDuration={2000}
+        onClose={() => setRunQuerySuccess(false)}
+      >
+        <Alert
+          onClose={() => setRunQuerySuccess(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {notifyContents.runQuerySuccess}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={runQueryFail}
+        sx={{ width: 500 }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        autoHideDuration={2000}
+        onClose={() => setRunQueryFail(false)}
+      >
+        <Alert
+          onClose={() => setRunQueryFail(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {notifyContents.runQueryFail}
         </Alert>
       </Snackbar>
     </Box>
