@@ -294,6 +294,11 @@ function Selector() {
       if(data.field === 'none') return undefined;
       if(!id.includes("function"))
         tableNameArray.push(table);
+      else
+      {
+        if(table!=='None')
+          tableNameArray.push(table);
+      }        
 
       if(id.includes("function")&&!id.match(/\d+/))
       {

@@ -278,10 +278,10 @@ const FuncDropDownMenu = (props) => {
       props.setCalcCommand(insertSyntax(props.calcCommand, "TRIM( 'string_value' )", props.cursor))
       // props.setCalcCommand(props.calcCommand+"TRIM( 'string_value' )");
    if(eventKey === "upper")
-      props.setCalcCommand(insertSyntax(props.calcCommand, "UPPER( 'string_value') ", props.cursor))
+      props.setCalcCommand(insertSyntax(props.calcCommand, "UPPER( 'string_value' ) ", props.cursor))
       // props.setCalcCommand(props.calcCommand+"UPPER( 'string_value') ");
    if(eventKey === "lower")
-      props.setCalcCommand(insertSyntax(props.calcCommand, "LOWER( 'string_value') ", props.cursor))
+      props.setCalcCommand(insertSyntax(props.calcCommand, "LOWER( 'string_value' ) ", props.cursor))
       // props.setCalcCommand(props.calcCommand+"LOWER( 'string_value') ");
    if(eventKey === "split_part")
       props.setCalcCommand(insertSyntax(props.calcCommand, "SPLIT_PART( 'string_value' , 'delimeter', 'index') ", props.cursor))

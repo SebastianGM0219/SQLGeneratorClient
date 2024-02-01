@@ -304,8 +304,10 @@ export default function TabView() {
               updatedString = updatedString.replace(matchResult[0], `EXTRACT(QUARTER FROM ${extractedValue})`);
             }
 
+            if(updatedString === "")
+              updatedString = null;
             updatedString += " as ";
-            updatedString += header_name;
+            updatedString += `"${header_name}"`;
             if(index !== selectFields.length-1)
               selectQuery += updatedString+ ", \n";         
             else
