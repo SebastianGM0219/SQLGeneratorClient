@@ -16,7 +16,7 @@ import { setCurSelectorTab } from '../../../slices/utility';
 import { runQuery,testQuery} from '../../../slices/query';
 import { setCodeSQL, setEdited } from '../../../slices/utility';
 import { Alert } from '@mui/material';
-const { Parser } = require('node-sql-parser');
+import { Parser } from 'node-sql-parser';
 const parser = new Parser();
 
 const useStyles = makeStyles()((theme) => {
