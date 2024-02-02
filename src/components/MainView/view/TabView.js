@@ -501,6 +501,7 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
       } catch (error) {
         setSnackMessage("Invalid Syntax");
         setSuccessOpen(false);
+        console.log(error);        
         setFailOpen(true);
  //       console.error('Invalid query syntax:', error.message);
       }

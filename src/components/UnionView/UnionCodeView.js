@@ -55,7 +55,7 @@ export default function CodeView() {
 
   const handleDefaultList = (e) => {
     setDefaultList(e.target.value);
-    dispatch(setCodeSQL(e.target.value));
+    dispatch(setCodeSQL({codeSQL:e.target.value}));
 //    dispatch(setEdited(true));
 //    dispatch(setCodeSQL(e.target.value));
   }
