@@ -151,6 +151,7 @@ export const querySlice = createSlice({
             data: {}
           }
         ],
+        
         filterFields: [
           {
             filterVariant: [],
@@ -415,8 +416,11 @@ export const querySlice = createSlice({
         state.relationFields[index].Operator.splice(i, 1);
       }
     },
+
     removeJoinRelation: (state, action) => {
-      const { index } = action.payload;
+      const { index } = action.payload;      
+      console.log(state.relationFields);
+      console.log("selectItem + ", index);
       state.relationFields.splice(index,1);
       if(state.relationFields.length==0)
       {
@@ -612,29 +616,25 @@ export const querySlice = createSlice({
       // const tableValue = parsedData[0].data.table;
       const newState_filter = state.selectFields.filter(item => item.id !== id).map(item => item.data.table);
       const uniqueArray = [...new Set(newState_filter)];
-  
       const relation = state.relationFields.filter(item => uniqueArray.includes(item.RTable[0])  && uniqueArray.includes(item.LTable[0]) );      
       const newState = state.selectFields.filter(item => item.id !== id);
       
       console.log("removeSelector");
       console.log(newState);
 
-  
       state.selectFields = newState;
       state.relationFields = relation;
-        if(relation.length===0)
-      {
-         state.relationFields.push({
-        LTable: [],
-        RTable: [],
-        LFields: [""],
-        RFields: [""],
-        Operator: [0],
-        joinType: 0
-      });
+      if(relation.length===0) {
+        state.relationFields.push({
+          LTable: [],
+          RTable: [],
+          LFields: [""],
+          RFields: [""],
+          Operator: [0],
+          joinType: 0
+        });
       }
-      if(state.clickField &&id === state.clickField.id)
-      {
+      if(state.clickField &&id === state.clickField.id) {
         state.clickField = {};
       }
     },

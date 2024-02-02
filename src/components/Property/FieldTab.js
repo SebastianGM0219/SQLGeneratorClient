@@ -212,23 +212,23 @@ export default function FieldTab() {
     else
     {
       //dispatch(setSourceColumnSelector({id:newTree[0].id, sourceColumn: newTree[0].data.header_name, source: newTree[0].data.table,field:newTree[0].data.field,type:newTree[0].data.type}));
-      if(fieldCalcDrop[0] && fieldCalcDrop[0].filterVariant && fieldCalcDrop[0].filterVariant[0] && fieldCalcDrop[0].filterVariant[0].data) {
+//       if(fieldCalcDrop[0] && fieldCalcDrop[0].filterVariant && fieldCalcDrop[0].filterVariant[0] && fieldCalcDrop[0].filterVariant[0].data) {
 
     
-        const  old_uniqueArray = tableNameArray.split(',').map(item => item.trim());
-  //      const diff = uniqueArray.filter(item => !old_uniqueArray.includes(item));
-        console.log("=============old============");
-        console.log(old_uniqueArray);
-        console.log(fieldCalcDrop[0].filterVariant[0].data.table);
-        if(!old_uniqueArray.includes(fieldCalcDrop[0].filterVariant[0].data.table))
-            tableNameArray+=' ,'+fieldCalcDrop[0].filterVariant[0].data.table;
-//        tableNameArray=(fieldCalcDrop[0].filterVariant[0].data.table);
-        //const isUnique = tableNameArray==uniqueTable?true:false;
-        // const uniqueTableName = uniqueArray.length===1?uniqueArray[0]: '';
-        // const uniqueArray = [...new Set(tableNameArray)];
-        dispatch(setIsUnique(true));
-        dispatch(setUniqueTable(tableNameArray));
-      }
+//         const  old_uniqueArray = tableNameArray.split(',').map(item => item.trim());
+//   //      const diff = uniqueArray.filter(item => !old_uniqueArray.includes(item));
+//         console.log("=============old============");
+//         console.log(old_uniqueArray);
+//         console.log(fieldCalcDrop[0].filterVariant[0].data.table);
+//         if(!old_uniqueArray.includes(fieldCalcDrop[0].filterVariant[0].data.table))
+//             tableNameArray+=' ,'+fieldCalcDrop[0].filterVariant[0].data.table;
+// //        tableNameArray=(fieldCalcDrop[0].filterVariant[0].data.table);
+//         //const isUnique = tableNameArray==uniqueTable?true:false;
+//         // const uniqueTableName = uniqueArray.length===1?uniqueArray[0]: '';
+//         // const uniqueArray = [...new Set(tableNameArray)];
+//         dispatch(setIsUnique(true));
+//         dispatch(setUniqueTable(tableNameArray));
+//       }
       if(fieldCalcDrop.length==2)
           dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:fieldCalcDrop[0].filterVariant[0].data.columnId, table:fieldCalcDrop[0].filterVariant[0].data.table, type:fieldCalcDrop[0].filterVariant[0].data.type, field:fieldCalcDrop[0].filterVariant[0].data.field}));       
       else if(fieldCalcDrop.length>2)
@@ -396,7 +396,7 @@ export default function FieldTab() {
               </Grid>  
           </Box> 
           <Box>
-            <AceEditor
+          <AceEditor
                 className={classes.ScrollClass}                
                 width={400} height={200}
                 placeholder="null"

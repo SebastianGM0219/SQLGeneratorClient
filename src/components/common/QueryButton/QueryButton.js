@@ -123,7 +123,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
         droppable: true,
         parent: '0',
         text: options[index],
-        data: item.utility.codeSQL
+        data: item.utility.codeViewSQL
       }
     })
 
