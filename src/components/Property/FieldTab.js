@@ -170,6 +170,7 @@ export default function FieldTab() {
   const aceEditorRef = React.useRef(null); // Create a reference to the AceEditor component
   const insertAt = (str, sub, pos) => `${str.slice(0, pos)}${sub}${str.slice(pos)}`;
   const [isScrolling, setIsScrolling] = useState(false);
+  const editor = aceEditorRef.current?.editor;
 
   const [cursorPosition, setCursorPosition] = useState({row:0, column:0})
   
@@ -283,10 +284,12 @@ export default function FieldTab() {
     return result
   }
   
+  const moveEditor = (start) => {
+    editor.moveCursorToPosition(start);
+  }
   const exchangeByNumber = (index) => {
     if(aceEditorRef.current)
     {
-      const editor = aceEditorRef.current.editor;
       editor.focus(); // Set focus on the AceEditor component
       const selectionRange = editor.getSelectionRange(); 
       const selectedText = editor.getSession().getTextRange(selectionRange);
@@ -427,7 +430,7 @@ export default function FieldTab() {
                 </Box>
               </Grid>
               <Grid item className={classes.boxStyle} xs={3}>
-                <FuncDropDownMenu focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand} cursor={cursorPosition}/>              
+                <FuncDropDownMenu editor={editor} moveEditor={moveEditor} focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand} cursor={cursorPosition}/>              
               </Grid>  
           </Box> 
           <Box>
