@@ -345,140 +345,143 @@ export default function FieldTab() {
         <Typography className={classes.headerFont}>Field Propterties</Typography>
       </Box>
       {/* {clickField} */}
-      
-      <Box sx={{padding: 1.5}}>
-        <Box>
-          <Grid className={classes.gridBox} container>
-            <Grid item xs={3}>
-              <Typography className={classes.labelFont}>Source</Typography>
-            </Grid>
-            {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
-            <Grid item xs={9}>
-              <Box className={classes.boxStyle}>
-                <Box> 
-                <TypeIcon disabled droppable={false} type={clickField.data?.hasKey?'List':'Table'} />
-              </Box>
-              <Box className={classes.labelGridItem}>
-                <Typography disabled variant="body2">{`${clickField.data.table}`}</Typography>
-              </Box>
-              </Box>
-            </Grid>
-            }
-          </Grid>
-          <Grid className={classes.gridBox} container>
-            <Grid item xs={3}>
-              <Typography className={classes.labelFont}>Column</Typography>
-            </Grid>
-            {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
-            <Grid item xs={9}>
-              <Box className={classes.boxStyle}>
-                <Box>
-                  <TypeIcon droppable={false} type={clickField.data?.type} />
-                </Box>
-                <Box className={classes.labelGridItem}>
-                  <Typography variant="body2">{`${clickField.text}`}</Typography>
-                </Box>
-              </Box>
-            </Grid>
-            }
-          </Grid>
-        </Box>
-        
-        <Box className={classes.defBox}>
-          <Grid sx={{marginTop: 2}} container>
-            {/* <Box>    
-              <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' onChange={handleName}  />
-             </Box> */}
-            <Grid item className={classes.boxStyle} xs={3}>
-              <Typography className={classes.labelFont}>Header</Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <Box>
-                <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' value={name} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onChange={handleName}  />
-              </Box>
-            </Grid>
-            <Grid item className={classes.boxStyle} xs={3}>
-              <Typography className={classes.labelFont}>Type</Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <Box>
-                <TypeSelector value={type} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onTypeChange={handleTypeChange} />
-              </Box>
-            </Grid>
-            <Grid item className={classes.boxStyle} xs={3}>
-              <Typography className={classes.labelFont}>Aggregation</Typography>
-            </Grid>
-            <Grid item xs={9}>
-                <CustomComboBox value={aggreType} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onChange={handleAggreChange}>
-                  <CustomMenuItem value="none">No Aggregation</CustomMenuItem>
-                  <CustomMenuItem value="sum">Sum of </CustomMenuItem>
-                  <CustomMenuItem value="count">Count of </CustomMenuItem>
-                  <CustomMenuItem value="max">Max of</CustomMenuItem>
-                  <CustomMenuItem value="min">Min of</CustomMenuItem>
-                  <CustomMenuItem value="avg">Average of</CustomMenuItem>
-                </CustomComboBox> 
-            </Grid>            
-          </Grid>
-        </Box>
-      </Box>
-      {clickField && Object.keys(clickField).length !== 0 &&clickField.id?.includes("function")&&
-      <Box sx={{padding: 1.5}}>
-          <Box>
-            <FormControl variant="standard" sx={{ width: '100%'}}>
-              <Typography className={classes.typoFont}>Header</Typography>
-              <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' value={name} onChange={handleName}  />
-            </FormControl>
-          </Box>
 
-          <Box sx={{display: 'flex', paddingTop: 2, paddingBottom: 2}}>
-              <Grid item className={classes.boxStyle} xs={9}>
-                <Box className={classes.iconBox}>
-                  <Typography className={clsx(classes.labelFont, classes.boldFont)}>Calulation </Typography>
-                  <HelpOutlineIcon className={classes.grayColor}/>
-                </Box>
-              </Grid>
-              <Grid item className={classes.boxStyle} xs={3}>
-                <FuncDropDownMenu editor={editor} moveEditor={moveEditor} focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand} cursor={cursorPosition}/>              
-              </Grid>  
-          </Box> 
-          <Box>
-          <AceEditor
-                className={classes.ScrollClass}                
-                width={400} height={200}
-                placeholder="null"
-                mode="mysql"
-                theme="textmate"
-                name="blah2"
-                onChange={onChange}
-                onCursorChange={(selection) => {
-                  setCursorPosition(selection.getCursor())
-                }}
-                fontSize={14}
-                showPrintMargin={true}
-                showGutter={true}
-                highlightActiveLine={true}
-                value={calcCommand}
-                ref={aceEditorRef} 
-                editorProps={{ $blockScrolling: true }}
-                setOptions={{
-                  enableBasicAutocompletion: true,
-                  enableLiveAutocompletion: true,
-                  enableSnippets: true,
-                  showLineNumbers: true,
-                  tabSize: 2,
-                }}/>
-          </Box> 
-          <Box sx={{display: 'flex', paddingTop: 2, paddingBottom: 2}}>
-              <Grid item className={classes.boxStyle} xs={9}>
-                <Box className={classes.iconBox}>
-                  <Typography className={clsx(classes.labelFont, classes.boldFont)}>Included Columns </Typography>
-                </Box>
-              </Grid>
-          </Box> 
-          <Box className={classes.boxMarginTop}>
-            <FieldDropBox exchangeByNumber={exchangeByNumber}/>
+      {
+        clickField && Object.keys(clickField).length !== 0 &&clickField.id?.includes("function") ?
+          <Box sx={{padding: 1.5}}>
+            <Box>
+              <FormControl variant="standard" sx={{ width: '100%'}}>
+                <Typography className={classes.typoFont}>Header</Typography>
+                <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' value={name} onChange={handleName}  />
+              </FormControl>
+            </Box>
+
+            <Box sx={{display: 'flex', paddingTop: 2, paddingBottom: 2}}>
+                <Grid item className={classes.boxStyle} xs={9}>
+                  <Box className={classes.iconBox}>
+                    <Typography className={clsx(classes.labelFont, classes.boldFont)}>Calulation </Typography>
+                    <HelpOutlineIcon className={classes.grayColor}/>
+                  </Box>
+                </Grid>
+                <Grid item className={classes.boxStyle} xs={3}>
+                  <FuncDropDownMenu editor={editor} moveEditor={moveEditor} focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand} cursor={cursorPosition}/>              
+                </Grid>  
+            </Box> 
+            <Box>
+            <AceEditor
+                  className={classes.ScrollClass}                
+                  width={400} height={200}
+                  placeholder="null"
+                  mode="mysql"
+                  theme="textmate"
+                  name="blah2"
+                  onChange={onChange}
+                  onCursorChange={(selection) => {
+                    setCursorPosition(selection.getCursor())
+                  }}
+                  fontSize={14}
+                  showPrintMargin={true}
+                  showGutter={true}
+                  highlightActiveLine={true}
+                  value={calcCommand}
+                  ref={aceEditorRef} 
+                  editorProps={{ $blockScrolling: true }}
+                  setOptions={{
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                  }}/>
+            </Box> 
+            <Box sx={{display: 'flex', paddingTop: 2, paddingBottom: 2}}>
+                <Grid item className={classes.boxStyle} xs={9}>
+                  <Box className={classes.iconBox}>
+                    <Typography className={clsx(classes.labelFont, classes.boldFont)}>Included Columns </Typography>
+                  </Box>
+                </Grid>
+            </Box> 
+            <Box className={classes.boxMarginTop}>
+              <FieldDropBox exchangeByNumber={exchangeByNumber}/>
+            </Box>
           </Box>
-      </Box>}      
+          :
+          <Box sx={{padding: 1.5}}>
+            <Box>
+              <Grid className={classes.gridBox} container>
+                <Grid item xs={3}>
+                  <Typography className={classes.labelFont}>Source</Typography>
+                </Grid>
+                {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
+                <Grid item xs={9}>
+                  <Box className={classes.boxStyle}>
+                    <Box> 
+                    <TypeIcon disabled droppable={false} type={clickField.data?.hasKey?'List':'Table'} />
+                  </Box>
+                  <Box className={classes.labelGridItem}>
+                    <Typography disabled variant="body2">{`${clickField.data.table}`}</Typography>
+                  </Box>
+                  </Box>
+                </Grid>
+                }
+              </Grid>
+              <Grid className={classes.gridBox} container>
+                <Grid item xs={3}>
+                  <Typography className={classes.labelFont}>Column</Typography>
+                </Grid>
+                {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
+                <Grid item xs={9}>
+                  <Box className={classes.boxStyle}>
+                    <Box>
+                      <TypeIcon droppable={false} type={clickField.data?.type} />
+                    </Box>
+                    <Box className={classes.labelGridItem}>
+                      <Typography variant="body2">{`${clickField.text}`}</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                }
+              </Grid>
+            </Box>
+            
+            <Box className={classes.defBox}>
+              <Grid sx={{marginTop: 2}} container>
+                {/* <Box>    
+                  <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' onChange={handleName}  />
+                </Box> */}
+                <Grid item className={classes.boxStyle} xs={3}>
+                  <Typography className={classes.labelFont}>Header</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Box>
+                    <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' value={name} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onChange={handleName}  />
+                  </Box>
+                </Grid>
+                <Grid item className={classes.boxStyle} xs={3}>
+                  <Typography className={classes.labelFont}>Type</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Box>
+                    <TypeSelector value={type} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onTypeChange={handleTypeChange} />
+                  </Box>
+                </Grid>
+                <Grid item className={classes.boxStyle} xs={3}>
+                  <Typography className={classes.labelFont}>Aggregation</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                    <CustomComboBox value={aggreType} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onChange={handleAggreChange}>
+                      <CustomMenuItem value="none">No Aggregation</CustomMenuItem>
+                      <CustomMenuItem value="sum">Sum of </CustomMenuItem>
+                      <CustomMenuItem value="count">Count of </CustomMenuItem>
+                      <CustomMenuItem value="max">Max of</CustomMenuItem>
+                      <CustomMenuItem value="min">Min of</CustomMenuItem>
+                      <CustomMenuItem value="avg">Average of</CustomMenuItem>
+                    </CustomComboBox> 
+                </Grid>            
+              </Grid>
+            </Box>
+          </Box>
+      }  
     </Box>
   )
 }
