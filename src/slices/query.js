@@ -622,7 +622,6 @@ export const querySlice = createSlice({
       console.log("removeSelector");
       console.log(newState);
 
-  
       state.selectFields = newState;
       state.relationFields = relation;
       if(relation.length===0) {

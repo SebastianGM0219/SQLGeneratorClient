@@ -14,7 +14,7 @@ import { setCurSelectorTab } from '../../../slices/utility';
 // import Autocomplete from '@mui/material/Autocomplete';
 // import { styled } from '@mui/material/styles';
 import { runQuery,testQuery} from '../../../slices/query';
-import { setCodeSQL, setEdited } from '../../../slices/utility';
+import { setCodeSQL, setEdited,setCodeViewSQL  } from '../../../slices/utility';
 import { Alert } from '@mui/material';
 import { Parser } from 'node-sql-parser';
 const parser = new Parser();
@@ -78,6 +78,8 @@ export default function TabView() {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
     let modifiedTable = uniqueTable.replace("None", "");
+    modifiedTable = modifiedTable.replace(/^,|,$/g, '');
+
 //    uniqueTable = modifiedTable;
 
     fromTable = `FROM ${modifiedTable}`;    
@@ -478,18 +480,18 @@ export default function TabView() {
       setDefaultList(query);
     }
     dispatch(setCodeSQL(query));
+    dispatch(setCodeViewSQL(query));
     const queryInfo= {
       query: query
     }
     if(selectFields.length>0)
     {
-
       try {
         parser.parse(query);
 //        console.log('The SQL query is valid.');
-            setSnackMessage("Query Syntax is good");
-            setSuccessOpen(true);
-            setFailOpen(false);
+        setSnackMessage("Query Syntax is good");
+        setSuccessOpen(true);
+        setFailOpen(false);
       } catch (error) {
         setSnackMessage("Invalid Syntax");
         setSuccessOpen(false);

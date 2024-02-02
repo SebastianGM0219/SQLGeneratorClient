@@ -456,6 +456,8 @@ export default function CodeView() {
             onChange={handleDefaultList} 
             padding={15}
             className={classes.editorStyle}
+            editorProps={{ $blockScrolling: true }}
+
             style={{
               "--color-prettylights-syntax-sublimelinter-gutter-mark": "#DCB862",
             }}
