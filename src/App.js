@@ -364,16 +364,22 @@ function App() {
       }
 
       setIsLoading(true);
-            dispatch(runQuery(queryInfo))
+      dispatch(runQuery(queryInfo))
         .then(data => {
+          console.log("run query data:", data)
           dispatch(setSheetOpened(true));
           setIsLoading(false);
-          // setRunQuerySuccess(true);
+          // check if run query is success or failed.
+          if(data.hasOwnProperty('error')) {
+            setRunQueryFail(true);
+          } else {
+            setRunQuerySuccess(true);
+          }
         })
         .catch(err => {
           console.log(err);
           setIsLoading(false);
-          // setRunQueryFail(true);
+          setRunQueryFail(true);
           setOpenModal(true);
         })
     }
@@ -911,15 +917,21 @@ function App() {
     setIsLoading(true);
     dispatch(runQuery(queryInfo))
       .then(data => {
+        console.log("run query data:", data, data.error)
         dispatch(setSheetOpened(true));
         setIsLoading(false);
-        // setRunQuerySuccess(true);
+        // check if run query is success or failed.
+        if(data.hasOwnProperty('error')) {
+          setRunQueryFail(true);
+        } else {
+          setRunQuerySuccess(true);
+        }
       })
       .catch(err => {
         console.log("run query faild" + err);
         setIsLoading(false);
         setOpenModal(true);
-        // setRunQueryFail(true);
+        setRunQueryFail(true);
       });
     setParamDialog(false);
   }

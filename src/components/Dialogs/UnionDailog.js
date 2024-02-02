@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import ParameterTextField from './ParameterTextField';
 import ParameterSelector from './ParameterSelector';
 import {Select, InputLabel,TextField} from '@mui/material';
-import { AppBar, Box, Container, Grid, Paper, Toolbar, Snackbar } from '@mui/material';
+import { AppBar, Box, Container, Grid, Paper, Toolbar, Snackbar, Alert } from '@mui/material';
 import { makeStyles  } from 'tss-react/mui';
 import Result from './../sheetUnion';
 import CustomLeftTree from '../UnionView/CustomLeftTree';
@@ -30,6 +30,8 @@ import WifiIcon from '@mui/icons-material/PlayCircleOutline';
 import { runQuery } from '../../slices/union';
 import { Oval } from  'react-loader-spinner';
 import Modal from '../../components/Dialogs/Modal';
+import { notifyContents } from '../common/Notification';
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -88,6 +90,8 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
   const {classes} = useStyles();
   const [isLoading, setIsLoading] = React.useState(false);
   const [unionType, setUnionType] = React.useState('UNION ALL');
+  const [runQuerySuccess, setRunQuerySuccess] = React.useState(false)
+  const [runQueryFail, setRunQueryFail] = React.useState(false)
   const codeSQL = useSelector(state => state.union.codeSQL);
   const dispatch = useDispatch();
 
@@ -114,9 +118,16 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
     dispatch(runQuery(queryInfo))
     .then(data => {
       setIsLoading(false);
+      // check if run query is success or failed.
+      if(data.hasOwnProperty('error')) {
+        setRunQueryFail(true);
+      } else {
+        setRunQuerySuccess(true);
+      }
     })
     .catch(err => {
       setOpenModal(true);
+      setRunQueryFail(true);
     })
   }
 
@@ -202,6 +213,37 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
             </Container>
           </Box>
         </DialogContent>
+        <Snackbar
+          open={runQuerySuccess}
+          sx={{ width: 500 }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={2000}
+          onClose={() => setRunQuerySuccess(false)}
+        >
+          <Alert
+            onClose={() => setRunQuerySuccess(false)}
+            severity="success"
+            sx={{ width: "100%" }}
+          > 
+            {notifyContents.runQuerySuccess}
+          </Alert>
+        </Snackbar>
+
+        <Snackbar
+          open={runQueryFail}
+          sx={{ width: 500 }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={2000}
+          onClose={() => setRunQueryFail(false)}
+        >
+          <Alert
+            onClose={() => setRunQueryFail(false)}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {notifyContents.runQueryFail}
+          </Alert>
+        </Snackbar>      
     </Dialog>
   );
 }
