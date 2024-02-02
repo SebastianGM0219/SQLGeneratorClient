@@ -635,7 +635,7 @@ function App() {
       </Box>
       <NewConnection open={open} handleClose={handleClose} handleConnect={handleConnect}/>
       <Modal open={openModal} param={{title: 'Failed', content: 'An error occured!'}} handleClose={handleCloseModal}/>
-      <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose} isLoading={isLoading}/>
+      <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose}/>
       <ParameterDialog open={paramDialog} handleParamClose={handleParamClose} flag={1} handleRun={handleRun} handleShowCreateView={handleShowCreateView}/>
       <ParameterDialog open={paramDialogForView} handleParamClose={handleParamClose} flag={2} handleRun={handleRun} handleShowCreateView={handleShowCreateView} />
       <CreateViewDialog open={createViewDialog} handleCreateViewClose={handleCreateViewClose} SaveView={SaveView} />

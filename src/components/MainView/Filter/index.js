@@ -15,11 +15,11 @@ const useStyles = makeStyles()((theme) => {
 export default function FilterView() {
   const { classes } = useStyles();
   return (
-    <Box>
+    <Box sx={{height:"100%"}}>
       <Box className={classes.boxMarginTop}>
         <OperatorEditor/>
       </Box>
-      <Box className={classes.boxMarginTop}>
+      <Box className={classes.boxMarginTop} sx={{overflowY: 'auto', height: '91%'}}>
         <FilterDropBox/>
       </Box>
     </Box>

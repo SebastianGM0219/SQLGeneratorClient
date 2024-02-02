@@ -72,7 +72,7 @@ export default function MainView() {
           </ToggleButtonGroup>
         </Box>
       </Box>
-      <Box sx={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden", overflowY: "auto"}} className={classes.restHeight}>
+      <Box sx={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}} className={classes.restHeight}>
          {alignment==="builder" && <TabView setSuccessOpen = {setSuccessOpen} setFailOpen = {setFailOpen} />}
          {alignment!=="builder" && <CodeView setSuccessOpen = {setSuccessOpen} setFailOpen = {setFailOpen} />}
       </Box>
