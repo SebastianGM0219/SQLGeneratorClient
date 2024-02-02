@@ -155,7 +155,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
     const updatedOptions = options.filter((option, index )=> option !== value1);
     const index = options.findIndex((option) => option === value1);    
     if(options.length === 1) {
-    } else if(index>=0) {
+    } else if(index>-1) {
       let sessionDbInfos = localStorage.getItem('dbQuery');
       let newinitialDbInfosArray= sessionDbInfos ? JSON.parse(sessionDbInfos):[];
       let sessionDbInfosarray= JSON.parse(sessionDbInfos);
