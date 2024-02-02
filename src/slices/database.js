@@ -24,7 +24,7 @@ const databaseSlice = createSlice({
       initAllDatabaseTable:(state, action) => {
         return {
           ...state,
-          initialState: []
+          ...initialState
         }
       },
       saveDbInformation: (state, action) => {

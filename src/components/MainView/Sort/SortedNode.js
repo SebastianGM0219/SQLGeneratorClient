@@ -16,12 +16,12 @@ const useStyles = makeStyles()((theme) => {
       gridTemplateColumns: 'auto 1fr auto',
       alignItems: 'center',
       paddingLeft: 8,
-      paddingRight: 8
+      paddingRight: 8,
     },
     itemStyle: {
       padding: 2,
       border: '1px solid #b6b6b6',
-      margin: '4px 32px 4px 4px',
+      margin: '0px 32px 4px 4px',
       background: 'white',
       minHeight: 32
     },
@@ -37,7 +37,7 @@ const useStyles = makeStyles()((theme) => {
       borderStyle: 'dashed',
       padding: 3,
       // margin: 4,
-      margin: '4px 32px 4px 4px',
+      margin: '0px 32px 0px 4px',
       minHeight: 32
     },
     toggleButton: {

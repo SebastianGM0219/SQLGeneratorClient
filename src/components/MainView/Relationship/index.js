@@ -19,7 +19,7 @@ export default function RelationShip() {
   }
 
   return (
-    <Box>
+    <Box sx={{height: '100%', overflowY: 'auto'}}>
       <DropComponent />
       <Button onClick={(handleClickAdd)}>Add RelationShip</Button>
     </Box>

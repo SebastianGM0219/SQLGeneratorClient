@@ -153,8 +153,7 @@ const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
 export default function AddTableDialog({
   open,
   handleTableClose,
-  handleAddTableClose,
-  isLoading
+  handleAddTableClose
 }) {
   const dispatch = useDispatch();
   const isConnected = useSelector((state) => state.database.success);
@@ -246,7 +245,7 @@ export default function AddTableDialog({
 
       <DialogContent width={600}>
         <Box>
-          {isLoading && 
+          {!(items.length) && 
             <div className={classes.loadingBox}>
               <div className={classes.loadingContent}>
                 <Oval

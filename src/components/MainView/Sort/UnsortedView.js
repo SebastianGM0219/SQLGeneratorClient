@@ -11,6 +11,7 @@ const useStyles = makeStyles()((theme) => {
   return {
     boxStyle: {
       height: 'calc(100% - 20px)',
+      overflowY: 'auto',
     },
     treeRoot: {
       height: '100%'

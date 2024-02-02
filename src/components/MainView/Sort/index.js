@@ -18,15 +18,15 @@ const useStyles = makeStyles()((theme) => {
 export default function SortView() {
   const { classes } = useStyles();
   return (
-    <Box>
-      <Grid spacing={4} container>
-        <Grid item xs={6}>
+    <Box sx={{height: '100%'}}>
+      <Grid spacing={4} container sx={{height: '100%'}}>
+        <Grid item xs={6} sx={{height: '100%'}}>
           <Typography className={classes.textStyle}>Unsorted</Typography>
-          <UnsortedView/>
+          <UnsortedView sx={{ height: '91%'}}/>
         </Grid>
-        <Grid item xs={6}>
-        <Typography className={classes.textStyle}>Sorted</Typography>
-          <SortedView/>
+        <Grid item xs={6} sx={{height: '100%'}}>
+          <Typography className={classes.textStyle}>Sorted</Typography>
+          <SortedView sx={{ height: '91%'}}/>
         </Grid>
       </Grid>
     </Box>
