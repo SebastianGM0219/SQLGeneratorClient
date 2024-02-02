@@ -6,6 +6,8 @@ import { makeStyles  } from 'tss-react/mui';
 import { setCodeSQL, setEdited } from '../../../slices/utility';
 import { runQuery } from '../../../slices/query';
 import { UpdateSharp } from '@mui/icons-material';
+import { Parser } from 'node-sql-parser';
+const parser = new Parser();
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -17,7 +19,7 @@ const useStyles = makeStyles()((theme) => {
   };
 });
 
-export default function CodeView() {
+export default function CodeView({setSuccessOpen, setFailOpen}) {
   const {classes} = useStyles();
 
   const queryData = useSelector(state => state.query);
@@ -448,6 +450,15 @@ export default function CodeView() {
     setDefaultList(e.target.value);
     dispatch(setEdited(true));
     dispatch(setCodeSQL(e.target.value));
+  }
+
+  try {
+    parser.parse(defaultList);
+    setSuccessOpen(true);
+    setFailOpen(false);
+  } catch (error) {
+    setSuccessOpen(false);
+    setFailOpen(true);
   }
 
   return <CodeEditor 

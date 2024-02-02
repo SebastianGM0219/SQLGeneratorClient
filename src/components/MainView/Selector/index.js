@@ -20,13 +20,16 @@ const useStyles = makeStyles()((theme) => {
   return {
     boxStyle: {
       backgroundColor: '#eeeeee',
-      height: 'calc(100% - 20px)',
+      height: 'calc(100% - 24px)',
       borderRadius: 4,
       border: '1px #666666',
-      borderStyle: 'dashed'
+      borderStyle: 'dashed',
+      overflowY: "auto"
     },
     treeRoot: {
-      height: '100%'
+      height: '100%',
+      margin: '0px',
+      padding: '6px'
     },
     placeholderContainer: {
       position: 'relative'
@@ -352,8 +355,8 @@ function Selector() {
           )}
           onDrop={handleDrop}
           classes={{
-            root: styles.treeRoot,
-            placeholder: styles.placeholderContainer
+            root: classes.treeRoot,
+            placeholder: classes.placeholderContainer
           }}
           sort={false}
           insertDroppableFirst={false}

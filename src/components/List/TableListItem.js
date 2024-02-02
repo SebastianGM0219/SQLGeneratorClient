@@ -80,7 +80,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
       />
       {isViewType==='1' ?(<FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconViewStyle}/>):
         (hasKey?<FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconStyle}/>:
-          <FontAwesomeIcon ic on={faTableCells} size="1x" className={classes.iconStyle}/>)}
+          <FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconStyle}/>)}
       {text.toUpperCase()}
     </Box>
   )
