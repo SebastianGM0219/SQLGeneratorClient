@@ -43,8 +43,9 @@ const useStyles = makeStyles()((theme) => {
 export default function MainView() {
   const { classes } = useStyles();
   const [alignment, setAlignment] = React.useState('builder');
-  const [successOpen, setSuccessOpen] = React.useState(false)
+  const [successOpen, setSuccessOpen] = React.useState(false);
   const [failOpen, setFailOpen] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState("")
   const isConnected = useSelector(state => state.database.success);
   const dispatch = useDispatch();
 
@@ -72,26 +73,26 @@ export default function MainView() {
           </ToggleButtonGroup>
         </Box>
       </Box>
-      <Box sx={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}} className={classes.restHeight}>
-         {alignment==="builder" && <TabView setSuccessOpen = {setSuccessOpen} setFailOpen = {setFailOpen} />}
-         {alignment!=="builder" && <CodeView setSuccessOpen = {setSuccessOpen} setFailOpen = {setFailOpen} />}
+      <Box sx={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden", overflowY: "auto"}} className={classes.restHeight}>
+         {alignment==="builder" && <TabView setSuccessOpen = {setSuccessOpen} setErrorMessage = {setErrorMessage} setFailOpen = {setFailOpen} />}
+         {alignment!=="builder" && <CodeView setSuccessOpen = {setSuccessOpen} setErrorMessage = {setErrorMessage} setFailOpen = {setFailOpen} />}
       </Box>
       {
-        successOpen ? 
+        successOpen ?
           (
             <Alert sx={{padding: "4px 12px", marginTop: "7px", bgcolor:'transparent', color: '#2e7d32'}}icon={<CheckCircleIcon fontSize="inherit" />} severity="success">
               Query Syntax is good
             </Alert>
-          ) : null     
-      }         
+          ) : null
+      }
       {
         failOpen ?
           (  
             <Alert sx={{padding: "4px 12px", marginTop: "7px", bgcolor:'transparent', color: 'rgb(211, 47, 47)'}} icon={<ErrorIcon fontSize="inherit" />} severity="error">
-              Invalid Syntax
+              Invalid Syntax : ${errorMessage}
             </Alert>       
           ) : null
-      }      
+      }
     </Box>
   )
 }

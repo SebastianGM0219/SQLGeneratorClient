@@ -168,7 +168,7 @@ export default function FieldTab() {
 // Dispatch an action to update the state of the duplicate slice with the state from the first slice
   const dispatch = useDispatch();
   const aceEditorRef = React.useRef(null); // Create a reference to the AceEditor component
-
+  const insertAt = (str, sub, pos) => `${str.slice(0, pos)}${sub}${str.slice(pos)}`;
   const [isScrolling, setIsScrolling] = useState(false);
 
   const [cursorPosition, setCursorPosition] = useState({row:0, column:0})
@@ -271,6 +271,21 @@ export default function FieldTab() {
     }
   }
 
+  const insertSyntax = (command, sub, cursor) => {
+    let result = "";
+    command.split('\n').forEach((value, index) => {
+      if(index !== cursor.row){
+        result += value;
+      }
+      else{
+        result += insertAt(value, sub, cursor.column)
+      }
+      if(index !== command.split('\n').length - 1)
+        result += '\n';
+    })
+    return result
+  }
+  
   const exchangeByNumber = (index) => {
     if(aceEditorRef.current)
     {
@@ -279,21 +294,41 @@ export default function FieldTab() {
       const selectionRange = editor.getSelectionRange(); 
       const selectedText = editor.getSession().getTextRange(selectionRange);
 
-      let updatedCommand = calcCommand.replace(selectedText, `{${index}}`);
+      const cursorPosition1 = selectionRange.start;
+      let updatedCommand;
+      if(selectedText === "") {
+        setCalcCommand(insertSyntax(calcCommand, `{${index}}`, cursorPosition));
+      } else {
+        editor.getSession().getDocument().remove(selectionRange);
+        editor.getSession().getDocument().insert(cursorPosition1, `{${index}}`);
+
+          // Update calcCommand with the updated content of the editor
+          updatedCommand = editor.getSession().getValue();
+          setCalcCommand(updatedCommand);
+      }
+    
 
       const session = editor.getSession();
-
       const content = session.getValue();
-      setCalcCommand(updatedCommand);
 
       // console.log("updatedcommand")';'
       // console.log(updatedCommand);
+      // const endPosition = {
+      //   row: session.getLength() - 1,
+      //   column: content.length
+      // };
       const endPosition = {
-        row: session.getLength() - 1,
-        column: content.length
+        row: cursorPosition1.row,
+        column: cursorPosition1.column +  `{${index}}`.length
       };
 
       editor.moveCursorToPosition(endPosition);
+      editor.selection.setRange({
+        start: cursorPosition1,
+        end: endPosition
+      });
+
+//      editor.selection.clearSelection();
     }
   }
 
