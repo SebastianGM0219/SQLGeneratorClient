@@ -24,12 +24,12 @@ const useStyles = makeStyles()((theme) => {
       borderRadius: 4,
       border: '1px #666666',
       borderStyle: 'dashed',
-      overflowY: "auto"
     },
     treeRoot: {
       height: '100%',
       margin: '0px',
-      padding: '6px'
+      padding: '6px',
+      overflowY: "auto"
     },
     placeholderContainer: {
       position: 'relative'

@@ -421,14 +421,14 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
               />
             </DialogContent>
             <DialogActions sx={{display:'block', padding:'4px 24px'}}>
-              <Button onClick={handleCloseNewDailog} variant="contained" sx={{float: 'right'}}>
-                Close
-              </Button>
               <Button
                 onClick={handleOkayNewDailog}
-                variant="contained" sx={{float: 'right', marginRight: '15px'}}
+                variant="contained" sx={{float: 'right'}}
               >
                 OK
+              </Button>
+              <Button onClick={handleCloseNewDailog} variant="contained" sx={{float: 'right', marginRight: '15px'}}>
+                Close
               </Button>
             </DialogActions>
           </Dialog>

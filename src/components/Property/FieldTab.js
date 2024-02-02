@@ -11,9 +11,9 @@ import { CheckBox, LocalConvenienceStoreOutlined, TextFields } from '@mui/icons-
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { runQuery } from '../../slices/query';
-import { setTreeOpened, setSheetOpened } from '../../slices/utility'
+import { setTreeOpened, setSheetOpened, setEdited } from '../../slices/utility'
 import { saveFunc } from '../../slices/savedata'
-import { setValueSelector, setValueSelectorInCalc} from '../../slices/query'
+import { setValueSelector, setValueSelectorInCalc, initAllState} from '../../slices/query'
 import { getTables, updateItem} from '../../slices/table'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import clsx from 'clsx';
@@ -168,11 +168,15 @@ export default function FieldTab() {
 // Dispatch an action to update the state of the duplicate slice with the state from the first slice
   const dispatch = useDispatch();
   const aceEditorRef = React.useRef(null); // Create a reference to the AceEditor component
-
+  const insertAt = (str, sub, pos) => `${str.slice(0, pos)}${sub}${str.slice(pos)}`;
   const [isScrolling, setIsScrolling] = useState(false);
+  const editor = aceEditorRef.current?.editor;
 
   const [cursorPosition, setCursorPosition] = useState({row:0, column:0})
   
+  const selectFields = useSelector(state => state.query.selectFields);
+
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -268,64 +272,104 @@ export default function FieldTab() {
     }
   }
 
+  const insertSyntax = (command, sub, cursor) => {
+    let result = "";
+    command.split('\n').forEach((value, index) => {
+      if(index !== cursor.row){
+        result += value;
+      }
+      else{
+        result += insertAt(value, sub, cursor.column)
+      }
+      if(index !== command.split('\n').length - 1)
+        result += '\n';
+    })
+    return result
+  }
+  
+  const moveEditor = (start) => {
+    editor.moveCursorToPosition(start);
+  }
   const exchangeByNumber = (index) => {
     if(aceEditorRef.current)
     {
-      const editor = aceEditorRef.current.editor;
       editor.focus(); // Set focus on the AceEditor component
       const selectionRange = editor.getSelectionRange(); 
       const selectedText = editor.getSession().getTextRange(selectionRange);
 
-      let updatedCommand = calcCommand.replace(selectedText, `{${index}}`);
+      const cursorPosition1 = selectionRange.start;
+      let updatedCommand;
+      if(selectedText === "") {
+        setCalcCommand(insertSyntax(calcCommand, `{${index}}`, cursorPosition));
+      } else {
+        editor.getSession().getDocument().remove(selectionRange);
+        editor.getSession().getDocument().insert(cursorPosition1, `{${index}}`);
+
+          // Update calcCommand with the updated content of the editor
+          updatedCommand = editor.getSession().getValue();
+          setCalcCommand(updatedCommand);
+      }
+    
 
       const session = editor.getSession();
-
       const content = session.getValue();
-      setCalcCommand(updatedCommand);
 
       // console.log("updatedcommand")';'
       // console.log(updatedCommand);
+      // const endPosition = {
+      //   row: session.getLength() - 1,
+      //   column: content.length
+      // };
       const endPosition = {
-        row: session.getLength() - 1,
-        column: content.length
+        row: cursorPosition1.row,
+        column: cursorPosition1.column +  `{${index}}`.length
       };
 
       editor.moveCursorToPosition(endPosition);
+      editor.selection.setRange({
+        start: cursorPosition1,
+        end: endPosition
+      });
+
+//      editor.selection.clearSelection();
     }
   }
 
   return (
     <Box sx={{position: 'relative', height: '100%'}}>
-      <Box sx={{ position: 'absolute', bottom: 4, left: 12}}>
+      <Box sx={{ position: 'absolute', bottom: 10, left: 12}}>
         {/* <Button variant='contained' disabled={disabled} onClick={handleApply}>Apply</Button> */}
-        <Button variant='contained' disabled={false} onClick={handleApply}>Apply</Button>
+        <Button variant='contained' disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onClick={handleApply}>Apply</Button>
       </Box>
       <Box className={classes.headerBox}>
         <Typography className={classes.headerFont}>Field Propterties</Typography>
       </Box>
       {/* {clickField} */}
-      {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
+      
       <Box sx={{padding: 1.5}}>
         <Box>
           <Grid className={classes.gridBox} container>
             <Grid item xs={3}>
               <Typography className={classes.labelFont}>Source</Typography>
             </Grid>
+            {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
             <Grid item xs={9}>
               <Box className={classes.boxStyle}>
                 <Box> 
-                <TypeIcon droppable={false} type={clickField.data?.hasKey?'List':'Table'} />
+                <TypeIcon disabled droppable={false} type={clickField.data?.hasKey?'List':'Table'} />
               </Box>
               <Box className={classes.labelGridItem}>
-                <Typography variant="body2">{`${clickField.data.table}`}</Typography>
+                <Typography disabled variant="body2">{`${clickField.data.table}`}</Typography>
               </Box>
               </Box>
             </Grid>
+            }
           </Grid>
           <Grid className={classes.gridBox} container>
             <Grid item xs={3}>
               <Typography className={classes.labelFont}>Column</Typography>
             </Grid>
+            {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
             <Grid item xs={9}>
               <Box className={classes.boxStyle}>
                 <Box>
@@ -336,8 +380,10 @@ export default function FieldTab() {
                 </Box>
               </Box>
             </Grid>
+            }
           </Grid>
         </Box>
+        
         <Box className={classes.defBox}>
           <Grid sx={{marginTop: 2}} container>
             {/* <Box>    
@@ -348,7 +394,7 @@ export default function FieldTab() {
             </Grid>
             <Grid item xs={9}>
               <Box>
-                <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' value={name} onChange={handleName}  />
+                <QueryInput defaultValue="" id="parameter-name" placeholder='Click to add a name' value={name} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onChange={handleName}  />
               </Box>
             </Grid>
             <Grid item className={classes.boxStyle} xs={3}>
@@ -356,14 +402,14 @@ export default function FieldTab() {
             </Grid>
             <Grid item xs={9}>
               <Box>
-                <TypeSelector value={type} onTypeChange={handleTypeChange} />
+                <TypeSelector value={type} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onTypeChange={handleTypeChange} />
               </Box>
             </Grid>
             <Grid item className={classes.boxStyle} xs={3}>
               <Typography className={classes.labelFont}>Aggregation</Typography>
             </Grid>
             <Grid item xs={9}>
-                <CustomComboBox value={aggreType} onChange={handleAggreChange}>
+                <CustomComboBox value={aggreType} disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onChange={handleAggreChange}>
                   <CustomMenuItem value="none">No Aggregation</CustomMenuItem>
                   <CustomMenuItem value="sum">Sum of </CustomMenuItem>
                   <CustomMenuItem value="count">Count of </CustomMenuItem>
@@ -374,7 +420,7 @@ export default function FieldTab() {
             </Grid>            
           </Grid>
         </Box>
-      </Box>}
+      </Box>
       {clickField && Object.keys(clickField).length !== 0 &&clickField.id?.includes("function")&&
       <Box sx={{padding: 1.5}}>
           <Box>
@@ -392,7 +438,7 @@ export default function FieldTab() {
                 </Box>
               </Grid>
               <Grid item className={classes.boxStyle} xs={3}>
-                <FuncDropDownMenu focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand} cursor={cursorPosition}/>              
+                <FuncDropDownMenu editor={editor} moveEditor={moveEditor} focusEditor ={focusEditor}calcCommand={calcCommand} setCalcCommand={setCalcCommand} cursor={cursorPosition}/>              
               </Grid>  
           </Box> 
           <Box>

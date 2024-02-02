@@ -241,7 +241,7 @@ export default function ParameterEditor({type, data, onSelectParamter, isDisable
             onChange={handleChange}
             variant='outlined' 
             name="parameter"
-            disabled={disabled}
+            disabled={isDisable}
           />
           {/* {openDatePicker && type==='Date' && 
             <Box onClick={handleDatePickerClick} ref={datePickerRef}>
@@ -256,7 +256,7 @@ export default function ParameterEditor({type, data, onSelectParamter, isDisable
         <Button 
           className={classes.buttonStyle}
           onClick={handleClick}
-          disabled={disabled}
+          disabled={isDisable}
         >
           <TuneIcon/>
         </Button>

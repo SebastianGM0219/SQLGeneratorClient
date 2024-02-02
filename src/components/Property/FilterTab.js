@@ -48,7 +48,7 @@ export default function FilterTab() {
   const currentColumn = useSelector(state => state.utility.currentColumn);
   const [parameter, setParameter] = React.useState('');
   const [isParameter, setIsParameter] = React.useState(false);
-  const [disabled, setDisabled] = React.useState(true);
+  const [disabled, setDisabled] = React.useState(false);
   const filterFields = useSelector(state => state.query.filterFields);
   const parameters = useSelector(state => state.utility.parameters);
   const dispatch = useDispatch();
@@ -56,10 +56,11 @@ export default function FilterTab() {
   const handleParameter = (value, isParam) => {
     setParameter(value);
     setIsParameter(isParam);
-    if(currentColumn.source && currentColumn.column && value) {
-      setDisabled(false)
-    }
-    else setDisabled(true)
+    // if(currentColumn.source && currentColumn.column && value) {
+    //   setDisabled(false)
+    // }
+    // else setDisabled(true)
+    setDisabled(false)
   }
 
   const handleApply = (e) => {
@@ -92,8 +93,8 @@ export default function FilterTab() {
 
   return (
     <Box sx={{position: 'relative', height: '100%'}}>
-      <Box sx={{ position: 'absolute', bottom: 4, left: 12}}>
-        <Button variant='contained' disabled={disabled||!(filterFields.length - 1)} onClick={handleApply}>Apply</Button>
+      <Box sx={{ position: 'absolute', bottom: 10, left: 12}}>
+        <Button variant='contained' disabled={disabled || currentColumn.source===''} onClick={handleApply}>Apply</Button>
       </Box>
       <Box className={classes.headerBox}>
         <Typography className={classes.headerFont}>Filter Propterties</Typography>
@@ -139,7 +140,7 @@ export default function FilterTab() {
             </Grid>
             <Grid item xs={9}>
               <Box>
-                <ParameterEditor type={currentColumn.data.type} data={currentColumn.data.value} isDisable={!(filterFields.length - 1)} onSelectParamter={handleParameter} />
+                <ParameterEditor type={currentColumn.data.type} data={currentColumn.data.value} isDisable={disabled || currentColumn.source===''} onSelectParamter={handleParameter} />
               </Box>
             </Grid>
           </Grid>

@@ -253,8 +253,22 @@ const FuncDropDownMenu = (props) => {
 
   const handleSelect = (eventKey, event) => {
     focusEditor();
+    const selectionRange = props.editor.getSelectionRange(); 
+    const selectedText = props.editor.getSession().getTextRange(selectionRange);
+
+    const cursorPosition1 = selectionRange.start;
+    console.log("heree");
+    console.log(cursorPosition1);
     if(eventKey === "cast")
+    {
       props.setCalcCommand(insertSyntax(props.calcCommand, "CAST({string} AS integer)", props.cursor))
+      const endPosition = {
+        row: cursorPosition1.row,
+        column: cursorPosition1.column +  `CAST({string} AS integer)`.length
+      };
+      console.log(endPosition);
+      props.moveEditor(endPosition);
+    }
       // props.setCalcCommand(props.calcCommand+"CAST({string} AS integer)");
     if(eventKey === "try")
       props.setCalcCommand(insertSyntax(props.calcCommand, "try({string} AS integer)", props.cursor))
@@ -403,7 +417,7 @@ const FuncDropDownMenu = (props) => {
       // props.setCalcCommand(props.calcCommand+"EOMONTH('date_value', 'month_number_value')");
 
     //JSON
-
+  
     //aggregation
 
   }

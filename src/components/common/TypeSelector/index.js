@@ -26,7 +26,7 @@ const useStyles = makeStyles()((theme) => {
   }
 });
 
-export default function TypeSelector({value, onTypeChange}){
+export default function TypeSelector({value, disabled, onTypeChange}){
   const { classes } = useStyles();
   const [ type, setType ] = React.useState(value);
 
@@ -47,7 +47,7 @@ export default function TypeSelector({value, onTypeChange}){
         name="parameter"
         disabled
       />
-      <TypeButton iconType={type} onChangeType={handleChange}/>
+      <TypeButton disabled={disabled} iconType={type} onChangeType={handleChange}/>
 
     </Box>
   )

@@ -1,10 +1,11 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Typography, Grid, Box } from "@mui/material";
 import { makeStyles  } from 'tss-react/mui';
 import { TypeIcon } from "../../common/Tree/TypeIcon";
 import CloseIcon from '@mui/icons-material/Close';
 import { removeFilter } from "../../../slices/query";
+import { setCurColumn } from "../../../slices/utility";
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -63,7 +64,9 @@ const useStyles = makeStyles()((theme) => {
 export const DataField = (props) => {
   const { classes } = useStyles();
   const { data, id } = props.node;
+  const curColumn = useSelector(state => state.utility.currentColumn);
   const dispatch = useDispatch();
+  
 
   const [visible, setVisible] = React.useState(false);
 
@@ -76,6 +79,22 @@ export const DataField = (props) => {
   }
 
   const handleClick = (e) => {
+    console.log(curColumn.source, curColumn.column, props.node.data.table, props.node.data.field)
+    
+    if(curColumn.source === props.node.data.table && curColumn.column === props.node.data.field){
+      const currentColumn = {
+        source: '',
+        column: '',
+        data: {
+          type: '',
+          // isList: false,
+          isParam: '',
+          value: ''
+        }
+      };
+      dispatch(setCurColumn({currentColumn}))
+    }
+
     dispatch(removeFilter({id}));
   }
 
