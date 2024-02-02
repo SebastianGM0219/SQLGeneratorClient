@@ -364,16 +364,22 @@ function App() {
       }
 
       setIsLoading(true);
-            dispatch(runQuery(queryInfo))
+      dispatch(runQuery(queryInfo))
         .then(data => {
+          console.log("run query data:", data)
           dispatch(setSheetOpened(true));
           setIsLoading(false);
-          // setRunQuerySuccess(true);
+          // check if run query is success or failed.
+          if(data.hasOwnProperty('error')) {
+            setRunQueryFail(true);
+          } else {
+            setRunQuerySuccess(true);
+          }
         })
         .catch(err => {
           console.log(err);
           setIsLoading(false);
-          // setRunQueryFail(true);
+          setRunQueryFail(true);
           setOpenModal(true);
         })
     }
@@ -911,15 +917,21 @@ function App() {
     setIsLoading(true);
     dispatch(runQuery(queryInfo))
       .then(data => {
+        console.log("run query data:", data, data.error)
         dispatch(setSheetOpened(true));
         setIsLoading(false);
-        // setRunQuerySuccess(true);
+        // check if run query is success or failed.
+        if(data.hasOwnProperty('error')) {
+          setRunQueryFail(true);
+        } else {
+          setRunQuerySuccess(true);
+        }
       })
       .catch(err => {
         console.log("run query faild" + err);
         setIsLoading(false);
         setOpenModal(true);
-        // setRunQueryFail(true);
+        setRunQueryFail(true);
       });
     setParamDialog(false);
   }
@@ -991,7 +1003,7 @@ function App() {
       </Box>
       <NewConnection open={open} handleClose={handleClose} handleConnect={handleConnect}/>
       <Modal open={openModal} param={{title: 'Failed', content: 'An error occured!'}} handleClose={handleCloseModal}/>
-      <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose} isLoading={isLoading}/>
+      <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose}/>
       <ParameterDialog open={paramDialog} handleParamClose={handleParamClose} flag={1} handleRun={handleRun} handleShowCreateView={handleShowCreateView}/>
       <ParameterDialog open={paramDialogForView} handleParamClose={handleParamClose} flag={2} handleRun={handleRun} handleShowCreateView={handleShowCreateView} />
       <CreateViewDialog open={createViewDialog} handleCreateViewClose={handleCreateViewClose} SaveView={SaveView} />

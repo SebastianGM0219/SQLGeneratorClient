@@ -71,7 +71,7 @@ export default function SortedView() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <DropBox>
+      <DropBox sx={{ height: '95%', overflowY: 'auto'}}>
         <Tree
           tree={treeData}
           rootId={0}
