@@ -15,7 +15,6 @@ import { setCurSelectorTab } from '../../../slices/utility';
 // import { styled } from '@mui/material/styles';
 import { runQuery,testQuery} from '../../../slices/query';
 import { setCodeSQL, setEdited } from '../../../slices/utility';
-import { Alert } from '@mui/material';
 import { Parser } from 'node-sql-parser';
 const parser = new Parser();
 
@@ -42,14 +41,12 @@ const useStyles = makeStyles()((theme) => {
   };
 });
 
-export default function TabView() {
+export default function TabView({setSuccessOpen, setFailOpen}) {
   const { classes } = useStyles();
   const isCrossTab = useSelector(state => state.utility.isCrossTab);
   const [enableSort, setEnableSort] = React.useState(isCrossTab);
   const currentSelectorTab = useSelector(state => state.utility.currentSelectorTab);
   const [value, setValue] = React.useState(String(currentSelectorTab+1));
-  const [successOpen, setSuccessOpen] = React.useState(false);
-  const [failOpen, setFailOpen] = React.useState(false);
   const queryData = useSelector(state => state.query);
   const dispatch = useDispatch();
   const isConnected = useSelector(state => state.database.success);
@@ -542,46 +539,7 @@ export default function TabView() {
           <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="2"><FilterView/></TabPanel>
           <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="3"><SortView/></TabPanel>
           <TabPanel className={clsx(classes.restHeight, classes.noPadding)} value="4"><RelationShipView /></TabPanel>
-        </TabContext>
-        {
-            successOpen? (
-              <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
-              {/* <Snackbar
-                open={successOpen}
-                sx={{ width: 500 }}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                autoHideDuration={500}
-              >
-                <Alert severity="success" sx={{ width: '100%' }}>
-                  {snackMessage}
-                </Alert>
-              </Snackbar> */}
-              
-                <Alert open={successOpen} severity="success" sx={{ width: '100%' }}>
-                    {snackMessage}
-                </Alert>
-            </div>
-            ) : null     
-        }         
-        {
-          failOpen ?
-            (  <div style={{ position: 'absolute', left: 10, bottom: 0, width: '30%' }}>
-            {/* <Snackbar
-              open={successOpen}
-              sx={{ width: 500 }}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              autoHideDuration={500}
-            >
-              <Alert severity="success" sx={{ width: '100%' }}>
-                {snackMessage}
-              </Alert>
-            </Snackbar> */}
-              <Alert open={failOpen} severity="error" sx={{ width: '100%' }}>
-                {snackMessage}
-              </Alert>
-          </div>          ):null
-        }
-      
+        </TabContext>      
       </div>
   </Box>
   );

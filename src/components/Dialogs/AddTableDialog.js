@@ -123,8 +123,8 @@ const useStyles = makeStyles()((theme) => {
     },
     loadingContent: {
       position: "absolute",
-      top: "250px",
-      left: "285px",
+      top: "180px",
+      left: "253px",
       transform: "translate(-50%, -50%)",
     },
   };
@@ -154,12 +154,14 @@ export default function AddTableDialog({
   open,
   handleTableClose,
   handleAddTableClose,
+  isLoading
 }) {
   const dispatch = useDispatch();
   const isConnected = useSelector((state) => state.database.success);
   const items = useSelector((state) => state.table);
   const [selectedItem, setSelectedItem] = React.useState("");
   const [filter, setFilter] = React.useState("");
+  const [checkedItems, setCheckedItems] = React.useState([]);
   const { classes } = useStyles();
 
   const getForeignTables = async () => {
@@ -178,7 +180,7 @@ export default function AddTableDialog({
       getForeignTables().then((rows) => {
         dispatch(initForeignTable({ foreginTable: rows }));
       });
-      dispatch(initAllTable());
+      // dispatch(initAllTable());
     }
   }, [isConnected]);
 
@@ -195,11 +197,25 @@ export default function AddTableDialog({
   };
 
   const handleSubmit = () => {
+    dispatch(updateItem({checkedItems: checkedItems}))
     handleAddTableClose();
   };
 
   const handleCheckboxChange = ({ text, checked }) => {
-    dispatch(updateItem({ text, checked }));
+    let existingItem = checkedItems.find(item => item.name === text)
+    let tmpCheckedItems = []
+    if(!existingItem){
+      setCheckedItems([...checkedItems, {name:text, checked:checked}])
+    }
+    else{
+      tmpCheckedItems = checkedItems.map(item => {
+        if(item.name === text)
+          return {name:item.name, checked:checked};
+        else 
+          return item
+      })
+      setCheckedItems(tmpCheckedItems)
+    }
   };
 
   return (
@@ -220,24 +236,7 @@ export default function AddTableDialog({
       sx={{opacity:!items.length ? 0.8: 1}}
       disableRestoreFocus
     >
-      {!items.length && (
-          <div className={classes.loadingBox}>
-            <div className={classes.loadingContent}>
-              <Oval
-                height={50}
-                width={50}
-                color="#2761c7"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-                ariaLabel="oval-loading"
-                secondaryColor="#2761c7"
-                strokeWidth={3}
-                strokeWidthSecondary={3}
-              />
-            </div>
-          </div>
-        )}
+      
       <CustomDialogTitle>
         Add Table Data
         <IconButton edge="end" color="inherit" onClick={handleClose}>
@@ -247,6 +246,24 @@ export default function AddTableDialog({
 
       <DialogContent width={600}>
         <Box>
+          {isLoading && 
+            <div className={classes.loadingBox}>
+              <div className={classes.loadingContent}>
+                <Oval
+                  height={50}
+                  width={50}
+                  color="#2761c7"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                  ariaLabel='oval-loading'
+                  secondaryColor="#2761c7"
+                  strokeWidth={3}
+                  strokeWidthSecondary={3}
+                />
+              </div>
+            </div>
+          }
           <SearchTextField
             id="outlined-start-adornment"
             InputProps={{
@@ -267,7 +284,7 @@ export default function AddTableDialog({
             <Grid container>
               <Grid
                 item
-                md={7}
+                md={6}
                 sx={{ borderRight: "1px solid #ccc" }}
                 className={classes.listBoxStyle}
               >
@@ -291,7 +308,7 @@ export default function AddTableDialog({
                     })}
                 </Box>
               </Grid>
-              <Grid item md={5} className={classes.listBoxStyle}>
+              <Grid item md={6} className={classes.listBoxStyle}>
                 <Box>
                   {selectedItem &&
                     items &&

@@ -222,7 +222,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
             }} 
           >
             {options.map((item,index) => {
-              return <MenuItem value={item}>{item}</MenuItem>
+              return <MenuItem value={item} key={index}>{item}</MenuItem>
             })}
           </CustomizedSelect>
         </FormControl>
