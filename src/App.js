@@ -368,12 +368,12 @@ function App() {
         .then(data => {
           dispatch(setSheetOpened(true));
           setIsLoading(false);
-          setRunQuerySuccess(true);
+          // setRunQuerySuccess(true);
         })
         .catch(err => {
           console.log(err);
           setIsLoading(false);
-          setRunQueryFail(true);
+          // setRunQueryFail(true);
           setOpenModal(true);
         })
     }
@@ -907,13 +907,13 @@ function App() {
       .then(data => {
         dispatch(setSheetOpened(true));
         setIsLoading(false);
-        setRunQuerySuccess(true);
+        // setRunQuerySuccess(true);
       })
       .catch(err => {
         console.log("run query faild" + err);
         setIsLoading(false);
         setOpenModal(true);
-        setRunQueryFail(true);
+        // setRunQueryFail(true);
       });
     setParamDialog(false);
   }
