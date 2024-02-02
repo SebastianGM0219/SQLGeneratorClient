@@ -176,6 +176,7 @@ function App() {
     setCreateViewDialog(false);
   }
   const handleConnect = (dbInfos) => {
+    setIsLoading(true)
      dispatch(connectDB(dbInfos))
       .unwrap()
       .then(data => {
@@ -188,9 +189,11 @@ function App() {
            setFailOpen(true);
            setSuccess(false);
          }
+         setIsLoading(false)
       })
       .catch(err => {
         setFailOpen(true);
+        setIsLoading(false)
       })
   }
 
