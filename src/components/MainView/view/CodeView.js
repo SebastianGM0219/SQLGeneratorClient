@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import { makeStyles  } from 'tss-react/mui';
-import { setCodeSQL, setEdited } from '../../../slices/utility';
+import { setCodeSQL, setEdited, setUniqueTable } from '../../../slices/utility';
 import { runQuery } from '../../../slices/query';
 import { UpdateSharp } from '@mui/icons-material';
 import { Parser } from 'node-sql-parser';
@@ -52,11 +52,23 @@ export default function CodeView({setSuccessOpen, setFailOpen}) {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
 
-    let modifiedTable = uniqueTable.replace("None", "");
+    let tableNameArray = [];
+    selectFields.map(item => {
+      const {data: {table}} = item;
+      tableNameArray.push(table);
+//      return {...item, data: { ...item.data, table: source,field: field,type:type}, text: sourceColumn};          
+    })
+
+
+    const uniqueArray1 = [...new Set(tableNameArray.filter(item => item !== "None"))];
+    let modifiedTable = uniqueArray1.join(',');
+
+
+    modifiedTable = modifiedTable.replace("None", "");
     //    uniqueTable = modifiedTable;
     modifiedTable = modifiedTable.replace(/^,|,$/g, '');
-    
-    fromTable = `FROM ${modifiedTable}`;    
+
+    fromTable = `FROM ${modifiedTable}`;       
     
              
     queryData.relationFields.forEach((item, index) => {

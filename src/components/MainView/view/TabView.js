@@ -75,12 +75,19 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
   React.useEffect(() => {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
-    let modifiedTable = uniqueTable.replace("None", "");
+
+    let tableNameArray = [];
+    selectFields.map(item => {
+      const {data: {table}} = item;
+      tableNameArray.push(table);
+//      return {...item, data: { ...item.data, table: source,field: field,type:type}, text: sourceColumn};          
+    })
+    const uniqueArray1 = [...new Set(tableNameArray.filter(item => item !== "None"))];
+    let modifiedTable = uniqueArray1.join(',');
+    modifiedTable = modifiedTable.replace("None", "");
     modifiedTable = modifiedTable.replace(/^,|,$/g, '');
-
-//    uniqueTable = modifiedTable;
-
-    fromTable = `FROM ${modifiedTable}`;    
+    fromTable = `FROM ${modifiedTable}`;     
+     
     queryData.relationFields.forEach((item, index) => {
       if(item.LTable.length>0){
         if(index === 0) fromTable = `FROM ${item.LTable[0]}`;
@@ -482,6 +489,7 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
     const queryInfo= {
       query: query
     }
+    console.log(query);
     if(selectFields.length>0)
     {
       try {
