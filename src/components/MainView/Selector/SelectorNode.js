@@ -6,6 +6,7 @@ import { Typography, Grid, Box } from "@mui/material";
 import { makeStyles  } from 'tss-react/mui';
 import { TypeIcon } from "../../common/Tree/TypeIcon";
 import CloseIcon from '@mui/icons-material/Close';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { removeSelector } from "../../../slices/query";
 import { clickSelector } from "../../../slices/query";
 import Functions from '@mui/icons-material/Functions';
@@ -62,8 +63,9 @@ const useStyles = makeStyles()((theme) => {
       paddingLeft: 4
     },
     iconStyle: {
-      width: 12,
-      height: 12
+      width: 22,
+      height: 22,
+      marginBottom: 3
     },
     sigmaStyle: {
       fontFamily: 'Segoe UI',
@@ -128,7 +130,9 @@ export const SelectorNode = (props) => {
     <Box sx= {{paddingInlineStart: indent}} className={isSelected?classes.itemSelectStyle: classes.itemStyle} onClick={handleProperty} onMouseOver={showCloseButton} onMouseOut = {hideCloseButton}>
       <Box className={visible?classes.blockStyle: classes.noneStyle}>
         <Box className={classes.closePosition}>
-          <CloseIcon className={classes.iconStyle} onClick={handleClick}/>
+          {/* <CloseIcon className={classes.iconStyle} onClick={handleClick} sx={{color: 'rgb(211, 47, 47)'}}/> */}
+          <CancelOutlinedIcon className={classes.iconStyle} onClick={handleClick} sx={{color: 'rgb(211, 47, 47)'}}/>
+          
         </Box>
       </Box>
       <Box className={data.aggreType !== "none"?classes.blockStyle: classes.noneStyle}>
