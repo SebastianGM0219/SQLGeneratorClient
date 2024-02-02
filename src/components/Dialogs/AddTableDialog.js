@@ -32,6 +32,7 @@ import { makeStyles } from "tss-react/mui";
 import { initAllTable } from "../../slices/table";
 import TableService from "../../services/TableService";
 import CloseIcon from "@mui/icons-material/Close";
+
 library.add(
   faMagnifyingGlass,
   faQuoteRight,
@@ -173,8 +174,11 @@ export default function AddTableDialog({
     }
   };
 
+
   React.useEffect(() => {
+    console.log("isConnected:", isConnected)
     if (isConnected) {
+      console.log("getTable dispatch")
       dispatch(getTables());
       getForeignTables().then((rows) => {
         dispatch(initForeignTable({ foreginTable: rows }));
@@ -245,7 +249,7 @@ export default function AddTableDialog({
 
       <DialogContent width={600}>
         <Box>
-          {!(items.length) && 
+          {(!(items.length) && !isConnected) &&
             <div className={classes.loadingBox}>
               <div className={classes.loadingContent}>
                 <Oval
