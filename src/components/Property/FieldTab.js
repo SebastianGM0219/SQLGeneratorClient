@@ -244,7 +244,7 @@ export default function FieldTab() {
 
 
   React.useEffect(() => {
-
+    console.log("clickField:", clickField)
     if(!clickField || !clickField.id) {
       return;
     }
