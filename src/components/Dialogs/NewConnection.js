@@ -173,7 +173,7 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
 
       dispatch(initAllDatabaseTable());
       dispatch(saveDbInformation({ dbInfo: dbInfos }));
-      dispatch(getTables());
+      // dispatch(getTables());
       dispatch(initAllState());
       dispatch(initAllUtility());
       dispatch(initAllTable());
@@ -229,7 +229,7 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
 
     dispatch(initAllDatabaseTable());
     dispatch(saveDbInformation({ dbInfo: dbInfos }));
-    dispatch(getTables());
+    // dispatch(getTables());
     dispatch(initAllState());
     dispatch(initAllUtility());
     dispatch(initAllTable());
