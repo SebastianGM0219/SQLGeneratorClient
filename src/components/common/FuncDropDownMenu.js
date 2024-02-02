@@ -403,7 +403,7 @@ const FuncDropDownMenu = (props) => {
       // props.setCalcCommand(props.calcCommand+"EOMONTH('date_value', 'month_number_value')");
 
     //JSON
-
+  
     //aggregation
 
   }
