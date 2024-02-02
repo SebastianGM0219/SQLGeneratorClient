@@ -268,6 +268,8 @@ function Selector() {
     // Your logic using the array and newArray parameters can go here
   };
   const handleDrop = (newTree) => {
+    console.log("new==================");
+    console.log(selectFields);
     let newItemData = {
       table: '',
       field: '',

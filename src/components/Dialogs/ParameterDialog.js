@@ -21,7 +21,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function ParameterDialog({ open, handleParamClose, handleRun }) {
+export default function ParameterDialog({ open, handleParamClose, handleRun, flag, handleShowCreateView }) {
   const parameters = useSelector(state => state.utility.parameters);
   const handleClose = (e) => {
     handleParamClose();
@@ -58,9 +58,16 @@ export default function ParameterDialog({ open, handleParamClose, handleRun }) {
           <Button autoFocus onClick={handleClose}>
             Close
           </Button>
+          {flag === 1 && (
           <Button onClick={handleRun}>
             Run Query
           </Button>
+          )}                    
+          {flag === 2 && (
+          <Button onClick={handleShowCreateView}>
+            Create View
+          </Button>
+          )}
         </DialogActions>
       </BootstrapDialog>
     </React.Fragment>

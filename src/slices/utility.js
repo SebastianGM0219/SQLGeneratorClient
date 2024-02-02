@@ -17,10 +17,12 @@ const initialState = {
   },
   parameters: [],
   codeSQL: "",
+  codeSQLForUnion: "",
   edited: false,
   isUnique: false,
   uniqueTable: '',
   funcIndex: 1,
+  codeViewSQL: ""
 };
 
 export const utilitySlice = createSlice({
@@ -90,6 +92,9 @@ export const utilitySlice = createSlice({
     setEdited: (state, action) => {
       state.edited = action.payload;
     },
+    setCodeViewSQL: (state, action) => {
+      state.codeViewSQL = action.payload;
+    },
     editParameter: (state, action) => {
       const {name, value} = action.payload;
       const newState = state.parameters.map(item => {
@@ -131,6 +136,7 @@ export const {
   setFuncIndex,
   initUtility,
   initAllUtility,
-  setAllUtility
+  setAllUtility,
+  setCodeViewSQL
 } = utilitySlice.actions;
 export default utilitySlice.reducer;

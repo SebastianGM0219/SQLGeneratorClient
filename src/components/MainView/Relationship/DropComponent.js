@@ -48,7 +48,6 @@ export default function DropComponent() {
   
   const handleClick = (event, index) => {
 //    if(validateLastFields(index)) 
-
       dispatch(addField(index));
   }
 
@@ -56,7 +55,7 @@ export default function DropComponent() {
     dispatch(removeField({index, i}));
   }
   const handleJoinRemove = (event, i, index) => {
-    dispatch(removeJoinRelation({index, i}));
+    dispatch(removeJoinRelation({index: i}));
   }
   
   const validateLastFields = (index) => {
@@ -113,8 +112,7 @@ export default function DropComponent() {
             </Grid>
           </Grid>
         ))
-      }
-      
+      }      
     </Box>
   );
 };

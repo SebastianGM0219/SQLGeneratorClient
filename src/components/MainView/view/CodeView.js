@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import { makeStyles  } from 'tss-react/mui';
-import { setCodeSQL, setEdited } from '../../../slices/utility';
+import { setCodeSQL, setEdited, setUniqueTable } from '../../../slices/utility';
 import { runQuery } from '../../../slices/query';
 import { UpdateSharp } from '@mui/icons-material';
 import { Parser } from 'node-sql-parser';
@@ -52,10 +52,23 @@ export default function CodeView({setSuccessOpen, setFailOpen}) {
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
 
-    let modifiedTable = uniqueTable.replace("None", "");
+    let tableNameArray = [];
+    selectFields.map(item => {
+      const {data: {table}} = item;
+      tableNameArray.push(table);
+//      return {...item, data: { ...item.data, table: source,field: field,type:type}, text: sourceColumn};          
+    })
+
+
+    const uniqueArray1 = [...new Set(tableNameArray.filter(item => item !== "None"))];
+    let modifiedTable = uniqueArray1.join(',');
+
+
+    modifiedTable = modifiedTable.replace("None", "");
     //    uniqueTable = modifiedTable;
-    
-        fromTable = `FROM ${modifiedTable}`;    
+    modifiedTable = modifiedTable.replace(/^,|,$/g, '');
+
+    fromTable = `FROM ${modifiedTable}`;       
     
              
     queryData.relationFields.forEach((item, index) => {
@@ -88,23 +101,12 @@ export default function CodeView({setSuccessOpen, setFailOpen}) {
         const {filterVariant, filterValue, operator, type} = item;
         const { data: { table, field }} = filterVariant[0];
         let typeOperator = typeAry1[operator];
-        // if(type === "Text") typeOperator = typeAry2[operator];
-        // if(filterValue.isParam) {
-        //   filterFields.push({table, field, typeOperator, value: '@'+filterValue.parameter, type});
-        // } else {
-        //   filterFields.push({table, field, typeOperator, value: filterValue.default, type});
-        // }
         if(type === "Text") typeOperator = typeAry2[operator];
-        let filterText = "";
-        if(filterValue.isParam){
-          const parameterName = filterValue.parameter;
-          parameters.forEach(item => {
-            if(item.name===parameterName) filterText = item.value;
-          })
+        if(filterValue.isParam) {
+          filterFields.push({table, field, typeOperator, value: '@'+filterValue.parameter, type});
+        } else {
+          filterFields.push({table, field, typeOperator, value: filterValue.default, type});
         }
-        else filterText = filterValue.default;
-        filterFields.push({table, field, typeOperator, value: filterText, type});
-
       }
     })
     joinArray = joinCommand.match(/\bAND\b|\bOR\b/g);
@@ -477,6 +479,8 @@ export default function CodeView({setSuccessOpen, setFailOpen}) {
             onChange={handleDefaultList} 
             padding={15}
             className={classes.editorStyle}
+            editorProps={{ $blockScrolling: true }}
+
             style={{
               "--color-prettylights-syntax-sublimelinter-gutter-mark": "#DCB862",
             }}
