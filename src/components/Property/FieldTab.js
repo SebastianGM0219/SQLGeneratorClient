@@ -345,7 +345,7 @@ export default function FieldTab() {
         <Typography className={classes.headerFont}>Field Propterties</Typography>
       </Box>
       {/* {clickField} */}
-      {clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function")&&
+      
       <Box sx={{padding: 1.5}}>
         <Box>
           <Grid className={classes.gridBox} container>
@@ -421,8 +421,6 @@ export default function FieldTab() {
           </Grid>
         </Box>
       </Box>
-      }
-      {console.log(clickField)}
       {clickField && Object.keys(clickField).length !== 0 &&clickField.id?.includes("function")&&
       <Box sx={{padding: 1.5}}>
           <Box>
