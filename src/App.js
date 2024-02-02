@@ -64,7 +64,7 @@ const useStyles = makeStyles()((theme) => {
       position: "absolute",
       width: '100%', height: '100%',
       background: '#50657a1a',
-      zIndex: 1000
+      zIndex: 10000
     },
     loadingContent: {
       position: "absolute",
@@ -568,7 +568,7 @@ function App() {
   return (    
   
     <Box sx={{ display: 'flex' }}>
-      { isLoading && 
+      {isLoading && 
         <div className={classes.loadingBox}>
           <div className={classes.loadingContent}>
             <Oval
@@ -632,7 +632,7 @@ function App() {
       </Box>
       <NewConnection open={open} handleClose={handleClose} handleConnect={handleConnect}/>
       <Modal open={openModal} param={{title: 'Failed', content: 'An error occured!'}} handleClose={handleCloseModal}/>
-      <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose}/>
+      <AddTableDialog open={addDialog} handleAddTableClose={handleAddTableClose} handleTableClose={handleTableClose} isLoading={isLoading}/>
       <ParameterDialog open={paramDialog} handleParamClose={handleParamClose} flag={1} handleRun={handleRun} handleShowCreateView={handleShowCreateView}/>
       <ParameterDialog open={paramDialogForView} handleParamClose={handleParamClose} flag={2} handleRun={handleRun} handleShowCreateView={handleShowCreateView} />
       <CreateViewDialog open={createViewDialog} handleCreateViewClose={handleCreateViewClose} SaveView={SaveView} />
