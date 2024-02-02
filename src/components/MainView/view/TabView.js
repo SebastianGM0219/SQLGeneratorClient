@@ -14,7 +14,7 @@ import { setCurSelectorTab } from '../../../slices/utility';
 // import Autocomplete from '@mui/material/Autocomplete';
 // import { styled } from '@mui/material/styles';
 import { runQuery,testQuery} from '../../../slices/query';
-import { setCodeSQL, setEdited,setCodeViewSQL  } from '../../../slices/utility';
+import { setCodeSQL, setEdited,setCodeViewSQL, setCurTab  } from '../../../slices/utility';
 import { Alert } from '@mui/material';
 import { Parser } from 'node-sql-parser';
 const parser = new Parser();
@@ -540,8 +540,8 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
       <TabContext value={value} className={classes.fullHeight} disabled= {!isConnected}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="Main-Tab-list" className={classes.tabContextStyle}>
-              <Tab disabled= {!isConnected} label="Fields" className={classes.tabStyle} value="1" />
-              <Tab disabled= {!isConnected} label="Filters" className={classes.tabStyle} value="2" />
+              <Tab disabled= {!isConnected} label="Fields" className={classes.tabStyle} onClick={()=> {dispatch(setCurTab(1))}} value="1" />
+              <Tab disabled= {!isConnected} label="Filters" className={classes.tabStyle} onClick={()=> {dispatch(setCurTab(1))}} value="2" />
               {!enableSort && <Tab disabled= {!isConnected} label="Sort" className={classes.tabStyle} value="3" />}
               <Tab disabled= {!isConnected} label="Relationships" className={classes.tabStyle} value="4" />
             </TabList>

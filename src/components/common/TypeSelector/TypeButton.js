@@ -31,7 +31,7 @@ const useStyles = makeStyles()((theme) => {
 
 const items = ['Text', 'Integer', 'Decimal', 'Boolean', 'TimeStamp', 'Date'];
 
-export default function TypeButton({iconType, onChangeType}){
+export default function TypeButton({iconType, onChangeType, disabled}){
   const { classes } = useStyles();
  
   const [type, setType] = React.useState(iconType);
@@ -59,6 +59,7 @@ export default function TypeButton({iconType, onChangeType}){
     <Box>
       <Button 
         className={classes.buttonStyle}
+        disabled={disabled}
         onClick={handleClick}
       >
         <TypeIcon type={type}/>
