@@ -19,7 +19,7 @@ const useStyles = makeStyles()((theme) => {
   };
 });
 
-export default function CodeView({setSuccessOpen, setFailOpen}) {
+export default function CodeView({setSuccessOpen, setErrorMessage, setFailOpen}) {
   const {classes} = useStyles();
 
   const queryData = useSelector(state => state.query);
@@ -469,6 +469,8 @@ export default function CodeView({setSuccessOpen, setFailOpen}) {
     setSuccessOpen(true);
     setFailOpen(false);
   } catch (error) {
+    console.log(error);   
+    setErrorMessage(error.message);
     setSuccessOpen(false);
     setFailOpen(true);
   }
