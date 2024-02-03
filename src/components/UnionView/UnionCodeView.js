@@ -72,6 +72,6 @@ export default function CodeView() {
               '--color-prettylights-syntax-sublimelinter-gutter-mark': '#DCB862',
             }}
             className={classes.editorStyle}
-       
+            disabled={true}
           />
 }
