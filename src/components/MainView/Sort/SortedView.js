@@ -36,6 +36,7 @@ export default function SortedView() {
   const dispatch = useDispatch();
 
   const sortFields = useSelector(state => state.query.sortFields);
+  const selectFields = useSelector(state => state.query.selectFields)
   const { classes } = useStyles();
   const [treeData, setTreeData] = useState(sortFields);
 
@@ -58,10 +59,8 @@ export default function SortedView() {
       text: '',
       data: {}
     })
-    if(newTree.length !== treeData.length) {
       dispatch(setSortData(realTree))
       setTreeData(realTree)  
-    }
   }
 
   React.useEffect(() => {
@@ -88,11 +87,18 @@ export default function SortedView() {
           insertDroppableFirst={false}
           onDrop = {handleDrop}
           canDrop={(tree, { dragSource, dropTargetId, dropTarget }) => {
-            if (dragSource?.parent === dropTargetId) {
-              return true;
+            console.log("dragSource", dragSource)
+            console.log('selectFields', selectFields)
+            // console.log("dropTarget",dropTarget)
+            let result = false;
+            for(let i = 0; i < selectFields.length; i++){
+              if(selectFields[i].id == dragSource.id)
+                return true
             }
-          }}          
-          dropTargetOffset={5}
+            return false
+          }
+          }        
+          dropTargetOffset={20}
         />
       </DropBox>
 
