@@ -52,7 +52,15 @@ export default function DropComponent() {
   }
 
   const handleRemove = (event, i, index) => {
-    dispatch(removeField({index, i}));
+    console.log("remove event:", i, index)
+    // if count of fields is more than 1, remove field item.
+    // else remove join item.
+    if(i > 0) {
+      dispatch(removeField({index, i}));
+    } else {
+      dispatch(removeJoinRelation({index}));
+    }
+
   }
   const handleJoinRemove = (event, i, index) => {
     dispatch(removeJoinRelation({index: i}));
