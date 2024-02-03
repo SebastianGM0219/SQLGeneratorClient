@@ -337,7 +337,7 @@ export default function FieldTab() {
 
   return (
     <Box sx={{position: 'relative', height: '100%'}}>
-      <Box sx={{ position: 'absolute', bottom: 10, left: 12}}>
+      <Box sx={{ position: 'absolute', bottom: 10, right: 12}}>
         {/* <Button variant='contained' disabled={disabled} onClick={handleApply}>Apply</Button> */}
         {/* <Button variant='contained' disabled={!selectFields.length || !(clickField && Object.keys(clickField).length !== 0 &&!clickField.id?.includes("function"))} onClick={handleApply}>Apply</Button> */}
         <Button variant='contained' disabled={!(clickField && Object.keys(clickField).length !== 0 )} onClick={handleApply}>Apply</Button>
