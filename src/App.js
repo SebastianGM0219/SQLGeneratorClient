@@ -1012,7 +1012,7 @@ function App() {
         open={successOpen}
         sx={{ width: 500 }}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={500}
+        autoHideDuration={2000}
         onClose={handleSuccessClose}
       >
         <Alert
