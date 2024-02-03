@@ -48,8 +48,12 @@ export default function SelectOperator({relationIndex, fieldIndex}) {
       onChange={(e) => handleChangeOperator(e, relationIndex, fieldIndex)}
       disabled={operator === ''? true: false}
     >
-      <MenuItem className={classes.fontStyle} value={0}>=</MenuItem>
-      <MenuItem className={classes.fontStyle} value={1}>!=</MenuItem>
+      <MenuItem className={classes.fontStyle} value={0}>{'='}</MenuItem>
+      <MenuItem className={classes.fontStyle} value={1}>{'!='}</MenuItem>
+      <MenuItem className={classes.fontStyle} value={2}>{'>'}</MenuItem>
+      <MenuItem className={classes.fontStyle} value={3}>{'>='}</MenuItem>
+      <MenuItem className={classes.fontStyle} value={4}>{'<'}</MenuItem>
+      <MenuItem className={classes.fontStyle} value={5}>{'<='}</MenuItem>
     </DropSelect>
   )
 }
