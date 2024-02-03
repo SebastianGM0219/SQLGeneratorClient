@@ -9,8 +9,6 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import ParameterTextField from './ParameterTextField';
-import ParameterSelector from './ParameterSelector';
 import {Select, InputLabel,TextField} from '@mui/material';
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
@@ -52,7 +50,17 @@ export default function CreateViewDialog({ open, handleCreateViewClose, SaveView
 
  }
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{ style: { width: 600, padding: 20 } }}>
+    <Dialog 
+      open={open} 
+      onClose={handleClose} maxWidth={'xs'}    
+      PaperProps={{ style: { width: 600, padding: 20 } }}
+      onKeyDown={(event) => {
+        if(event.key === "Enter"){
+          event.preventDefault()
+          SaveClick()
+        }
+      }}
+    >
         <CustomDialogTitle id="customized-dialog-title">
           Create View
           <IconButton edge="end" color="inherit" onClick={handleClose}>

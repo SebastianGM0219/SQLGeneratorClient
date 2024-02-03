@@ -25,7 +25,16 @@ export default function ParameterDialog({ open, handleParamClose, handleRun, fla
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{ style: { width: 600, padding: 20 } }}>
+    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{ style: { width: 600, padding: 20 } }}
+      onKeyDown={(event) => {
+        event.stopPropagation()
+        if(event.key === "Enter"){
+          if(flag === 1)handleRun()
+          if(flag === 2) handleShowCreateView()
+        }
+        
+      }}
+    >
       <CustomDialogTitle id="customized-dialog-title">
         Set Parameters
         <IconButton edge="end" color="inherit" onClick={handleClose}>
