@@ -44,11 +44,11 @@ export default function SortedView() {
     const filtered = newTree.map(node => {
       if (node.id !== 'none'){
         const { parent, id, text, data } = node;
-        const {field, hasKey, isKey, table, type, sortType} = data;
+        const {field, hasKey, isKey, table, type, sortType, header_name} = data;
 
         if (sortType !== undefined) 
           return { parent, id, text, data }
-        return {parent, id, text, data: {field, hasKey, isKey, table, type, sortType: 'ASC'}}
+        return {parent, id, text, data: {field, hasKey, isKey, header_name, table, type, sortType: 'ASC'}}
       }
     });
     const realTree = filtered.filter(node => node!==undefined);

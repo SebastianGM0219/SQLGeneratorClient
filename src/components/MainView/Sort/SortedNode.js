@@ -89,7 +89,7 @@ export const SortedNode = (props) => {
 
     dispatch(removeSortField({id}));
   }
-  
+
   return (
     <Box onMouseOver={showCloseButton} onMouseOut = {hideCloseButton}>
       { id === 'none' &&
@@ -109,7 +109,7 @@ export const SortedNode = (props) => {
               <TypeIcon droppable={false} type={data?.type} />
             </Box>
             <Box className={classes.labelGridItem}>
-              <Typography variant="body2">{`${props.node.text}`}</Typography>
+              <Typography variant="body2">{`${data?data.header_name:props.node.text}`}</Typography>
             </Box>
             <Box>
               <ToggleButtonGroup 
