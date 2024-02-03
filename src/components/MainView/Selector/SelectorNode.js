@@ -63,9 +63,8 @@ const useStyles = makeStyles()((theme) => {
       paddingLeft: 4
     },
     iconStyle: {
-      width: 22,
-      height: 22,
-      marginBottom: 3
+      width: 12,
+      height: 12
     },
     sigmaStyle: {
       fontFamily: 'Segoe UI',
@@ -130,8 +129,9 @@ export const SelectorNode = (props) => {
     <Box sx= {{paddingInlineStart: indent}} className={isSelected?classes.itemSelectStyle: classes.itemStyle} onClick={handleProperty} onMouseOver={showCloseButton} onMouseOut = {hideCloseButton}>
       <Box className={visible?classes.blockStyle: classes.noneStyle}>
         <Box className={classes.closePosition}>
+          <CloseIcon className={classes.iconStyle} onClick={handleClick} />
           {/* <CloseIcon className={classes.iconStyle} onClick={handleClick} sx={{color: 'rgb(211, 47, 47)'}}/> */}
-          <CancelOutlinedIcon className={classes.iconStyle} onClick={handleClick} sx={{color: 'rgb(211, 47, 47)'}}/>
+          {/* <CancelOutlinedIcon className={classes.iconStyle} onClick={handleClick} sx={{color: 'rgb(211, 47, 47)'}}/> */}
           
         </Box>
       </Box>
