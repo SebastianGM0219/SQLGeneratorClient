@@ -12,13 +12,10 @@ import Typography from '@mui/material/Typography';
 import ParameterTextField from './ParameterTextField';
 import ParameterSelector from './ParameterSelector';
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
+const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
 }));
 
 export default function ParameterDialog({ open, handleParamClose, handleRun, flag, handleShowCreateView }) {
@@ -28,49 +25,39 @@ export default function ParameterDialog({ open, handleParamClose, handleRun, fla
   }
 
   return (
-
-    <React.Fragment>
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Set Parameters
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
+    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{ style: { width: 600, padding: 20 } }}>
+      <CustomDialogTitle id="customized-dialog-title">
+        Set Parameters
+        <IconButton edge="end" color="inherit" onClick={handleClose}>
           <CloseIcon />
         </IconButton>
-        <DialogContent dividers>
-            {parameters.map(item => !item.isList && (<ParameterTextField key={item.name} elName={item.name} type={item.type} defaultValue={item.default} />))}
-            {parameters.map(item => item.isList && (<ParameterSelector key={item.name} elName={item.name} type={item.type} defaultValue={item.default} list={item.list} />))}
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Close
-          </Button>
-          {flag === 1 && (
-          <Button onClick={handleRun}>
+      </CustomDialogTitle>
+      
+      <DialogContent>
+          {parameters.map(item => !item.isList && (<ParameterTextField key={item.name} elName={item.name} type={item.type} defaultValue={item.default} />))}
+          {parameters.map(item => item.isList && (<ParameterSelector key={item.name} elName={item.name} type={item.type} defaultValue={item.default} list={item.list} />))}
+      </DialogContent>
+      <DialogActions sx={{ display: "block", padding: "4px 24px" }}>
+        {flag === 1 && (
+          <Button variant="contained" sx={{ float: "right" }} onClick={handleRun}>
             Run Query
           </Button>
           )}                    
-          {flag === 2 && (
-          <Button onClick={handleShowCreateView}>
-            Create View
-          </Button>
-          )}
-        </DialogActions>
-      </BootstrapDialog>
-    </React.Fragment>
+        {flag === 2 && (
+        <Button variant="contained" sx={{ float: "right" }} onClick={handleShowCreateView}>
+          Next
+        </Button>
+        )}
+        <Button
+          variant="contained"
+          sx={{ float: "right", marginRight: "15px" }}
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+      </DialogActions>
+      
+    </Dialog>
     
   );
 }

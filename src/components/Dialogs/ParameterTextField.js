@@ -32,9 +32,9 @@ export default function ParameterTextField({elName, type, defaultValue}) {
   }, [defaultValue])
   
   return (
-    <Box>
+    <Box sx={{width: '100%'}}>
       <Typography>{elName}</Typography>
-      <TextField value={value} onChange={handleChange} sx={{width: 480}} className={classes.paddingStyle}/>
+      <TextField value={value} onChange={handleChange} sx={{width: '100%'}} className={classes.paddingStyle}/>
     </Box>
   )
 } 

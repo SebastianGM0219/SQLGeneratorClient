@@ -15,23 +15,31 @@ import {Select, InputLabel,TextField} from '@mui/material';
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
   fontSize: 12,
-  '& .MuiInputBase-input': {
+  marginTop: 1,
+  // pointerEvents: 'none',
+  "& .MuiInputBase-input": {
     height: 0,
-    fontSize: 12
+    fontSize: 14,
   },
-  '& .MuiInputLabel-root': {
-    fontSize: 12,
-    transform: 'translate(14px, 9px) scale(1)'
-  }
+  "& .MuiInputLabel-root": {
+    fontSize: 14,
+    transform: "translate(14px, 9px) scale(1)",
+  },
 }));
 
-const CustomInputLabel = styled(InputLabel)(({theme}) => ({
-  fontSize:15,
-  marginTop:12,
+const CustomInputLabel = styled(InputLabel)(({ theme }) => ({
+  fontSize: "14px",
+  marginTop: 12,
+}));
+
+const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
 }));
 
 export default function CreateViewDialog({ open, handleCreateViewClose, SaveView }) {
-  const [viewName, setViewName] = React.useState("");
+  const [viewName, setViewName] = React.useState("New View");
   const handleClose = (e) => {
     handleCreateViewClose();
   }
@@ -44,12 +52,15 @@ export default function CreateViewDialog({ open, handleCreateViewClose, SaveView
 
  }
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{  style: { width:600, paddingRight: 20, paddingLeft:20, paddingTop:10, paddingBottom:10 } }}>
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          CreateView
-        </DialogTitle>
-        <DialogContent>
-          <CustomInputLabel id="saved-connection-label" >View Name</CustomInputLabel>                
+    <Dialog open={open} onClose={handleClose} maxWidth={'xs'}    PaperProps={{ style: { width: 600, padding: 20 } }}>
+        <CustomDialogTitle id="customized-dialog-title">
+          Create View
+          <IconButton edge="end" color="inherit" onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </CustomDialogTitle>
+        
+        <DialogContent>         
           <CustomTextField
             name="port"
             type="text"
@@ -59,14 +70,22 @@ export default function CreateViewDialog({ open, handleCreateViewClose, SaveView
             onChange={changeViewNameHandler}
           />
         </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} variant="contained">
-            Close
-          </Button>
-          <Button onClick={SaveClick} variant="contained">
+        <DialogActions sx={{ display: "block", padding: "4px 24px" }}>
+          <Button
+            variant="contained"
+            sx={{ float: "right" }}
+            onClick={SaveClick}
+          >
             Save
           </Button>
-        </DialogActions>
-      </Dialog>
+          <Button
+            variant="contained"
+            sx={{ float: "right", marginRight: "15px" }}
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
