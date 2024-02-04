@@ -17,6 +17,8 @@ import { Snackbar, Alert } from "@mui/material";
 import Sheet from './Sheet'
 import { setSheetOpened } from '../../slices/utility';
 import { edit } from 'ace-builds';
+import { useSnackbar} from 'notistack'
+import { notifyContents } from '../common/Notification';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -55,6 +57,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 export default function Result() {
+  const {enqueueSnackbar} = useSnackbar();
   const isSheetOpened = useSelector(state => state.utility.sheetOpened);
   const data = useSelector(state => state.query.sheetContent);
   const buttonRef = useRef();
@@ -62,8 +65,11 @@ export default function Result() {
   const [expanded, setExpanded] = React.useState(isSheetOpened);
   const [exportFileName, setExportFileName] = React.useState("output");
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
-  const [isSuccessExport, setIsSuccessExport] = React.useState(false)
   const isConnected = useSelector(state => state.database.success);
+  
+  const snackbarWithStyle = (content, variant) => {
+    enqueueSnackbar(content, {variant: variant, style:{width: '350px'}, autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'right' }})
+  }
 
   React.useEffect(() => {
     setExpanded(isSheetOpened);
@@ -93,7 +99,7 @@ export default function Result() {
   const exportCSV = (event) => {
     buttonRef.current.link.click();
     handleCloseEditDialog();
-    setIsSuccessExport(true)
+    snackbarWithStyle(notifyContents.exportSuccess, 'success')
   }
 
   const handleOpenEditDialog = () => {
@@ -108,9 +114,6 @@ export default function Result() {
     setExportFileName(e.target.value)
   }
 
-  const handleSuccesExport = () => {
-    setIsSuccessExport(false)
-  }
 
   return (
     <Box>
@@ -154,18 +157,6 @@ export default function Result() {
             <Button variant="contained" sx={{float: 'right', marginRight: '15px'}} onClick={handleCloseEditDialog}>Cancel</Button>
           </DialogActions>
       </Dialog>
-
-      <Snackbar
-        open={isSuccessExport}
-        sx={{ width: 500 }}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={2000}
-        onClose={handleSuccesExport}
-      >
-        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
-          Export Success
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }

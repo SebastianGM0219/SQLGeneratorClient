@@ -32,6 +32,8 @@ import {setLeftUnionData, setRightUnionData} from "../../../slices/union"
 import ExpandIcon from '@mui/icons-material/PlaylistPlay';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import {useSnackbar} from 'notistack'
+import { notifyContents } from '../Notification';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -51,6 +53,12 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
   const [minusDisable, setMinusDisable] = useState(false);
   const dispatch = useDispatch();
   const isConnected = useSelector(state => state.database.success);
+
+  const {enqueueSnackbar} = useSnackbar()
+
+  const snackbarWithStyle = (content, variant) => {
+    enqueueSnackbar(content, {variant: variant, style:{width: '350px'}, autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'right' }})
+  }
 
   const handleIncrement = () => {
     setOpen(true); // Open the dialog when handleIncrement is clicked
@@ -104,6 +112,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
     if(!options.includes(newOption) && newOption.trim() !== ""){
       options.push(newOption);
       setValue1(newOption);
+      snackbarWithStyle(notifyContents.queryCreateSuccess, "success")
     }   
 //    setPreviousValue(value1);     
     setMinusDisable(true);
@@ -111,6 +120,7 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
     setOpen(false); 
     dispatch(initAllState());
     dispatch(initAllUtility());
+   
   };
 
   const handleOpenUnionDialog = () => {
@@ -175,11 +185,12 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
       options.splice(index,1);
       let utility = newinitialDbInfosArray[select].utility;
       let query = newinitialDbInfosArray[select].query;
-
       dispatch(setAllUtility(utility));
       dispatch(setAllState(query));
-       setValue1(options[select]);
-       setOptions(updatedOptions);
+      setValue1(options[select]);
+      setOptions(updatedOptions);
+
+      snackbarWithStyle(notifyContents.queryDeleteSuccess, "error")
 //       console.log("session=========");
 //       console.log(newinitialDbInfosArray);
 // //      index = options.indexOf(e.target.value);

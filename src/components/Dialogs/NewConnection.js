@@ -27,6 +27,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Snackbar, Alert } from "@mui/material";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import DialogContentText from "@mui/material/DialogContentText";
+
+import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+
+import { notifyContents } from "../common/Notification";
+
 const CustomTextField = styled(TextField)(({ theme }) => ({
   fontSize: 12,
   marginTop: 1,
@@ -77,6 +82,7 @@ const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
 }));
 
 export default function NewConnection({ open, handleClose, handleConnect, isLoading }) {
+  const { enqueueSnackbar } = useSnackbar();
   const sessionDbInfos = Cookies.get("dbInfos");
   const initialDbInfosArray = sessionDbInfos ? JSON.parse(sessionDbInfos) : [];
   const initialDbInfos =
@@ -107,11 +113,13 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
   const [error, setError] = React.useState(false);
   const [empty, setEmpty] = React.useState(false);
   const [openAlertSave, setOpenAlertSave] = React.useState(false);
-  const [saveSnackOpen, setSaveSnackOpen] = React.useState(false);
-  const [deleteSnackOpen, setDeleteSnackOpen] = React.useState(false);
   const [disableParam, setDisableParam] = React.useState(
     initmenu.length > 0 ? false : true
   );
+
+  const snackbarWithStyle = (content, variant) => {
+    enqueueSnackbar(content, {variant: variant, style:{width: '350px'}, autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'right' }})
+  }
 
   useEffect(() => {
     setDisableParam(connectMenu.length > 0 ? false : true);
@@ -164,10 +172,9 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
       });
       console.log(found);
       if (!found) {
+        snackbarWithStyle(notifyContents.databaseSave, "success")
         newArray.push(newvalue); // If not found, push new value to array
       }
-
-      //      setSaveSnackOpen(true);
       Cookies.set("dbInfos", JSON.stringify(newArray), { expires: 30 });
       //    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
 
@@ -178,8 +185,9 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
       dispatch(initAllUtility());
       dispatch(initAllTable());
       handleConnect(dbInfos);
+      if(found)
       setOpenAlertSave(false);
-
+      
       setFlag(0);
       //       }
       //       else
@@ -187,19 +195,14 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
       // //        setOpenAlertSave(true);
       //       }
       //      setSaveOpen(open);
-      //      setSaveSnackOpen(false);
     }
   };
 
   const closeDuplicateAlert = () => {
     setDuplicateAlert(false);
   };
-  const handleSaveClose = () => {
-    setSaveSnackOpen(false);
-  };
-  const handleDeleteClose = () => {
-    setDeleteSnackOpen(false);
-  };
+
+
 
   const closeAgreeAlertSave = () => {
     // setSelectedName(index_flag);
@@ -223,7 +226,6 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
     if (!found) {
       newArray.push(newvalue); // If not found, push new value to array
     }
-    //      setSaveSnackOpen(true);
     Cookies.set("dbInfos", JSON.stringify(newArray), { expires: 30 });
     //    Cookies.set('dbInfos', JSON.stringify(newArray), { expires: 30 });
 
@@ -336,7 +338,7 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
     Cookies.set("dbInfos", JSON.stringify(initialDbInfosArray), {
       expires: 30,
     });
-    setDeleteSnackOpen(true);
+    snackbarWithStyle(notifyContents.databaseDelete, 'error')
   };
 
   const handleSaveNewDailog = () => {
@@ -366,10 +368,9 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
       if (!found) {
         newArray.push(newvalue); // If not found, push new value to array
       }
-      //      setSaveSnackOpen(true);
       Cookies.set("dbInfos", JSON.stringify(newArray), { expires: 30 });
       setSaveDisable(true);
-      setSaveSnackOpen(true);
+      snackbarWithStyle(notifyContents.databaseSave, 'success')
     }
   };
 
@@ -579,30 +580,7 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
         </Button>
       </DialogActions>
 
-      <Snackbar
-        open={saveSnackOpen}
-        sx={{ width: 500 }}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={2000}
-        onClose={handleSaveClose}
-      >
-        <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
-          Database saved correctly.
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={deleteSnackOpen}
-        sx={{ width: 500 }}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={2000}
-        onClose={handleDeleteClose}
-      >
-        <Alert severity="error" variant="filled" sx={{ width: "100%" }}>
-          Database deleted correctly.
-        </Alert>
-      </Snackbar>
-
+     
       <Dialog
         open={empty}
         // onClose={closeAlertSave}
