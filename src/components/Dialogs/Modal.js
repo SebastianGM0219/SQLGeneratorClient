@@ -4,7 +4,15 @@ import { styled } from '@mui/material/styles';
 
 export default function Modal({ open, param, handleClose, handleOK }) {
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={'xs'} >
+    <Dialog 
+      open={open} 
+      onClose={handleClose} 
+      maxWidth={'xs'} 
+      onKeyDown={(event) => {
+        if(event.key === "Enter")
+          handleClose()
+      }}
+    >
       <DialogTitle>{param.title}</DialogTitle>
       <DialogContent width={400}>
         {param.content}

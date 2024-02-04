@@ -148,7 +148,7 @@ export const SelectorNode = (props) => {
 
       <Grid container>
         <Grid item xs={4}  className={classes.boxStyle}>
-          <Typography variant="body2" className={classes.paddingText} >{`${data.header_name.toUpperCase()}`}</Typography>
+          <Typography variant="body2" className={classes.paddingText} >{`${data.header_name}`}</Typography>
         </Grid>
         <Grid item xs={4}>
           <Box className={classes.boxStyle}>

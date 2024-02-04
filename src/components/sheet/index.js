@@ -132,6 +132,10 @@ export default function Result() {
         PaperProps={{  style: { width:400, paddingRight: 20, paddingLeft:20, paddingTop:20, paddingBottom:20} }} 
         open={editDialogOpen} onClose={handleCloseEditDialog} 
         disableRestoreFocus
+        onKeyDown={(event) => {
+          if(event.key === "Enter")
+          exportCSV()
+        }}
       >
         <DialogTitle>Edit Export File Name</DialogTitle>
           <DialogContent>      

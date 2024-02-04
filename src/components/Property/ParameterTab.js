@@ -183,8 +183,8 @@ export default function ParameterTab() {
 
   return (
     <Box sx={{ position: 'relative', height: '100%'}}>
-      <Box sx={{position: 'absolute', bottom: 0, right: 0}}>
-        <Button onClick={handleCreate} >Create</Button>
+      <Box sx={{position: 'absolute', bottom: 10, right: 12 }}>
+        <Button variant='contained' disabled={parameter.length === 0} onClick={handleCreate} >Create</Button>
       </Box>
       <Box className={classes.headerBox}>
         <Typography className={classes.headerFont}>Parameter Properties</Typography>

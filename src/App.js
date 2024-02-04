@@ -744,7 +744,7 @@ function App() {
 
     let joinQuery = '';
     const joinTypeArray = ['LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'FULL JOIN'];
-    const OperatorTypeArray = ['=', '!=']
+    const OperatorTypeArray = ['=', '!=', '>', '>=', '<', '<=']
   
     joinFields.map((item) => {
         const {joinTable, LFields, RFields, Operators, joinType} = item;
@@ -1012,7 +1012,7 @@ function App() {
         open={successOpen}
         sx={{ width: 500 }}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={500}
+        autoHideDuration={2000}
         onClose={handleSuccessClose}
       >
         <Alert

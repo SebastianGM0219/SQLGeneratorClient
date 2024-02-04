@@ -93,7 +93,7 @@ export default function FilterTab() {
 
   return (
     <Box sx={{position: 'relative', height: '100%'}}>
-      <Box sx={{ position: 'absolute', bottom: 10, left: 12}}>
+      <Box sx={{ position: 'absolute', bottom: 10, right: 12}}>
         <Button variant='contained' disabled={disabled || currentColumn.source===''} onClick={handleApply}>Apply</Button>
       </Box>
       <Box className={classes.headerBox}>

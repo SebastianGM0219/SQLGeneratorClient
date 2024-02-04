@@ -238,6 +238,10 @@ export default function AddTableDialog({
       }}
       sx={{opacity:!items.length ? 0.8: 1}}
       disableRestoreFocus
+      onKeyDown={(event) => {
+        if(event.key === "Enter")
+          handleSubmit()
+      }}
     >
       
       <CustomDialogTitle>

@@ -33,7 +33,7 @@ export const UnsortedNode = (props) => {
           <TypeIcon droppable={false} type={data?.type} />
         </Box>
         <Box className={classes.labelGridItem}>
-          <Typography variant="body2">{`${props.node.text}`}</Typography>
+          <Typography variant="body2">{`${data?data.header_name:props.node.text}`}</Typography>
         </Box>
       </Box>
     </Box>

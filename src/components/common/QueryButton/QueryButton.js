@@ -43,7 +43,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function QueryButton({label, defaultValue, hasIcon, onChangeList}){
   const [inputValue, setInputValue] = React.useState('');
   const [open, setOpen] = useState(false); // State for managing dialog visibility
-  const [newOption, setNewOption] = useState(''); // State for storing new option input value
+  const [newOption, setNewOption] = useState('New Query'); // State for storing new option input value
   const [options, setOptions] = useState(['QUERY1']);
   const [value1, setValue1] = React.useState(options[0]);
   const currentState = useSelector((state) => state); // Access the entire state
@@ -236,6 +236,10 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
         PaperProps={{  style: { width:400, padding: 20} }} 
         open={open} onClose={handleDialogClose} 
         disableRestoreFocus
+        onKeyDown={(event) => {
+          if(event.key === "Enter")
+          handleAddOption()
+        }}
       >
         <DialogTitle>Add New Query</DialogTitle>
           <DialogContent>      

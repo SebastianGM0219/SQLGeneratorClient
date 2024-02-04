@@ -431,7 +431,7 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
 
     let joinQuery = '';
     const joinTypeArray = ['LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'FULL JOIN'];
-    const OperatorTypeArray = ['=', '!=']
+    const OperatorTypeArray = ['=', '!=', '>', '>=', '<', '<='];
   
     joinFields.map((item) => {
         const {joinTable, LFields, RFields, Operators, joinType} = item;
