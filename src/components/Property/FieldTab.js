@@ -21,7 +21,7 @@ import FuncDropDownMenu from '../common/FuncDropDownMenu';
 import FieldDropBox from './FieldDrop/FieldDropBox';
 import AceEditor from "react-ace";
 import { useState,useEffect } from 'react';
-import { setIsUnique, setUniqueTable, setFuncIndex } from "../../slices/utility";
+import { setIsUnique, setUniqueTable, setFuncIndex ,setCalcFieldArray,testQuery} from "../../slices/query";
 import "ace-builds/src-noconflict/mode-mysql";
 import "ace-builds/src-noconflict/theme-textmate";
 import "ace-builds/src-noconflict/ext-language_tools";
@@ -172,10 +172,12 @@ export default function FieldTab() {
   const [isScrolling, setIsScrolling] = useState(false);
   const editor = aceEditorRef.current?.editor;
 
+
   const [cursorPosition, setCursorPosition] = useState({row:0, column:0})
   
   const selectFields = useSelector(state => state.query.selectFields);
-
+  const calcApplyFields = useSelector(state => state.query.calcApplyFields);
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -212,37 +214,220 @@ export default function FieldTab() {
     if(!clickField.id.includes("function"))
     {
       dispatch(setValueSelector({id:clickField.id, name: name, aggreType: aggreType}));
+      
     }
     else
     {
-      //dispatch(setSourceColumnSelector({id:newTree[0].id, sourceColumn: newTree[0].data.header_name, source: newTree[0].data.table,field:newTree[0].data.field,type:newTree[0].data.type}));
-//       if(fieldCalcDrop[0] && fieldCalcDrop[0].filterVariant && fieldCalcDrop[0].filterVariant[0] && fieldCalcDrop[0].filterVariant[0].data) {
 
-    
-//         const  old_uniqueArray = tableNameArray.split(',').map(item => item.trim());
-//   //      const diff = uniqueArray.filter(item => !old_uniqueArray.includes(item));
-//         console.log("=============old============");
-//         console.log(old_uniqueArray);
-//         console.log(fieldCalcDrop[0].filterVariant[0].data.table);
-//         if(!old_uniqueArray.includes(fieldCalcDrop[0].filterVariant[0].data.table))
-//             tableNameArray+=' ,'+fieldCalcDrop[0].filterVariant[0].data.table;
-// //        tableNameArray=(fieldCalcDrop[0].filterVariant[0].data.table);
-//         //const isUnique = tableNameArray==uniqueTable?true:false;
-//         // const uniqueTableName = uniqueArray.length===1?uniqueArray[0]: '';
-//         // const uniqueArray = [...new Set(tableNameArray)];
-//         dispatch(setIsUnique(true));
-//         dispatch(setUniqueTable(tableNameArray));
-//       }
+      let full = {};
+      full = calcApplyFields
       if(fieldCalcDrop.length==2)
           dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:fieldCalcDrop[0].filterVariant[0].data.columnId, table:fieldCalcDrop[0].filterVariant[0].data.table, type:fieldCalcDrop[0].filterVariant[0].data.type, field:fieldCalcDrop[0].filterVariant[0].data.field}));       
       else if(fieldCalcDrop.length>2)
           dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:"Multiple",table:fieldCalcDrop[0].filterVariant[0].data.table, type: "Multiple"}));
       else 
           dispatch(setValueSelectorInCalc({id:clickField.id, name: name , command: calcCommand, dropbox: fieldCalcDrop,columnId:"None",table:"None"}));
+
+      const query = change(calcCommand, fieldCalcDrop);
+      
+        const allStrings = [];
+        fieldCalcDrop.forEach((item, index) => {
+          if (item?.filterVariant[0]?.data?.table) {
+            const yourString = item.filterVariant[0].data.table;
+            allStrings.push(yourString);
+          }
+        });
+
+         const  allStrings1 = [...new Set(allStrings)];
+        const joinedString = allStrings1.join(', ');
+
+
+        let max = "select ";
+        max += query;
+        max += " from " + joinedString;            
+        const queryInfo= {
+          query: max
+        }
+
+      dispatch(testQuery(queryInfo))
+      .then(data =>{
+
+            if(data.payload === "Query Syntax is good") {
+              dispatch(setCalcFieldArray({id:clickField.id, value:true}));
+            } else 
+            {
+              dispatch(setCalcFieldArray({id:clickField.id, value:false}));
+            }
+      })
+      
      }
+
+
+
   }
 
 
+  const change = (command, dropbox) => {
+
+
+    let updatedString = command.replace(/{\d+}/g, (match) => {
+      const index = parseInt(match.match(/\d+/)[0]);
+      return dropbox[index-1].filterVariant[0].data.table+"."+ dropbox[index-1].filterVariant[0].data.field; // Replace {{1}} with data.body
+    });
+//            updatedString = updatedString.replace(/\s/g, '');
+    let regex = /DAY\((.*?)\)/g;
+    let matchResult;
+
+    while ((matchResult = regex.exec(updatedString)) !== null) {
+      const extractedValue = matchResult[1];
+      updatedString = updatedString.replace(matchResult[0], `EXTRACT(DAY FROM ${extractedValue})`);
+    }
+
+    matchResult = updatedString.match(/DATE_ADD\((.*)\)/)
+    if(matchResult && matchResult[1]) {
+      let extractedElements = matchResult[1].split(',');
+      if(extractedElements[0]==="'second'" || 
+         extractedElements[0]==="'minute'" || 
+         extractedElements[0]==="'hour'" ||
+         extractedElements[0]==="'day'" || 
+         extractedElements[0]==="'week'" || 
+         extractedElements[0]==="'month'" ||
+         extractedElements[0]==="'quarter'" ||
+         extractedElements[0]==="'year'" ||
+         extractedElements[0]==="'millisecond'") {
+        const isDate = !isNaN(Date.parse(extractedElements[2]));                
+        if(isDate && extractedElements[0] !== "'millisecond'") 
+          extractedElements[2]= "DATE " + extractedElements[2];
+        if(isDate &&extractedElements[0] === "'millisecond'")
+          extractedElements[2]= "TIMESTAMP " + extractedElements[2];                
+        if(extractedElements[0] !== "'year'"&& 
+           extractedElements[0] !== "'month'" &&
+           extractedElements[0] !== "'quarter'" &&
+           extractedElements[0] !== "'week'")
+           extractedElements[0] = `${extractedElements[0].replace(/'/g, '')}s`;                
+        else
+          extractedElements[0] = `${extractedElements[0].replace(/'/g, '')}`;                                               
+         updatedString = updatedString.replace(/DATE_ADD\((.*)\)/, `${extractedElements[2]} + INTERVAL '${extractedElements[1]} ${extractedElements[0]}'`);
+      }
+    }
+
+    
+    // matchResult = updatedString.match(/DATE_DIFF\((.*?)\)/)
+    // if(matchResult && matchResult[1]) {
+    //   let extractedElements = matchResult[1].split(',');
+    //   updatedString = updatedString.replace(/DATE_DIFF\((.*)\)/, `DATE_PART(${extractedElements[0]}, AGE(${extractedElements[1]},${extractedElements[2]}))`);
+    // }
+
+    regex = /DATE_DIFF\((.*?)\)/g;
+    while ((matchResult = regex.exec(updatedString)) !== null) {
+        const extractedElements = matchResult[1].split(',');
+        updatedString = updatedString.replace(matchResult[0], `DATE_PART(${extractedElements[0]}, AGE(${extractedElements[1]},${extractedElements[2]}))`);
+    }
+
+    const formatStringMap = {
+      '%a': 'Dy',
+      '%b': 'Mon',
+      '%c': 'MM',
+      '%d': 'DD',
+      '%e': 'FMDD',
+      '%f': 'MS',
+      '%H': 'HH24',
+      '%h': 'HH12',
+      '%I': 'HH12',
+      '%i': 'MI',
+      '%j': 'DDD',
+      '%k': 'HH24',
+      '%l': 'HH12',
+      '%M': 'Month',
+      '%m': 'MM',
+      '%p': 'AM',
+      '%r': 'HH:MI:SSam',
+      '%s': 'SS',
+      '%S': 'SS',
+      '%T': 'HH24:MI:SS',
+      '%v': 'WW',
+      '%W': 'Day',
+      '%x': 'IYYY',
+      '%Y': 'YYYY',
+      '%y': 'YY',
+      '%%': '%%',
+    };
+
+    // matchResult = updatedString.match(/DATE_FORMAT\((.*)\)/)
+
+    // if(matchResult && matchResult[1]) {
+    //   let extractedElements = matchResult[1].split(',');
+    //   extractedElements[1] = extractedElements[1].replace(/'/g, '');
+    //   updatedString = updatedString.replace(/DATE_FORMAT\((.*)\)/, `TO_CHAR(${extractedElements[0]}::DATE, '${formatStringMap[extractedElements[1]]}')`);
+    // }
+    regex = /DATE_FORMAT\((.*?)\)/g;
+
+    while ((matchResult = regex.exec(updatedString)) !== null) {
+      const extractedElements = matchResult[1].split(',');
+      extractedElements[1] = extractedElements[1].replace(/'/g, '');
+      const newFormat = formatStringMap[extractedElements[1]];
+      updatedString = updatedString.replace(matchResult[0], `TO_CHAR(${extractedElements[0]}::DATE, '${newFormat}')`);
+    }
+
+
+    // matchResult = updatedString.match(/EOMONTH\((.*)\)/)
+
+    // if(matchResult && matchResult[1]) {
+    //   let extractedElements = matchResult[1].split(',');
+    //   extractedElements[1] = extractedElements[1].replace(/'/g, '');
+    //   updatedString = updatedString.replace(/EOMONTH\((.*)\)/, `DATE_TRUNC('MONTH', ${extractedElements[0]}::date) + INTERVAL '1 MONTH - 1 DAY' * ${extractedElements[1]} `);
+    // }
+
+    regex = /EOMONTH\((.*?)\)/g;
+
+    while ((matchResult = regex.exec(updatedString)) !== null) {
+      const extractedElements = matchResult[1].split(',');
+      extractedElements[1] = extractedElements[1].replace(/'/g, '');
+      updatedString = updatedString.replace(matchResult[0], `DATE_TRUNC('MONTH', ${extractedElements[0]}::date) + INTERVAL '1 MONTH - 1 DAY' * ${extractedElements[1]}`);
+    }
+    
+    // matchResult = updatedString.match(/MONTH\((.*)\)/);            
+
+    // if (matchResult && matchResult[1]) {
+    //   updatedString = updatedString.replace(/MONTH\((.*)\)/, `EXTRACT(MONTH FROM ${matchResult[1]})`);
+    // }
+
+    regex = /MONTH\((.*?)\)/g;
+    
+    while ((matchResult = regex.exec(updatedString)) !== null) {
+      const extractedValue = matchResult[1];
+      updatedString = updatedString.replace(matchResult[0], `EXTRACT(MONTH FROM ${extractedValue})`);
+    }
+
+    // matchResult = updatedString.match(/YEAR\((.*)\)/);            
+
+    // if (matchResult && matchResult[1]){
+    //   updatedString = updatedString.replace(/YEAR\((.*)\)/, `EXTRACT(YEAR FROM ${matchResult[1]})`);
+    // }
+
+    regex = /YEAR\((.*?)\)/g;
+    
+    while ((matchResult = regex.exec(updatedString)) !== null) {
+      const extractedValue = matchResult[1];
+      updatedString = updatedString.replace(matchResult[0], `EXTRACT(YEAR FROM ${extractedValue})`);
+    }
+
+
+    // matchResult = updatedString.match(/QUARTER\((.*)\)/);
+
+    // if (matchResult && matchResult[1]){
+    //   updatedString = updatedString.replace(/QUARTER\((.*)\)/, `EXTRACT(QUARTER FROM ${matchResult[1]})`);
+    // }
+
+    regex = /QUARTER\((.*?)\)/g;
+    
+    while ((matchResult = regex.exec(updatedString)) !== null) {
+      const extractedValue = matchResult[1];
+      updatedString = updatedString.replace(matchResult[0], `EXTRACT(QUARTER FROM ${extractedValue})`);
+    }
+
+    return updatedString;
+  }
   React.useEffect(() => {
 
     if(!clickField || !clickField.id) {
@@ -251,7 +436,7 @@ export default function FieldTab() {
     if(clickField.id.includes("function")){
       setCalcCommand(clickField.data.command);
       setName(clickField.data.header_name);
-    } else{
+    } else {
       setName(clickField.data.header_name);
       setType(clickField.data.type);  
     }
@@ -314,12 +499,7 @@ export default function FieldTab() {
       const session = editor.getSession();
       const content = session.getValue();
 
-      // console.log("updatedcommand")';'
-      // console.log(updatedCommand);
-      // const endPosition = {
-      //   row: session.getLength() - 1,
-      //   column: content.length
-      // };
+
       const endPosition = {
         row: cursorPosition1.row,
         column: cursorPosition1.column +  `{${index}}`.length

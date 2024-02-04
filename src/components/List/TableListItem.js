@@ -49,9 +49,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   const uniqueTable = useSelector(state => state.utility.uniqueTable); 
   const isView = (name) => {
   const filterTable = tables.filter(item => item.name ===name)[0];
-    // console.log("valueeee");
-    // console.log(filterTable?filterTable.table_type.isView:0);
-    // console.log("valueeee");
+
 
     return filterTable?filterTable.table_type.isView:0;
 //    console.log(filterTable.table_type.isView);

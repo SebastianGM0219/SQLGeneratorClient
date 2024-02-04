@@ -8,7 +8,9 @@ import { current } from '@reduxjs/toolkit';
 import store from "../store";
 const initialState = {
   selectFields: [],
+  calcFieldArray:{},
   clickField:{},
+  calcApplyStatus: true,
   operatorType: '',
   relationFields: [
     {
@@ -126,6 +128,19 @@ export const querySlice = createSlice({
         ...state,
         ...action.payload
       }
+    },
+    setCalcFieldArray: (state, action) => {
+      state.calcFieldArray[action.payload.id] = action.payload.value;
+
+      let flag = true;
+      for (let key in state.calcFieldArray) {
+        if (state.calcFieldArray[key] !== true) {
+          flag = false;
+        }
+      }
+      state.calcApplyStatus = flag && action.payload.value;
+
+
     },
     initAllState:(state, action) => {
       return {
@@ -419,8 +434,6 @@ export const querySlice = createSlice({
 
     removeJoinRelation: (state, action) => {
       const { index } = action.payload;      
-      console.log(state.relationFields);
-      console.log("selectItem + ", index);
       state.relationFields.splice(index,1);
       if(state.relationFields.length==0)
       {
@@ -618,7 +631,7 @@ export const querySlice = createSlice({
       const uniqueArray = [...new Set(newState_filter)];
       const relation = state.relationFields.filter(item => uniqueArray.includes(item.RTable[0])  && uniqueArray.includes(item.LTable[0]) );      
       const newState = state.selectFields.filter(item => item.id !== id);
-      
+//      state.calcFieldArray[item.id]
       console.log("removeSelector");
       console.log(newState);
 
@@ -796,7 +809,8 @@ export const {
   resetBasedOnCommand,
   initFilter,
   removeFieldCalcDrop,
-  setAllState
+  setAllState,
+  setCalcFieldArray
 } = querySlice.actions;
 export default querySlice.reducer;
 

@@ -116,8 +116,7 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
     const queryInfo= {
       query: query
     }
-    console.log("=================unition");
-    console.log(codeSQL);
+
 
     if(query) {
       dispatch(runQuery(queryInfo))

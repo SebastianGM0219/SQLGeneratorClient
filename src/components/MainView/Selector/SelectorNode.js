@@ -12,7 +12,7 @@ import { clickSelector } from "../../../slices/query";
 import Functions from '@mui/icons-material/Functions';
 import { setCurTab } from '../../../slices/utility';
 import TableService from '../../../services/TableService'
-import { addRelation, setRelationData,initRelation} from "../../../slices/query"
+import { addRelation, setRelationData,initRelation,setCalcFieldArray} from "../../../slices/query"
 import { setUniqueTable } from "../../../slices/utility";
 
 import { array } from "prop-types";
@@ -113,9 +113,8 @@ export const SelectorNode = (props) => {
     const newState = items.filter(item => item.id !== id).map(item => item.data.table);
     const uniqueArray = [...new Set(newState)];
     const uniqueTableName = uniqueArray.join(' , ');
-    console.log("========unqiueTableName============");
-    console.log(uniqueTableName);
     dispatch(setUniqueTable(uniqueTableName));
+    dispatch(setCalcFieldArray({id:id, value:true}));
     dispatch(removeSelector({id}));
   }
   
