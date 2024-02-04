@@ -32,6 +32,8 @@ import { makeStyles } from "tss-react/mui";
 import { initAllTable } from "../../slices/table";
 import TableService from "../../services/TableService";
 import CloseIcon from "@mui/icons-material/Close";
+import { notifyContents } from "../common/Notification";
+import {useSnackbar} from 'notistack'
 
 library.add(
   faMagnifyingGlass,
@@ -157,12 +159,17 @@ export default function AddTableDialog({
   handleAddTableClose
 }) {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const isConnected = useSelector((state) => state.database.success);
   const items = useSelector((state) => state.table);
   const [selectedItem, setSelectedItem] = React.useState("");
   const [filter, setFilter] = React.useState("");
   const [checkedItems, setCheckedItems] = React.useState([]);
   const { classes } = useStyles();
+
+  const snackbarWithStyle = (content, variant) => {
+    enqueueSnackbar(content, {variant: variant, style:{width: '350px'}, autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'right' }})
+  }
 
   const getForeignTables = async () => {
     try {
@@ -202,6 +209,7 @@ export default function AddTableDialog({
   const handleSubmit = () => {
     dispatch(updateItem({checkedItems: checkedItems}))
     handleAddTableClose();
+    snackbarWithStyle(notifyContents.addTableDataSuccess, "success");
   };
 
   const handleCheckboxChange = ({ text, checked }) => {

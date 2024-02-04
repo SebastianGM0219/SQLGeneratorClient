@@ -31,8 +31,8 @@ import { runQuery } from '../../slices/union';
 import { Oval } from  'react-loader-spinner';
 import Modal from '../../components/Dialogs/Modal';
 import { notifyContents } from '../common/Notification';
+import {useSnackbar} from 'notistack'
 import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
-
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -85,14 +85,17 @@ const CustomInputLabel = styled(InputLabel)(({theme}) => ({
 }));
 
 export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, queryName}) {
+  const { enqueueSnackbar } = useSnackbar();
   const [openModal, setOpenModal] = React.useState(false);
   const {classes} = useStyles();
   const [isLoading, setIsLoading] = React.useState(false);
   const [unionType, setUnionType] = React.useState('UNION ALL');
-  const [runQuerySuccess, setRunQuerySuccess] = React.useState(false)
-  const [runQueryFail, setRunQueryFail] = React.useState(false)
   const codeSQL = useSelector(state => state.union.codeSQL);
   const dispatch = useDispatch();
+
+  const snackbarWithStyle = (content, variant) => {
+    enqueueSnackbar(content, {variant: variant, style:{width: '350px'}, autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'right' }})
+  }
 
   const handleUnionTypeChange = (event) => {
     setUnionType(event.target.value);
@@ -115,20 +118,24 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
     }
 
 
-    dispatch(runQuery(queryInfo))
-    .then(data => {
-      setIsLoading(false);
-      // check if run query is success or failed.
-      if(data.hasOwnProperty('error')) {
-        setRunQueryFail(true);
-      } else {
-        setRunQuerySuccess(true);
-      }
-    })
-    .catch(err => {
-      setOpenModal(true);
-      setRunQueryFail(true);
-    })
+    if(query) {
+      dispatch(runQuery(queryInfo))
+      .then(data => {
+        setIsLoading(false);
+        // check if run query is success or failed.
+        if(data.hasOwnProperty('error')) {
+          snackbarWithStyle(notifyContents.runQueryFail, 'error')
+        } else {
+          snackbarWithStyle(notifyContents.runQuerySuccess, 'success')
+        }
+      })
+      .catch(err => {
+        setOpenModal(true);
+        snackbarWithStyle(notifyContents.runQuerySuccess, 'success')
+      })
+    } else {
+      snackbarWithStyle(notifyContents.unionWarning, 'warning')
+    }  
   }
 
   return (
@@ -220,37 +227,6 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
             </Container>
           </Box>
         </DialogContent>
-        <Snackbar
-          open={runQuerySuccess}
-          sx={{ width: 500 }}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          autoHideDuration={2000}
-          onClose={() => setRunQuerySuccess(false)}
-        >
-          <Alert
-            onClose={() => setRunQuerySuccess(false)}
-            severity="success"
-            sx={{ width: "100%" }}
-          > 
-            {notifyContents.runQuerySuccess}
-          </Alert>
-        </Snackbar>
-
-        <Snackbar
-          open={runQueryFail}
-          sx={{ width: 500 }}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          autoHideDuration={2000}
-          onClose={() => setRunQueryFail(false)}
-        >
-          <Alert
-            onClose={() => setRunQueryFail(false)}
-            severity="error"
-            sx={{ width: "100%" }}
-          >
-            {notifyContents.runQueryFail}
-          </Alert>
-        </Snackbar>      
     </Dialog>
   );
 }

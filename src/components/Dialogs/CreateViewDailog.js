@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import {Select, InputLabel,TextField} from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { notifyContents } from '../common/Notification';
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
   fontSize: 12,
@@ -37,7 +39,11 @@ const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
 }));
 
 export default function CreateViewDialog({ open, handleCreateViewClose, SaveView }) {
+  const {enqueueSnackbar} = useSnackbar();
   const [viewName, setViewName] = React.useState("New View");
+  const snackbarWithStyle = (content, variant) => {
+    enqueueSnackbar(content, {variant: variant, style:{width: '350px'}, autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'right' }})
+  }
   const handleClose = (e) => {
     handleCreateViewClose();
   }
@@ -47,6 +53,7 @@ export default function CreateViewDialog({ open, handleCreateViewClose, SaveView
  const SaveClick = () => {
     SaveView(viewName);
     handleCreateViewClose();
+    snackbarWithStyle(notifyContents.createViewSuccess, "success")
 
  }
   return (

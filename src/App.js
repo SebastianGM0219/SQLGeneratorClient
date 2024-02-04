@@ -36,6 +36,8 @@ import TableService from "./services/TableService";
 import { SelectPicker } from "rsuite";
 import { notifyContents } from "./components/common/Notification";
 
+import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -85,15 +87,13 @@ const useStyleButton = makeStyles({
   }
 });
 function App() {
+  const { enqueueSnackbar } = useSnackbar();
   const { classes } = useStyles();
   const [isLoading, setIsLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
-  const [successOpen, setSuccessOpen] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  const [failOpen, setFailOpen] = React.useState(false);
-  const [runQuerySuccess, setRunQuerySuccess] = React.useState(false)
-  const [runQueryFail, setRunQueryFail] = React.useState(false)
+
 
   const [addDialog, setAddDialog] = React.useState(false);
   const [paramDialog, setParamDialog] = React.useState(false);
@@ -118,6 +118,10 @@ function App() {
   const uniqueTable = useSelector(state => state.utility.uniqueTable);
   const dbInformation = useSelector(state => state.database.dbInfo);
   const {buttonStyle} = useStyleButton();
+
+  const snackbarWithStyle = (content, variant) => {
+    enqueueSnackbar(content, {variant: variant, style:{width: '350px'}, autoHideDuration: 3000, anchorOrigin: { vertical: 'top', horizontal: 'right' }})
+  }
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -136,16 +140,7 @@ function App() {
     setAddDialog(true);
   };
 
-  const handleSuccessClose = () => {
-    setSuccessOpen(false);
-    setOpen(false);
-  };
-
-  const handleFailClose = () => {
-    setFailOpen(false);
-  };
-
-  const handleShowCreateView = () => {
+    const handleShowCreateView = () => {
     setParamDialogForView(false);
     setCreateViewDialog(true);
   };
@@ -182,18 +177,19 @@ function App() {
       .unwrap()
       .then(data => {
          if(data.success){ 
-           setAddDialog(false);
-           setSuccessOpen(true);
-           setSuccess(true)
+          setAddDialog(false);
+          snackbarWithStyle(notifyContents.newConnectSuccess, 'success')
+          setOpen(false)
+          setSuccess(true)
          }
          else {
-           setFailOpen(true);
-           setSuccess(false);
+          snackbarWithStyle(notifyContents.newConnectFail, 'error')
+          setSuccess(false);
          }
          setIsLoading(false)
       })
       .catch(err => {
-        setFailOpen(true);
+        snackbarWithStyle(notifyContents.newConnectFail, 'error')
         setIsLoading(false)
       })
   }
@@ -203,7 +199,8 @@ function App() {
 
     dispatch(initAllState());
     dispatch(initAllUtility());
-    dispatch(initAllTable());      
+    dispatch(initAllTable());  
+    snackbarWithStyle(notifyContents.resetSuccess, "success")    
   }
   const handleRunQuery = (event) => {
     if(parameters.length>0 && !edited) {
@@ -370,15 +367,16 @@ function App() {
           setIsLoading(false);
           // check if run query is success or failed.
           if(data.hasOwnProperty('error')) {
-            setRunQueryFail(true);
+            snackbarWithStyle(notifyContents.runQueryFail, 'error')
           } else {
-            setRunQuerySuccess(true);
+            snackbarWithStyle(notifyContents.runQuerySuccess, 'success')
           }
         })
         .catch(err => {
           console.log(err);
           setIsLoading(false);
-          setRunQueryFail(true);
+          snackbarWithStyle(notifyContents.runQueryFail, 'error')
+
           setOpenModal(true);
         })
     }
@@ -917,22 +915,22 @@ function App() {
         setIsLoading(false);
         // check if run query is success or failed.
         if(data.hasOwnProperty('error')) {
-          setRunQueryFail(true);
-        } else {
-          setRunQuerySuccess(true);
+          snackbarWithStyle(notifyContents.runQueryFail, "error")
+        } else { 
+          snackbarWithStyle(notifyContents.runQuerySuccess, "success")
         }
       })
       .catch(err => {
 
         setIsLoading(false);
         setOpenModal(true);
-        setRunQueryFail(true);
+        snackbarWithStyle(notifyContents.runQueryFail, "error")
       });
     setParamDialog(false);
   }
 
   return (    
-  
+    
     <Box sx={{ display: 'flex' }}>
       {isLoading && 
         <div className={classes.loadingBox}>
@@ -1003,70 +1001,8 @@ function App() {
       <ParameterDialog open={paramDialogForView} handleParamClose={handleParamClose} flag={2} handleRun={handleRun} handleShowCreateView={handleShowCreateView} />
       <CreateViewDialog open={createViewDialog} handleCreateViewClose={handleCreateViewClose} SaveView={SaveView} />
 
-      <Snackbar
-        open={successOpen}
-        sx={{ width: 500 }}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={2000}
-        onClose={handleSuccessClose}
-      >
-        <Alert
-          onClose={handleSuccessClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          {notifyContents.newConnectSuccess}
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={failOpen}
-        sx={{ width: 500 }}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={2000}
-        onClose={handleFailClose}
-      >
-        <Alert
-          onClose={handleFailClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {notifyContents.newConnectFail}
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={runQuerySuccess}
-        sx={{ width: 500 }}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={2000}
-        onClose={() => setRunQuerySuccess(false)}
-      >
-        <Alert
-          onClose={() => setRunQuerySuccess(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-        > 
-          {notifyContents.runQuerySuccess}
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={runQueryFail}
-        sx={{ width: 500 }}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={2000}
-        onClose={() => setRunQueryFail(false)}
-      >
-        <Alert
-          onClose={() => setRunQueryFail(false)}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {notifyContents.runQueryFail}
-        </Alert>
-      </Snackbar>      
     </Box>
+
   );
 }
 
