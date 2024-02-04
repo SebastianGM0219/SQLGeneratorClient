@@ -268,8 +268,7 @@ function Selector() {
     // Your logic using the array and newArray parameters can go here
   };
   const handleDrop = (newTree) => {
-    console.log("new==================");
-    console.log(selectFields);
+
     let newItemData = {
       table: '',
       field: '',
@@ -306,7 +305,7 @@ function Selector() {
         let idNew = 'function' + funcIndex;
         dispatch(setFuncIndex(funcIndex+1));
         return {data:dataNew, droppable, id:idNew, parent, text};
-      } 
+      }
       else
       {
         return {data, droppable, id, parent, text};
@@ -322,9 +321,7 @@ function Selector() {
 
     if(uniqueArray.length>=2 && diff.length>0)
     {
-      console.log("here_array");
-      console.log(uniqueArray);
-      console.log(diff);
+
       setRelation(uniqueArray,diff);
     }
     if(!newData.includes(undefined) ){ //&& !duplicated
@@ -363,11 +360,6 @@ function Selector() {
           sort={false}
           insertDroppableFirst={false}
           canDrop={(tree, { dragSource, dropTargetId, dropTarget }) => {
-            // console.log("==========RS++++++++++++++++++");
-            // console.log(dragSource?.parent);
-            // console.log(dropTargetId);
-
-            // console.log("==========RS++++++++++++++++++");
 
             if (dragSource?.parent === dropTargetId) {
               return true;

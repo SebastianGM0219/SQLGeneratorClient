@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Checkbox } from '@mui/material';
+import { Box, Checkbox, FormControlLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,7 +10,6 @@ import { makeStyles } from 'tss-react/mui';
 const useStyles = makeStyles()((theme) => {
   return {
     boxStyle: {
-      borderBottom: '1px solid #ddd',
       fontSize: 16,
       padding: 4,
       paddingLeft: 14,
@@ -50,9 +49,7 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   const uniqueTable = useSelector(state => state.utility.uniqueTable); 
   const isView = (name) => {
   const filterTable = tables.filter(item => item.name ===name)[0];
-    // console.log("valueeee");
-    // console.log(filterTable?filterTable.table_type.isView:0);
-    // console.log("valueeee");
+
 
     return filterTable?filterTable.table_type.isView:0;
 //    console.log(filterTable.table_type.isView);
@@ -71,17 +68,35 @@ export default function TableListItem({ isChecked, hasKey, text, onClick, onChec
   }
 
   return (
-    <Box className={classes.boxStyle} onClick={handleClick}>
-      <ListCheckBox 
-        checked={checked}
-        disabled={uniqueTable.includes(text)} 
-        className={classes.checkStyle}
-        onChange={handleChange}                                                                                                                                                                                              
-      />
-      {isViewType==='1' ?(<FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconViewStyle}/>):
-        (hasKey?<FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconStyle}/>:
-          <FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconStyle}/>)}
-      {text.toUpperCase()}
-    </Box>
+    <FormControlLabel 
+      control={
+        <Box className={classes.boxStyle} onClick={handleClick}>
+        <ListCheckBox 
+          checked={checked}
+          disabled={uniqueTable.includes(text)} 
+          className={classes.checkStyle}
+          onChange={handleChange}
+                                                                                                                                                                                                       
+        />
+        {isViewType==='1' ?(<FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconViewStyle}/>):
+          (hasKey?<FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconStyle}/>:
+            <FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconStyle}/>)}
+      </Box>
+      }
+      label={text.toUpperCase()}
+      sx={{borderBottom: '1px solid #ddd', width:'100%'}}
+    />
+    // <Box className={classes.boxStyle} onClick={handleClick}>
+    //   <ListCheckBox 
+    //     checked={checked}
+    //     disabled={uniqueTable.includes(text)} 
+    //     className={classes.checkStyle}
+    //     onChange={handleChange}                                                                                                                                                                                              
+    //   />
+    //   {isViewType==='1' ?(<FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconViewStyle}/>):
+    //     (hasKey?<FontAwesomeIcon icon={faTableList} size="1x" className={classes.iconStyle}/>:
+    //       <FontAwesomeIcon icon={faTableCells} size="1x" className={classes.iconStyle}/>)}
+    //   {text.toUpperCase()}
+    // </Box>
   )
 }

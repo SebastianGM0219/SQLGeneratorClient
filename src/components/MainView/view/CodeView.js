@@ -36,6 +36,8 @@ export default function CodeView({setSuccessOpen, setErrorMessage, setFailOpen})
   const isUnique = useSelector(state => state.utility.isUnique);
   const uniqueTable = useSelector(state => state.utility.uniqueTable);
   const handleApply = useSelector(state => state.query.selectFields);
+  const handleCalculationApply = useSelector(state => state.utility.calcApply);
+
   const parameters = useSelector(state => state.utility.parameters);
 
   const dispatch = useDispatch();
@@ -361,7 +363,7 @@ export default function CodeView({setSuccessOpen, setErrorMessage, setFailOpen})
 
     let joinQuery = '';
     const joinTypeArray = ['LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'FULL JOIN'];
-    const OperatorTypeArray = ['=', '!=']
+    const OperatorTypeArray = ['=', '!=', '>', '>=', '<', '<='];
   
     joinFields.map((item) => {
         const {joinTable, LFields, RFields, Operators, joinType} = item;
@@ -456,24 +458,29 @@ export default function CodeView({setSuccessOpen, setErrorMessage, setFailOpen})
     } else {
       setDefaultList(query);
     }
+
+    
   }, [operatorType, handleApply]);
 
   const handleDefaultList = (e) => {
     setDefaultList(e.target.value);
     dispatch(setEdited(true));
     dispatch(setCodeSQL(e.target.value));
+
+    try {
+      parser.parse(defaultList);
+      setSuccessOpen(true);
+      setFailOpen(false);
+    } catch (error) {
+      console.log(error);   
+      setErrorMessage(error.message);
+      setSuccessOpen(false);
+      setFailOpen(true);
+    }
+
   }
 
-  try {
-    parser.parse(defaultList);
-    setSuccessOpen(true);
-    setFailOpen(false);
-  } catch (error) {
-    console.log(error);   
-    setErrorMessage(error.message);
-    setSuccessOpen(false);
-    setFailOpen(true);
-  }
+
 
   return <CodeEditor 
             value={defaultList} 

@@ -6,12 +6,13 @@ import { Typography, Grid, Box } from "@mui/material";
 import { makeStyles  } from 'tss-react/mui';
 import { TypeIcon } from "../../common/Tree/TypeIcon";
 import CloseIcon from '@mui/icons-material/Close';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { removeSelector } from "../../../slices/query";
 import { clickSelector } from "../../../slices/query";
 import Functions from '@mui/icons-material/Functions';
 import { setCurTab } from '../../../slices/utility';
 import TableService from '../../../services/TableService'
-import { addRelation, setRelationData,initRelation} from "../../../slices/query"
+import { addRelation, setRelationData,initRelation,setCalcFieldArray} from "../../../slices/query"
 import { setUniqueTable } from "../../../slices/utility";
 
 import { array } from "prop-types";
@@ -112,9 +113,8 @@ export const SelectorNode = (props) => {
     const newState = items.filter(item => item.id !== id).map(item => item.data.table);
     const uniqueArray = [...new Set(newState)];
     const uniqueTableName = uniqueArray.join(' , ');
-    console.log("========unqiueTableName============");
-    console.log(uniqueTableName);
     dispatch(setUniqueTable(uniqueTableName));
+    dispatch(setCalcFieldArray({id:id, value:true}));
     dispatch(removeSelector({id}));
   }
   
@@ -128,7 +128,10 @@ export const SelectorNode = (props) => {
     <Box sx= {{paddingInlineStart: indent}} className={isSelected?classes.itemSelectStyle: classes.itemStyle} onClick={handleProperty} onMouseOver={showCloseButton} onMouseOut = {hideCloseButton}>
       <Box className={visible?classes.blockStyle: classes.noneStyle}>
         <Box className={classes.closePosition}>
-          <CloseIcon className={classes.iconStyle} onClick={handleClick}/>
+          <CloseIcon className={classes.iconStyle} onClick={handleClick} />
+          {/* <CloseIcon className={classes.iconStyle} onClick={handleClick} sx={{color: 'rgb(211, 47, 47)'}}/> */}
+          {/* <CancelOutlinedIcon className={classes.iconStyle} onClick={handleClick} sx={{color: 'rgb(211, 47, 47)'}}/> */}
+          
         </Box>
       </Box>
       <Box className={data.aggreType !== "none"?classes.blockStyle: classes.noneStyle}>
@@ -143,7 +146,7 @@ export const SelectorNode = (props) => {
 
       <Grid container>
         <Grid item xs={4}  className={classes.boxStyle}>
-          <Typography variant="body2" className={classes.paddingText} >{`${data.header_name.toUpperCase()}`}</Typography>
+          <Typography variant="body2" className={classes.paddingText} >{`${data.header_name}`}</Typography>
         </Grid>
         <Grid item xs={4}>
           <Box className={classes.boxStyle}>

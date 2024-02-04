@@ -33,9 +33,9 @@ export default function ParameterSelector({elName, type, defaultValue, list}) {
   }, [defaultValue])
 
   return (
-    <Box>
+    <Box sx={{width: '100%'}}>
       <Typography>{elName}</Typography>
-      <Select onChange={handleChange} value={value} className={classes.paddingStyle} sx={{width: 480}}>
+      <Select sx={{width: '100%', marginBottom:'12px'}} onChange={handleChange} value={value} className={classes.paddingStyle}>
         {list.map(item => (
           <MenuItem key={item} value={item}>
             {item}

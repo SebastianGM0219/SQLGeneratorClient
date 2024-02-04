@@ -176,9 +176,9 @@ export default function AddTableDialog({
 
 
   React.useEffect(() => {
-    console.log("isConnected:", isConnected)
+
     if (isConnected) {
-      console.log("getTable dispatch")
+
       dispatch(getTables());
       getForeignTables().then((rows) => {
         dispatch(initForeignTable({ foreginTable: rows }));
@@ -238,6 +238,10 @@ export default function AddTableDialog({
       }}
       sx={{opacity:!items.length ? 0.8: 1}}
       disableRestoreFocus
+      onKeyDown={(event) => {
+        if(event.key === "Enter")
+          handleSubmit()
+      }}
     >
       
       <CustomDialogTitle>

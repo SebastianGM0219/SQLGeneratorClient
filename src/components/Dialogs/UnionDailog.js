@@ -31,6 +31,7 @@ import { runQuery } from '../../slices/union';
 import { Oval } from  'react-loader-spinner';
 import Modal from '../../components/Dialogs/Modal';
 import { notifyContents } from '../common/Notification';
+import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -49,10 +50,8 @@ const useStyles = makeStyles()((theme) => {
         border: '1px solid #aaa'
     },
     listBoxStyle: {
-      border: '1px solid #ccc',
+      borderBottom: '1px solid #ccc',
       borderRight: '1px solid #aaa',
-      borderLeft:'none', 
-      borderTop:'none', 
       maxHeight: 250
     },
     searchStyle: {
@@ -114,8 +113,7 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
     const queryInfo= {
       query: query
     }
-    console.log("=================unition");
-    console.log(codeSQL);
+
 
     dispatch(runQuery(queryInfo))
     .then(data => {
@@ -167,7 +165,14 @@ export default function UnionDialog({ open, handleCloseUnionDialog, SaveView, qu
               }
               <Container spacing={0} sx={{marginBotom: 0, padding: 0}} maxWidth={'1920'} minHeight={'1000'}>
                 <Box sx={{marginBottom:1, display:"flex", alignItems:'center'}}>
-                  <Button onClick={handleRun} size="small" sx={{padding: '16px 24px',  height:'24.25px',fontSize: 12, borderColor: '#CCCCCC', color: 'gray', paddingRight: '15px', display: 'flex', justifyContent: 'space-between'}} color = 'inherit' variant="outlined"   ><WifiIcon sx={{marginRight: '10px'}} fontSize= 'small' />Run</Button>
+                  <Button 
+                    onClick={handleRun} 
+                    sx={{padding: '3px 10px', fontSize: 12, borderColor: '#CCCCCC', color: 'gray', display: 'flex', justifyContent: 'space-between'}} 
+                    color = 'inherit' 
+                    variant="outlined"
+                  >
+                    <WifiIcon/><span style={{height:'20px', marginLeft:'4px'}}>Run</span>
+                  </Button>
                   <FormControl sx={{marginLeft: 4}}>
                     <RadioGroup
                       row

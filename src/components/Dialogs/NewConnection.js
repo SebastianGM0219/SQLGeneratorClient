@@ -379,6 +379,10 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
       onClose={handleClose}
       maxWidth={"xs"}
       PaperProps={{ style: { width: 600, padding: 20 } }}
+      onKeyDown={(event) => {
+        if(event.key === "Enter")
+          handleClick()
+      }}
     >
       <CustomDialogTitle sx={{ marginLeft: "3px" }}>
         Connect to PostgreSQL Host
@@ -408,6 +412,11 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
             open={newButtonOpen}
             onClose={handleCloseNewDailog}
             disableRestoreFocus
+            onKeyDown={(event) => {
+              event.stopPropagation()
+              if(event.key === "Enter")
+              handleOkayNewDailog()
+            }}
           >
             <DialogTitle>New Connection</DialogTitle>
             <DialogContent>
@@ -599,6 +608,11 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
         // onClose={closeAlertSave}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onKeyDown={(event) => {
+          event.stopPropagation()
+          if(event.key === "Enter")
+          closeEmpty()
+        }}
       >
         <DialogTitle id="alert-dialog-title">{"Warning"}</DialogTitle>
         <DialogContent>
@@ -618,6 +632,11 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
         // onClose={closeAlertSave}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onKeyDown={(event) => {
+          event.stopPropagation()
+          if(event.key === "Enter")
+          closeAgreeAlertSave()
+        }}
       >
         <DialogTitle id="alert-dialog-title">
           {"POSTSQL Professional"}
@@ -640,6 +659,11 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
         // onClose={closeAlertSave}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onKeyDown={(event) => {
+          event.stopPropagation()
+          if(event.key === "Enter")
+          closeDuplicateAlert()
+        }}
       >
         <DialogTitle id="alert-dialog-title">
           {"POSTSQL Professional"}
