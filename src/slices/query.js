@@ -269,7 +269,6 @@ export const querySlice = createSlice({
       }
 
       let j;
-      console.log(joinConditions);
       for(let i = 0; i < joinConditions.length; i++) {
           let tempRTable=[];
           let tempLTable=[];
@@ -632,8 +631,6 @@ export const querySlice = createSlice({
       const relation = state.relationFields.filter(item => uniqueArray.includes(item.RTable[0])  && uniqueArray.includes(item.LTable[0]) );      
       const newState = state.selectFields.filter(item => item.id !== id);
 //      state.calcFieldArray[item.id]
-      console.log("removeSelector");
-      console.log(newState);
 
       state.selectFields = newState;
       state.relationFields = relation;

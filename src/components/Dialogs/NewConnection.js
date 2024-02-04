@@ -170,7 +170,6 @@ export default function NewConnection({ open, handleClose, handleConnect, isLoad
         }
         return item;
       });
-      console.log(found);
       if (!found) {
         snackbarWithStyle(notifyContents.databaseSave, "success")
         newArray.push(newvalue); // If not found, push new value to array

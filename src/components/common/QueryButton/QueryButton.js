@@ -161,7 +161,6 @@ export default function QueryButton({label, defaultValue, hasIcon, onChangeList}
   },[currentState]);
 
   const handleDecrement = () => {
-    console.log(value1)
     const updatedOptions = options.filter((option, index )=> option !== value1);
     const index = options.findIndex((option) => option === value1);    
     if(options.length === 1) {

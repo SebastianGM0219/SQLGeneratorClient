@@ -485,10 +485,8 @@ function App() {
       }
     })
 
-    console.log(joinCommand);
     joinArray = joinCommand.match(/\bAND\b|\bOR\b/g);
     joinArray = joinCommand.match(/\bAND\b|\bOR\b/g);
-    console.log(joinArray);
     let selectQuery = 'SELECT ';
 
     selectFields.map((item, index) => {
