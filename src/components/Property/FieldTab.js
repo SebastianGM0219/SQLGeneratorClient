@@ -218,24 +218,7 @@ export default function FieldTab() {
     }
     else
     {
-//        dispatch(setSourceColumnSelector({id:newTree[0].id, sourceColumn: newTree[0].data.header_name, source: newTree[0].data.table,field:newTree[0].data.field,type:newTree[0].data.type}));
-//        if(fieldCalcDrop[0] && fieldCalcDrop[0].filterVariant && fieldCalcDrop[0].filterVariant[0] && fieldCalcDrop[0].filterVariant[0].data) {
 
-    
-//         const  old_uniqueArray = tableNameArray.split(',').map(item => item.trim());
-//   //      const diff = uniqueArray.filter(item => !old_uniqueArray.includes(item));
-//         console.log("=============old============");
-//         console.log(old_uniqueArray);
-//         console.log(fieldCalcDrop[0].filterVariant[0].data.table);
-//         if(!old_uniqueArray.includes(fieldCalcDrop[0].filterVariant[0].data.table))
-//             tableNameArray+=' ,'+fieldCalcDrop[0].filterVariant[0].data.table;
-// //        tableNameArray=(fieldCalcDrop[0].filterVariant[0].data.table);
-//         //const isUnique = tableNameArray==uniqueTable?true:false;
-//         // const uniqueTableName = uniqueArray.length===1?uniqueArray[0]: '';
-//         // const uniqueArray = [...new Set(tableNameArray)];
-//         dispatch(setIsUnique(true));
-//         dispatch(setUniqueTable(tableNameArray));
-//       }
       let full = {};
       full = calcApplyFields
       if(fieldCalcDrop.length==2)
@@ -244,17 +227,8 @@ export default function FieldTab() {
           dispatch(setValueSelectorInCalc({id:clickField.id, name: name, command: calcCommand, dropbox: fieldCalcDrop,columnId:"Multiple",table:fieldCalcDrop[0].filterVariant[0].data.table, type: "Multiple"}));
       else 
           dispatch(setValueSelectorInCalc({id:clickField.id, name: name , command: calcCommand, dropbox: fieldCalcDrop,columnId:"None",table:"None"}));
-      // console.log(calcCommand);
-      // console.log("fullllly=--------------");
-      // console.log(clickField.id);
 
-      // full[clickField.id] = true;
-
-
-         //   console.log(codeSQL);
       const query = change(calcCommand, fieldCalcDrop);
-      console.log("her============================ger");
-        
       
         const allStrings = [];
         fieldCalcDrop.forEach((item, index) => {
@@ -274,15 +248,10 @@ export default function FieldTab() {
         const queryInfo= {
           query: max
         }
-        console.log("=============max=================");
-        console.log(max);
-        console.log("=============max=================");
-
 
       dispatch(testQuery(queryInfo))
       .then(data =>{
-          console.log("sytnax====================");
-          console.log(data.payload);
+
             if(data.payload === "Query Syntax is good") {
               dispatch(setCalcFieldArray({id:clickField.id, value:true}));
             } else 
@@ -530,12 +499,7 @@ export default function FieldTab() {
       const session = editor.getSession();
       const content = session.getValue();
 
-      // console.log("updatedcommand")';'
-      // console.log(updatedCommand);
-      // const endPosition = {
-      //   row: session.getLength() - 1,
-      //   column: content.length
-      // };
+
       const endPosition = {
         row: cursorPosition1.row,
         column: cursorPosition1.column +  `{${index}}`.length

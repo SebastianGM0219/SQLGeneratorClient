@@ -357,8 +357,7 @@ function App() {
       if(edited || isCrossTab) query = codeSQL;*/
       
       let query = GetQueryBasedOnParam();
-      // console.log("app.jst");
-      // console.log(query);
+
       const queryInfo= {
         query: query
       }
@@ -366,7 +365,7 @@ function App() {
       setIsLoading(true);
       dispatch(runQuery(queryInfo))
         .then(data => {
-          console.log("run query data:", data)
+
           dispatch(setSheetOpened(true));
           setIsLoading(false);
           // check if run query is success or failed.
@@ -488,7 +487,6 @@ function App() {
       }
     })
 
-    console.log("joincommand");
     console.log(joinCommand);
     joinArray = joinCommand.match(/\bAND\b|\bOR\b/g);
     joinArray = joinCommand.match(/\bAND\b|\bOR\b/g);
@@ -767,7 +765,7 @@ function App() {
   
     let whereQuery = 'WHERE ';
   
-    console.log("============joinarray==========");
+
     console.log(joinArray);
     filterFields.map((item, index) => {
       if(index>0){
@@ -874,10 +872,7 @@ function App() {
             if(item.name===parameterName)
             {
               filterText = item.value;
-              console.log("exchange============");
-              console.log(filterText);
-              console.log(filterValue.parameter);
-              console.log("exchange============");
+
               query = query.replace("@"+filterValue.parameter,filterText );
 
             }
@@ -917,7 +912,7 @@ function App() {
     setIsLoading(true);
     dispatch(runQuery(queryInfo))
       .then(data => {
-        console.log("run query data:", data, data.error)
+
         dispatch(setSheetOpened(true));
         setIsLoading(false);
         // check if run query is success or failed.
@@ -928,7 +923,7 @@ function App() {
         }
       })
       .catch(err => {
-        console.log("run query faild" + err);
+
         setIsLoading(false);
         setOpenModal(true);
         setRunQueryFail(true);

@@ -257,8 +257,7 @@ const FuncDropDownMenu = (props) => {
     const selectedText = props.editor.getSession().getTextRange(selectionRange);
 
     const cursorPosition1 = selectionRange.start;
-    console.log("heree");
-    console.log(cursorPosition1);
+
     if(eventKey === "cast")
     {
       props.setCalcCommand(insertSyntax(props.calcCommand, "CAST({string} AS integer)", props.cursor))

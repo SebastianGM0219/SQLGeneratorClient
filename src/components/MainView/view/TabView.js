@@ -78,11 +78,6 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
   }, [isCrossTab]);
 
 
-//   React.useEffect(() => {
-// //    setEnableSort(isCrossTab)
-//     console.log("=============  handleCalculationApply================================================");
-//     calcSelectFlag("")
-//   }, [ handleCalculationApply ]);
 
   React.useEffect(() => {
     const selectFields = queryData.selectFields;
@@ -328,8 +323,6 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
 
             if(updatedString === "")
               updatedString = null;
-            console.log("updatestring============");
-            console.log(updatedString);
             updatedString += " as ";
             updatedString += `"${header_name}"`;
             if(index !== selectFields.length-1)
@@ -533,29 +526,6 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
     }
     console.log(query);
 
-
-    // if(handleCalculationApply)
-    // {
-    //   console.log(codeSQL);
-    //   dispatch(testQuery(queryInfo))
-    //   .then(data =>{
-    //       console.log("sytnax====================");
-    //       console.log(data.payload);
-    //         if(data.payload === "Query Syntax is good") {
-    //           setSnackMessage(data.payload);
-    //           setSuccessOpen(true);
-    //           setFailOpen(false);
-    //         } else 
-    //         {
-    //           setSnackMessage(data.payload);
-    //           setSuccessOpen(false);
-    //           setFailOpen(true);
-    //         }
-    //   })
-    //   dispatch(setCalcApply(false));
-    // }
-    // else
-    // {
       if(selectFields.length>0)
       {
         try {
@@ -606,9 +576,6 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
         setFailOpen(false);
   
       }
-      console.log("===============s=sdfsdfsdf===============");
-      console.log(calcApplyStatus);
-      console.log("===============s=sdfsdfsdf===============");
        
 //    }
   }, [queryData,handleApply,calcApplyStatus]);

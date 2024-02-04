@@ -42,9 +42,7 @@ export const CustomNode = (props) => {
   
   const isView = (name) => {
     const filterTable = tables.filter(item => item.name ===name)[0];
-    // console.log("valueeee");
-    // console.log(filterTable?filterTable.table_type.isView:0);
-    // console.log("valueeee");
+
 
     return filterTable?filterTable.table_type.isView:0;
 //    console.log(filterTable.table_type.isView);
@@ -130,7 +128,6 @@ export const CustomNode = (props) => {
         )}
       </div>
       <div>
-
         {props.node.id !== "function" && <TypeIcon droppable={droppable || false} type={(isView(props.node.data.table) == 1&&(data?.type=="Table" || data?.type=="List")) ? "View" : data?.type} />}
         {props.node.id === "function" && <span style={{fontFamily: 'Segoe UI', fontStyle: 'italic'}}> fx </span>}
       </div>

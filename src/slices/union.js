@@ -6,8 +6,6 @@ export const runQuery = createAsyncThunk(
   "query/run_view",
   async (queryInfo) => {
     try {
-      console.log("=============foool=-===============");
-      console.log(queryInfo);
       const res = await QueryService.runQuery(queryInfo);
       return res.data;
     } catch (error) {
@@ -66,8 +64,7 @@ export const unionSlice = createSlice({
 
     setLeftUnionData1: (state, action) => {
       const  left=action.payload.left;
-      console.log("left");
-      console.log(left);
+
       return {
         ...state,
         rightTree: state.TotalTree.filter(leftItem => {
@@ -97,7 +94,7 @@ export const unionSlice = createSlice({
   extraReducers: {
     [runQuery.fulfilled]: (state, action) => {
       const {fields, rowCount, rows} = action.payload;
-      console.log("founded-----------------");
+
       state.sheetContent = {fields, rowCount, rows};
       return state;
     }

@@ -87,8 +87,7 @@ export default function SortedView() {
           insertDroppableFirst={false}
           onDrop = {handleDrop}
           canDrop={(tree, { dragSource, dropTargetId, dropTarget }) => {
-            console.log("dragSource", dragSource)
-            console.log('selectFields', selectFields)
+
             // console.log("dropTarget",dropTarget)
             let result = false;
             for(let i = 0; i < selectFields.length; i++){

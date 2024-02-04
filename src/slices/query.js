@@ -91,8 +91,6 @@ export const runQuery = createAsyncThunk(
   "query/run",
   async (queryInfo) => {
     try {
-      console.log("finally--------------");
-      console.log(queryInfo);
       const res = await QueryService.runQuery(queryInfo);
       return res.data;
     } catch (error) {
@@ -141,9 +139,7 @@ export const querySlice = createSlice({
         }
       }
       state.calcApplyStatus = flag && action.payload.value;
-      console.log("status=================");
-      console.log(action.payload.value);
-      console.log("status=================");
+
 
     },
     initAllState:(state, action) => {
@@ -438,8 +434,6 @@ export const querySlice = createSlice({
 
     removeJoinRelation: (state, action) => {
       const { index } = action.payload;      
-      console.log(state.relationFields);
-      console.log("selectItem + ", index);
       state.relationFields.splice(index,1);
       if(state.relationFields.length==0)
       {
@@ -637,7 +631,7 @@ export const querySlice = createSlice({
       const uniqueArray = [...new Set(newState_filter)];
       const relation = state.relationFields.filter(item => uniqueArray.includes(item.RTable[0])  && uniqueArray.includes(item.LTable[0]) );      
       const newState = state.selectFields.filter(item => item.id !== id);
-      
+//      state.calcFieldArray[item.id]
       console.log("removeSelector");
       console.log(newState);
 

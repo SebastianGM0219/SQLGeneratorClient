@@ -51,7 +51,6 @@ export default function CodeView({setSuccessOpen, setErrorMessage, setFailOpen})
   //   return updatedString; // Return the updated string
   // }
   useEffect(() => {
-    console.log("here========handle_appplied===========");
     const selectFields = queryData.selectFields;
     let fromTable='', joinFields = [], sortFields = [], filterFields=[], joinArray;
 
@@ -478,7 +477,7 @@ export default function CodeView({setSuccessOpen, setErrorMessage, setFailOpen})
       setSuccessOpen(false);
       setFailOpen(true);
     }
-    
+
   }
 
 

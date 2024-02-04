@@ -176,9 +176,9 @@ export default function AddTableDialog({
 
 
   React.useEffect(() => {
-    console.log("isConnected:", isConnected)
+
     if (isConnected) {
-      console.log("getTable dispatch")
+
       dispatch(getTables());
       getForeignTables().then((rows) => {
         dispatch(initForeignTable({ foreginTable: rows }));
