@@ -9,7 +9,7 @@ import RelationShipView from '../Relationship';
 import SortView from '../Sort'
 import FilterView from '../Filter';
 import clsx from 'clsx';
-import { setCurSelectorTab } from '../../../slices/utility';
+import { setCalcApply, setCurSelectorTab } from '../../../slices/utility';
 // import TextField from '@mui/material/TextField';
 // import Autocomplete from '@mui/material/Autocomplete';
 // import { styled } from '@mui/material/styles';
@@ -17,6 +17,7 @@ import { runQuery,testQuery} from '../../../slices/query';
 import { setCodeSQL, setEdited,setCodeViewSQL, setCurTab  } from '../../../slices/utility';
 import { Alert } from '@mui/material';
 import { Parser } from 'node-sql-parser';
+import { LocalConvenienceStoreOutlined, UpdateSharp } from '@mui/icons-material';
 const parser = new Parser();
 
 const useStyles = makeStyles()((theme) => {
@@ -62,6 +63,10 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
   const uniqueTable = useSelector(state => state.utility.uniqueTable);
   const handleApply = useSelector(state => state.query.selectFields);
   const parameters = useSelector(state => state.utility.parameters);
+  const handleCalculationApply = useSelector(state => state.utility.calcApply);
+  const codeSQL = useSelector(state => state.utility.codeSQL);
+
+  const calcApplyStatus = useSelector(state => state.query.calcApplyStatus);
   const [snackMessage, setSnackMessage] = React.useState("");
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -71,6 +76,13 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
   React.useEffect(() => {
     setEnableSort(isCrossTab)
   }, [isCrossTab]);
+
+
+//   React.useEffect(() => {
+// //    setEnableSort(isCrossTab)
+//     console.log("=============  handleCalculationApply================================================");
+//     calcSelectFlag("")
+//   }, [ handleCalculationApply ]);
 
   React.useEffect(() => {
     const selectFields = queryData.selectFields;
@@ -86,7 +98,7 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
     let modifiedTable = uniqueArray1.join(',');
     modifiedTable = modifiedTable.replace("None", "");
     modifiedTable = modifiedTable.replace(/^,|,$/g, '');
-    fromTable = `FROM ${modifiedTable}`;     
+    fromTable = `FROM ${modifiedTable}`;
      
     queryData.relationFields.forEach((item, index) => {
       if(item.LTable.length>0){
@@ -316,12 +328,42 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
 
             if(updatedString === "")
               updatedString = null;
+            console.log("updatestring============");
+            console.log(updatedString);
             updatedString += " as ";
             updatedString += `"${header_name}"`;
             if(index !== selectFields.length-1)
               selectQuery += updatedString+ ", \n";         
             else
               selectQuery += updatedString;
+            console.log(updatedString);
+
+            let max = "select ";
+            max += updatedString;
+            max += " from " + modifiedTable;            
+            const queryInfo= {
+              query: max
+            }
+
+//             if(handleCalculationApply)
+//             {
+//               dispatch(testQuery(queryInfo))
+//               .then(data =>{
+//                   console.log("sytnax====================");
+//                   console.log(data.payload);
+//                     if(data.payload === "Query Syntax is good") {
+// //                      setSnackMessage(data.payload);
+// //                      setSuccessOpen(true);
+//                       setFailOpen(false);
+//                     } else 
+//                     {
+//                       setSnackMessage(data.payload);
+//                       setSuccessOpen(false);
+//                       setFailOpen(true);
+//                     }
+//               })
+//               dispatch(setCalcApply(false));
+//             }
           }         
         }
     })
@@ -490,47 +532,89 @@ export default function TabView({setSuccessOpen, setFailOpen}) {
       query: query
     }
     console.log(query);
-    if(selectFields.length>0)
-    {
-      try {
-        parser.parse(query);
-//        console.log('The SQL query is valid.');
-        setSnackMessage("Query Syntax is good");
-        setSuccessOpen(true);
-        setFailOpen(false);
-      } catch (error) {
-        setSnackMessage("Invalid Syntax");
-        setSuccessOpen(false);
-        console.log(error);        
-        setFailOpen(true);
- //       console.error('Invalid query syntax:', error.message);
-      }
-/*    dispatch(testQuery(queryInfo))
-    .then(data =>{
 
-        if(selectFields.length>0) {
-          if(data.payload === "Query Syntax is good") {
-            setSnackMessage(data.payload);
-            setSuccessOpen(true);
-            setFailOpen(false);
-          } else 
+
+    // if(handleCalculationApply)
+    // {
+    //   console.log(codeSQL);
+    //   dispatch(testQuery(queryInfo))
+    //   .then(data =>{
+    //       console.log("sytnax====================");
+    //       console.log(data.payload);
+    //         if(data.payload === "Query Syntax is good") {
+    //           setSnackMessage(data.payload);
+    //           setSuccessOpen(true);
+    //           setFailOpen(false);
+    //         } else 
+    //         {
+    //           setSnackMessage(data.payload);
+    //           setSuccessOpen(false);
+    //           setFailOpen(true);
+    //         }
+    //   })
+    //   dispatch(setCalcApply(false));
+    // }
+    // else
+    // {
+      if(selectFields.length>0)
+      {
+        try {
+          parser.parse(query);
+  //        console.log('The SQL query is valid.');
+          if(calcApplyStatus)
           {
-            setSnackMessage(data.payload);
-            setSuccessOpen(false);
-            setFailOpen(true);
+          setSnackMessage("Query Syntax is good");
+          setSuccessOpen(true);
+          setFailOpen(false);
           }
+          else
+          {
+            setSnackMessage("Invalid Syntax");
+            setSuccessOpen(false);
+            // console.log(error);
+            setFailOpen(true);  
+          }
+        } catch (error) {
+          setSnackMessage("Invalid Syntax");
+          setSuccessOpen(false);
+          console.log(error);
+          setFailOpen(true);
+   //       console.error('Invalid query syntax:', error.message);
         }
-    })
-            */
+  /*    dispatch(testQuery(queryInfo))
+      .then(data =>{
+  
+          if(selectFields.length>0) {
+            if(data.payload === "Query Syntax is good") {
+              setSnackMessage(data.payload);
+              setSuccessOpen(true);
+              setFailOpen(false);
+            } else 
+            {
+              setSnackMessage(data.payload);
+              setSuccessOpen(false);
+              setFailOpen(true);
+            }
+          }
+      })
+              */
+  
+      }
+      else
+      {
+        setSuccessOpen(false);
+        setFailOpen(false);
+  
+      }
+      console.log("===============s=sdfsdfsdf===============");
+      console.log(calcApplyStatus);
+      console.log("===============s=sdfsdfsdf===============");
+       
+//    }
+  }, [queryData,handleApply,calcApplyStatus]);
 
-    }
-    else
-    {
-      setSuccessOpen(false);
-      setFailOpen(false);
 
-    }
-  }, [queryData,handleApply]);
+
   return (
 
 

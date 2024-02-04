@@ -8,7 +8,9 @@ import { current } from '@reduxjs/toolkit';
 import store from "../store";
 const initialState = {
   selectFields: [],
+  calcFieldArray:{},
   clickField:{},
+  calcApplyStatus: true,
   operatorType: '',
   relationFields: [
     {
@@ -89,6 +91,8 @@ export const runQuery = createAsyncThunk(
   "query/run",
   async (queryInfo) => {
     try {
+      console.log("finally--------------");
+      console.log(queryInfo);
       const res = await QueryService.runQuery(queryInfo);
       return res.data;
     } catch (error) {
@@ -126,6 +130,21 @@ export const querySlice = createSlice({
         ...state,
         ...action.payload
       }
+    },
+    setCalcFieldArray: (state, action) => {
+      state.calcFieldArray[action.payload.id] = action.payload.value;
+
+      let flag = true;
+      for (let key in state.calcFieldArray) {
+        if (state.calcFieldArray[key] !== true) {
+          flag = false;
+        }
+      }
+      state.calcApplyStatus = flag && action.payload.value;
+      console.log("status=================");
+      console.log(action.payload.value);
+      console.log("status=================");
+
     },
     initAllState:(state, action) => {
       return {
@@ -796,7 +815,8 @@ export const {
   resetBasedOnCommand,
   initFilter,
   removeFieldCalcDrop,
-  setAllState
+  setAllState,
+  setCalcFieldArray
 } = querySlice.actions;
 export default querySlice.reducer;
 

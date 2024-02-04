@@ -7,6 +7,7 @@ export const runQuery = createAsyncThunk(
   async (queryInfo) => {
     try {
       console.log("=============foool=-===============");
+      console.log(queryInfo);
       const res = await QueryService.runQuery(queryInfo);
       return res.data;
     } catch (error) {

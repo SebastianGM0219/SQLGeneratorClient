@@ -15,6 +15,7 @@ const initialState = {
       value: ''
     }
   },
+  calcApply: false,
   parameters: [],
   codeSQL: "",
   codeSQLForUnion: "",
@@ -53,6 +54,7 @@ export const utilitySlice = createSlice({
             value: ''
           }
         },
+        calcApply: false,
         parameters: [],
         codeSQL: "",
         edited: false,
@@ -94,6 +96,9 @@ export const utilitySlice = createSlice({
     },
     setCodeViewSQL: (state, action) => {
       state.codeViewSQL = action.payload;
+    },
+    setCalcApply: (state,action) => {
+      state.calcApply = action.payload;
     },
     editParameter: (state, action) => {
       const {name, value} = action.payload;
@@ -137,6 +142,7 @@ export const {
   initUtility,
   initAllUtility,
   setAllUtility,
-  setCodeViewSQL
+  setCodeViewSQL,
+  setCalcApply
 } = utilitySlice.actions;
 export default utilitySlice.reducer;
